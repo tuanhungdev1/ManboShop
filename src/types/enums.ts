@@ -1,0 +1,15 @@
+export enum InputType {
+  Text = "text",
+  Number = "number",
+  Email = "email",
+  Password = "password",
+  Date = "date",
+  DatetimeLocal = "datetime-local",
+  Month = "month",
+  Week = "week",
+  Time = "time",
+  Url = "url",
+  Tel = "tel",
+  Search = "search",
+  Color = "color",
+}

@@ -4,5 +4,17 @@ export default {
   theme: {
     extend: {},
   },
+  theme: {
+    extend: {
+      fontSize: {
+        10: "10px",
+      },
+      colors: {
+        primary: {
+          500: "#BF272D",
+        },
+      },
+    },
+  },
   plugins: [],
 };
