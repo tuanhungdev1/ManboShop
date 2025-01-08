@@ -6,7 +6,6 @@ import { ThemeProvider } from "@mui/material";
 import theme from "@configs/muiConfig";
 import RootLayout from "@pages/RootLayout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AuthLayout from "@pages/auth/AuthLayout";
 import RegisterPage from "@pages/auth/RegisterPage";
 import LoginPage from "@pages/auth/LoginPage";
 
@@ -21,17 +20,12 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        element: <AuthLayout />,
-        children: [
-          {
-            path: "register",
-            element: <RegisterPage />,
-          },
-          {
-            path: "login",
-            element: <LoginPage />,
-          },
-        ],
+        path: "register",
+        element: <RegisterPage />,
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
       },
     ],
   },
