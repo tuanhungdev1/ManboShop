@@ -14,17 +14,17 @@ const PrimaryButton: React.FC<CustomButtonProps> = ({
   return (
     <Button
       {...props}
-      className={cn(className, "bg-blue-primary")}
+      className={cn(className)}
       sx={{
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "Montserrat, sans-serif",
         fontSize: "16px",
         textTransform: "none",
-        borderRadius: "8px",
         padding: "10px 16px",
-        backgroundColor: "#BF272D",
+        backgroundColor: "#110E11",
+        borderRadius: 0,
         color: "#fff",
         "&:hover": {
-          backgroundColor: "#8f1c20",
+          backgroundColor: "#292729",
         },
         ...props.sx,
       }}

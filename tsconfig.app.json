@@ -36,5 +36,5 @@
       "@services/*": ["src/services/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "src/constants/menus/.ts"]
 }
