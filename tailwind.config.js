@@ -10,6 +10,9 @@ export default {
       colors: {
         primary: {
           900: "#110E11",
+          800: "#3D3D3D",
+
+          300: "#D1D1D1",
         },
       },
       keyframes: {
