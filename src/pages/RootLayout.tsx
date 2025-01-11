@@ -8,18 +8,18 @@ import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
   return (
-    <div>
+    <>
       <TopHeader />
       <Header />
-
       <AnnouncementMarquee />
-      <Suspense fallback={<LoadingPage />}>
-        <Outlet />
-      </Suspense>
-
+      <div>
+        <Suspense fallback={<LoadingPage />}>
+          <Outlet />
+        </Suspense>
+      </div>
       <Footer />
       <ButtonBackToTop />
-    </div>
+    </>
   );
 };
 

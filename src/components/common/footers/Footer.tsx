@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import PolicyList from "./PolicyList";
 import SocialMediaList from "./SocialMediaList";
 import { EmailInput } from "@components/formInputs";
+import FooterList from "./FooterList";
+import { footerSections } from "@constants/footers/footerList";
+import PaymentListFooter from "./PaymentListFooter";
 
 const Footer = () => {
   return (
@@ -9,8 +12,8 @@ const Footer = () => {
       <PolicyList />
       <div className="w-screen bg-primary-900  text-white flex sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw]">
         {/* LEFT FOOTER */}
-        <div className="flex-1 ">
-          <div className="flex flex-col text-[13px] items-start flex-1 px-[60px] py-[56px] border-white border-x">
+        <div className="flex-1 border-white border-l-[1px]">
+          <div className="flex flex-col text-[13px] items-start flex-1 px-[60px] py-[56px] border-white">
             <div>
               <div className="flex">
                 <div>
@@ -68,7 +71,7 @@ const Footer = () => {
               </div>
             </div>
           </div>
-          <div className="pt-[36px] pb-[60px] border-t border-x w-full flex items-center justify-between px-[60px]">
+          <div className="pt-[36px] pb-[60px] border-t  w-full flex items-center justify-between px-[60px]">
             <div className="font-semibold text-[13px]">
               Bản quyền © 2024 KGVIETNAM
             </div>
@@ -88,7 +91,14 @@ const Footer = () => {
         </div>
 
         {/* RIGHT FOOTER */}
-        <div className="flex-1 border-white border-r-[1px] "></div>
+        <div className="flex-1 border-white border-r-[1px] border-l-[1px]">
+          <div className="py-[56px] px-[60px] ">
+            <div className="grid grid-cols-2 gap-y-5">
+              <FooterList footerSections={footerSections} />
+            </div>
+            <PaymentListFooter />
+          </div>
+        </div>
       </div>
 
       {/* COPPY RIGHT */}
