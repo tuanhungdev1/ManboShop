@@ -14,6 +14,9 @@ export default {
 
           300: "#D1D1D1",
         },
+        second: {
+          500: "#343A40",
+        },
       },
       keyframes: {
         marquee: {

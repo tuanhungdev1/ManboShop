@@ -1,3 +1,4 @@
+import ButtonBackToTop from "@components/buttons/ButtonBackToTop";
 import { Footer } from "@components/common/footers";
 import { Header, TopHeader } from "@components/common/headers";
 import { AnnouncementMarquee } from "@components/common/menus";
@@ -10,11 +11,14 @@ const RootLayout = () => {
     <div>
       <TopHeader />
       <Header />
+
       <AnnouncementMarquee />
       <Suspense fallback={<LoadingPage />}>
         <Outlet />
       </Suspense>
+
       <Footer />
+      <ButtonBackToTop />
     </div>
   );
 };
