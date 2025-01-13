@@ -37,7 +37,7 @@ const FormField = <T extends FieldValues>({
 }: FormFieldProps<T>) => {
   return (
     <div>
-      <p className="mb-1 text-sm text-dark-100 opacity-90">{label}</p>
+      <p className="mb-2 text-[14px] text-black opacity-80">{label}</p>
       <Controller
         name={name}
         control={control}

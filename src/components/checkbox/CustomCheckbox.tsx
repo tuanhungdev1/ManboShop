@@ -1,54 +1,83 @@
 import React from "react";
 import {
-  Checkbox,
+  Checkbox as MuiCheckbox,
   FormControlLabel,
-  FormHelperText,
+  styled,
   CheckboxProps,
 } from "@mui/material";
 
-interface CustomCheckboxProps extends CheckboxProps {
-  label: string;
-  helperText?: string;
+// Đầu tiên, sửa lại Checkbox component để nhận thêm field từ react-hook-form
+interface CustomCheckboxProps
+  extends Omit<CheckboxProps, "onChange" | "color"> {
+  label?: string;
+  name: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  color?:
+    | "primary"
+    | "secondary"
+    | "error"
+    | "info"
+    | "success"
+    | "warning"
+    | "default";
+
+  labelStyle?: React.CSSProperties;
+  disabled?: boolean;
+  className?: string;
   error?: boolean;
-  containerClassName?: string;
-  labelClassName?: string;
+  errorMessage?: string;
 }
+
+const StyledCheckbox = styled(MuiCheckbox, {
+  shouldForwardProp: (prop) => prop !== "customColor",
+})<{ customColor?: string }>(({ theme, customColor }) => ({
+  "&.Mui-checked": {
+    color: customColor || theme.palette.primary.main,
+  },
+  "&:hover": {
+    backgroundColor: "transparent",
+  },
+}));
 
 const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
   label,
-  helperText,
-  error,
-  containerClassName,
-  labelClassName,
+  name,
+  checked,
   onChange,
-  checked = false, // Ensure checked is always a boolean
-  disabled,
-  ...props
+  color,
+  labelStyle,
+  disabled = false,
+  className,
+  ...rest
 }) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange?.(event, event.target.checked);
-  };
-
-  return (
-    <div className={containerClassName}>
-      <FormControlLabel
-        className={labelClassName}
-        disabled={disabled}
-        control={
-          <Checkbox
-            checked={checked}
-            onChange={handleChange}
-            disabled={disabled}
-            {...props}
-          />
-        }
-        label={label || ""}
-      />
-      {helperText && (
-        <FormHelperText error={error}>{helperText}</FormHelperText>
-      )}
-    </div>
+  const renderCheckbox = () => (
+    <StyledCheckbox
+      checked={checked}
+      onChange={onChange}
+      name={name}
+      customColor={color}
+      disabled={disabled}
+      {...rest}
+    />
   );
+
+  if (label) {
+    return (
+      <FormControlLabel
+        control={renderCheckbox()}
+        label={label}
+        sx={{
+          ".MuiFormControlLabel-label": {
+            ...labelStyle,
+            color: disabled ? "text.disabled" : "text.primary",
+          },
+        }}
+        className={className}
+      />
+    );
+  }
+
+  return renderCheckbox();
 };
 
 export default CustomCheckbox;

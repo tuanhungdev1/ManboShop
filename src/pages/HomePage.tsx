@@ -7,7 +7,7 @@ const HomePage = () => {
     <div>
       Home Page
       <div>
-        <Link to={"/register"}>
+        <Link to={"/account/register"}>
           <PrimaryButton variant="contained">Register</PrimaryButton>
         </Link>
       </div>

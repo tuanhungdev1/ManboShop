@@ -8,6 +8,7 @@ import RootLayout from "@pages/RootLayout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RegisterPage from "@pages/auth/RegisterPage";
 import LoginPage from "@pages/auth/LoginPage";
+import AuthLayout from "@pages/auth/AuthLayout";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -20,12 +21,18 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "register",
-        element: <RegisterPage />,
-      },
-      {
-        path: "login",
-        element: <LoginPage />,
+        path: "/account",
+        element: <AuthLayout />,
+        children: [
+          {
+            path: "login",
+            element: <LoginPage />,
+          },
+          {
+            path: "register",
+            element: <RegisterPage />,
+          },
+        ],
       },
     ],
   },

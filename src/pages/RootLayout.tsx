@@ -12,7 +12,7 @@ const RootLayout = () => {
       <TopHeader />
       <Header />
       <AnnouncementMarquee />
-      <div>
+      <div className="px-4">
         <Suspense fallback={<LoadingPage />}>
           <Outlet />
         </Suspense>

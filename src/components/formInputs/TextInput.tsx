@@ -26,8 +26,23 @@ const TextInput: React.FC<TextInputProps> = ({
     <TextField
       fullWidth
       slotProps={{
-        input: { className: "h-12 px-4 py-2 !rounded-[8px]" },
+        input: {
+          className: "h-12 px-4 py-2 !rounded-[0px]",
+        },
         htmlInput: { className: "!p-0" },
+      }}
+      sx={{
+        fontSize: "10px",
+        "& .MuiOutlinedInput-root": {
+          "& input::placeholder": {
+            color: "",
+            fontSize: "14px",
+          },
+        },
+        "& .MuiOutlinedInput-input": {
+          // style cho input text
+          fontSize: "14px",
+        },
       }}
       name={name}
       value={value}

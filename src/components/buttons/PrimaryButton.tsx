@@ -17,7 +17,7 @@ const PrimaryButton: React.FC<CustomButtonProps> = ({
       className={cn(className)}
       sx={{
         fontFamily: "Montserrat, sans-serif",
-        fontSize: "16px",
+        fontSize: "14px",
         textTransform: "none",
         padding: "10px 16px",
         backgroundColor: "#110E11",
