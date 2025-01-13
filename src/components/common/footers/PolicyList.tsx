@@ -3,7 +3,7 @@ import { cn } from "@utils/cn";
 
 const PolicyList = () => {
   return (
-    <div className="flex items-center text-[14px] px-4 justify-around bg-primary-300 w-screen sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex-row">
+    <div className="grid grid-cols-2 lg:grid-cols-4 items-center text-[12px] md:text-[14px] px-[20px] justify-around bg-primary-300 w-screen md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex-row">
       {policyList.map((policyItem, policyIndex) => {
         const PolicyIconComponent = policyItem.icon;
 
@@ -11,9 +11,9 @@ const PolicyList = () => {
           <div
             key={policyItem.id}
             className={cn(
-              "flex items-center flex-1 px-8 py-4",
+              "flex items-center gap-4 sm:gap-3 justify-center flex-1 px-8 py-4",
               policyIndex !== policyList.length - 1
-                ? "border-r border-white"
+                ? "xl:border-r xl:border-white"
                 : ""
             )}
           >

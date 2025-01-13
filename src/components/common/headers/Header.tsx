@@ -1,14 +1,21 @@
 import { Link } from "react-router-dom";
 import { ClothingMenu, ActionIcons } from "../menus";
+import { CgMenuRightAlt } from "react-icons/cg";
+import { useState } from "react";
 
 const Header = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
   return (
     <div className="px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex flex-col">
       <div className="relative flex items-center justify-between mt-[14px] h-10">
-        <div>
+        <div className="hidden lg:block">
           <ClothingMenu />
         </div>
-        <div className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2">
+        <div className="cursor-pointer lg:absolute lg:-translate-x-1/2 lg:-translate-y-1/2 lg:top-1/2 lg:left-1/2">
           <Link to={"/"}>
             <svg
               width="94"
@@ -52,8 +59,14 @@ const Header = () => {
             </svg>
           </Link>
         </div>
-        <div>
+        <div className="flex items-center gap-3">
           <ActionIcons />
+          <div
+            className="text-[23px] cursor-pointer lg:hidden"
+            onClick={toggleSidebar}
+          >
+            <CgMenuRightAlt />
+          </div>
         </div>
       </div>
     </div>

@@ -8,12 +8,12 @@ import PaymentListFooter from "./PaymentListFooter";
 
 const Footer = () => {
   return (
-    <div>
+    <div className="overflow-hidden max-w-screen">
       <PolicyList />
-      <div className="w-screen bg-primary-900  text-white flex sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw]">
+      <div className="w-screen bg-primary-900  text-white flex flex-col xl:flex-row sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw]">
         {/* LEFT FOOTER */}
-        <div className="flex-1 border-white border-l-[1px]">
-          <div className="flex flex-col text-[13px] items-start flex-1 px-[60px] py-[56px] border-white">
+        <div className="flex-1 xl:border-white xl:border-l-[1px] w-full">
+          <div className="flex flex-col text-[10px] xl:text[13px] items-start flex-1 xl:px-[60px] xl:py-[56px] px-[20px] py-[20px] border-white">
             <div>
               <div className="flex">
                 <div>
@@ -71,7 +71,7 @@ const Footer = () => {
               </div>
             </div>
           </div>
-          <div className="pt-[36px] pb-[60px] border-t  w-full flex items-center justify-between px-[60px]">
+          <div className="xl:pt-[36px] pt-[20px] xl:pb-[60px] border-t  w-full flex items-center justify-between xl:px-[60px] px-[20px]">
             <div className="font-semibold text-[13px]">
               Bản quyền © 2024 KGVIETNAM
             </div>
@@ -91,8 +91,8 @@ const Footer = () => {
         </div>
 
         {/* RIGHT FOOTER */}
-        <div className="flex-1 border-white border-r-[1px] border-l-[1px]">
-          <div className="py-[56px] px-[60px] ">
+        <div className="flex-1 border-white w-full xl:border-r-[1px] xl:border-l-[1px]">
+          <div className="xl:py-[56px] xl:px-[60px] px-[20px] py-[20px]">
             <div className="grid grid-cols-2 gap-y-5">
               <FooterList footerSections={footerSections} />
             </div>
@@ -103,7 +103,7 @@ const Footer = () => {
 
       {/* COPPY RIGHT */}
 
-      <div className="py-4 font-medium text-center bg-white">
+      <div className="w-full py-4 font-medium text-center bg-white">
         <span>
           &copy; {new Date().getFullYear()} ARISTINO. All rights reserved.
         </span>

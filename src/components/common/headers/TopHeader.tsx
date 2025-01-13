@@ -13,7 +13,7 @@ const TopHeader = () => {
           </Link>
         </div>
       </div>
-      <div className="flex items-center gap-3 cursor-pointer">
+      <div className="items-center hidden gap-3 cursor-pointer lg:flex">
         <div className="flex items-center gap-1">
           <StorefrontIcon
             sx={{
