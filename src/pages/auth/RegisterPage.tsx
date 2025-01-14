@@ -1,8 +1,7 @@
-import { Box } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { FormField } from "@components/formFields";
 import { TextInput } from "@components/formInputs";
@@ -14,6 +13,10 @@ import {
 import { InputType } from "@types-d/enums";
 import { cn } from "@utils/cn";
 import { CustomCheckbox } from "@components/checkbox";
+import { useAppDispatch } from "@redux/hooks";
+import { useRegisterMutation } from "@services/rootApi";
+import { useEffect } from "react";
+import { openSnackbar } from "@redux/slices/snackbarSlice";
 
 export interface RegisterFormData {
   username: string;
@@ -67,10 +70,14 @@ const schema = yup.object().shape({
 });
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const [register, { data, isSuccess }] = useRegisterMutation();
+
   const {
     control,
     handleSubmit,
-    register,
     watch,
 
     formState: { errors },
@@ -86,10 +93,24 @@ const RegisterPage = () => {
 
   const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
     console.log(data);
+    register(data);
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(
+        openSnackbar({
+          type: "success",
+          message: data.message,
+        })
+      );
+
+      navigate("/account/login");
+    }
+  }, [isSuccess, data?.message, navigate, dispatch]);
+
   return (
-    <Box sx={{ mt: 5, width: "100%", mx: "auto", fontSize: "14px" }}>
+    <div className="mx-auto text-[14px] sm:w-[450px] w-full mt-5">
       <div className="flex items-center w-full text-[14px] text-center">
         <Link
           to={"/account/login"}
@@ -112,15 +133,15 @@ const RegisterPage = () => {
           gap: "18px",
           marginTop: "40px",
         }}
-        className="select-none"
+        className="w-full select-none"
       >
         <FormField
           control={control}
           label="Email*"
+          name="email"
           Component={TextInput}
           error={errors.email?.message}
           type={InputType.Email}
-          {...register("email")}
           placeholder="Nhập Email"
         />
 
@@ -129,7 +150,7 @@ const RegisterPage = () => {
           label="Tên đăng nhập*"
           error={errors.username?.message}
           Component={(props) => <TextInput {...props} />}
-          {...register("username")}
+          name="username"
           placeholder="Tên đăng nhập"
         />
 
@@ -138,7 +159,7 @@ const RegisterPage = () => {
           label="Họ*"
           error={errors.lastname?.message}
           Component={(props) => <TextInput {...props} />}
-          {...register("username")}
+          name="lastname"
           placeholder="Nhập họ của bạn"
         />
 
@@ -147,7 +168,7 @@ const RegisterPage = () => {
           label="Tên*"
           error={errors.firstname?.message}
           Component={(props) => <TextInput {...props} />}
-          {...register("username")}
+          name="firstname"
           placeholder="Nhập tên của bạn"
         />
 
@@ -157,7 +178,7 @@ const RegisterPage = () => {
           Component={TextInput}
           error={errors.password?.message}
           type={InputType.Password}
-          {...register("password")}
+          name="password"
           placeholder="Nhập mật khẩu"
         />
 
@@ -167,7 +188,7 @@ const RegisterPage = () => {
           error={errors.confirmPassword?.message}
           Component={TextInput}
           type={InputType.Password}
-          {...register("confirmPassword")}
+          name="confirmPassword"
           placeholder="Xác nhận mật khẩu"
         />
 
@@ -252,7 +273,7 @@ const RegisterPage = () => {
         <GoogleLoginButton />
         <FacebookLoginButton />
       </div>
-    </Box>
+    </div>
   );
 };
 

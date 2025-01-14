@@ -9,6 +9,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RegisterPage from "@pages/auth/RegisterPage";
 import LoginPage from "@pages/auth/LoginPage";
 import AuthLayout from "@pages/auth/AuthLayout";
+import { Provider } from "react-redux";
+import { store } from "@redux/store";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -40,8 +42,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </Provider>
   </StrictMode>
 );

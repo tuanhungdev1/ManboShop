@@ -3,6 +3,11 @@ export interface Token {
   refreshToken: string;
 }
 
+export interface ApiErrorResponse {
+  Message: string;
+  StatusCode: number;
+}
+
 export interface MetaData {
   currentPage: number;
   totalPage: number;

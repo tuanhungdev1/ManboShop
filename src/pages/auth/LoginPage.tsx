@@ -1,14 +1,23 @@
-import { Typography, Box } from "@mui/material";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { FormField } from "@components/formFields";
 import { TextInput } from "@components/formInputs";
-import { PrimaryButton } from "@components/buttons";
+import {
+  FacebookLoginButton,
+  GoogleLoginButton,
+  PrimaryButton,
+} from "@components/buttons";
 import { InputType } from "@types-d/enums";
-import { CustomCheckbox } from "@components/checkbox";
+import { useLoginMutation } from "@services/rootApi";
+import { useAppDispatch } from "@redux/hooks";
+import { useEffect } from "react";
+import { openSnackbar } from "@redux/slices/snackbarSlice";
+import { ApiErrorResponse } from "@types-d/type";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 export interface LoginFormData {
   username: string;
@@ -29,6 +38,10 @@ const schema = yup.object().shape({
 });
 
 const LoginPage = () => {
+  const [login, { data, isError, isSuccess, error }] = useLoginMutation();
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -40,19 +53,51 @@ const LoginPage = () => {
 
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     console.log(data);
+
+    login(data);
   };
 
+  useEffect(() => {
+    if (isError) {
+      const fetchError = error as FetchBaseQueryError;
+      if ("data" in fetchError) {
+        const errorData = fetchError.data as ApiErrorResponse;
+        console.log(errorData);
+        dispatch(openSnackbar({ type: "error", message: errorData.Message }));
+      } else {
+        const serializedError = error as SerializedError;
+        dispatch(
+          openSnackbar({
+            type: "error",
+            message: serializedError.message || "An error occurred",
+          })
+        );
+      }
+    }
+
+    if (isSuccess) {
+      dispatch(openSnackbar({ type: "success", message: data.message }));
+      navigate("/");
+    }
+  }, [isError, dispatch, data, isSuccess, navigate, error]);
+
+  console.log(data, error);
   return (
-    <Box sx={{ mt: 5, width: 500, mx: "auto" }}>
-      <Typography variant="h1" sx={{ fontSize: 45, fontWeight: "bold" }}>
-        Chào mừng bạn 👋
-      </Typography>
-      <Typography
-        variant="body1"
-        sx={{ mt: 2, mb: 5, fontSize: "1.25rem", opacity: 0.4 }}
-      >
-        Vui lòng đăng nhập vào tài khoản của bạn.
-      </Typography>
+    <div className="mx-auto text-[14px] sm:w-[450px] w-full mt-5">
+      <div className="flex items-center w-full text-[14px] text-center">
+        <Link
+          to={"/account/login"}
+          className="flex-1 py-4 font-semibold border-b border-black"
+        >
+          <span>Đăng Nhập</span>
+        </Link>
+        <Link
+          to={"/account/register"}
+          className="flex-1 py-4 border-b border-primary-300 opacity-60"
+        >
+          <span>Đăng Ký</span>
+        </Link>
+      </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -80,26 +125,6 @@ const LoginPage = () => {
           {...register("password")}
         />
 
-        <div className="flex items-center justify-between">
-          <Controller
-            name="isRememberMe"
-            control={control}
-            render={({ field }) => (
-              <CustomCheckbox
-                label="Ghi nhớ đăng nhập"
-                checked={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-          <Box>
-            <Link to={"/forgot-password"}>
-              <Typography className="text-primary-500">
-                Quên mật khẩu
-              </Typography>
-            </Link>
-          </Box>
-        </div>
         <PrimaryButton
           type="submit"
           fullWidth
@@ -110,17 +135,25 @@ const LoginPage = () => {
         >
           Đăng Nhập
         </PrimaryButton>
-        <Typography
-          variant="body1"
-          sx={{ mt: 4, textAlign: "center", opacity: 0.8 }}
-        >
-          Chưa có tài khoản?{" "}
-          <Link to={"/register"} className="text-primary-500">
-            Đăng ký ngay
+
+        <div className="text-[14px] underline text-center mt-2 font-semibold">
+          <Link to={"/forgot-password"}>
+            <span className="text-primary-500">Quên mật khẩu</span>
           </Link>
-        </Typography>
+        </div>
+
+        <div className="flex text-[15px] mb-5 items-center justify-between gap-10 mt-5">
+          <div className="h-[0.5px] flex-1 bg-primary-300"></div>
+          <div className="font-bold">Hoặc</div>
+          <div className="h-[0.5px] flex-1 bg-primary-300"></div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <GoogleLoginButton />
+          <FacebookLoginButton />
+        </div>
       </form>
-    </Box>
+    </div>
   );
 };
 
