@@ -11,6 +11,8 @@ import LoginPage from "@pages/auth/LoginPage";
 import AuthLayout from "@pages/auth/AuthLayout";
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
+import CollectionLayout from "@pages/collection/CollectionLayout";
+import CollectionDetail from "@pages/collection/CollectionDetail";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -21,6 +23,15 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        element: <CollectionLayout />,
+        children: [
+          {
+            path: "/collection/:collectionName",
+            element: <CollectionDetail />,
+          },
+        ],
       },
       {
         path: "/account",

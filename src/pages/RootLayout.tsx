@@ -19,22 +19,24 @@ const RootLayout = () => {
       <TopHeader />
       <Header />
       <AnnouncementMarquee />
-      <div className="px-4">
+      <div className="px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex flex-col">
         <Suspense fallback={<LoadingPage />}>
           <Outlet />
         </Suspense>
       </div>
       <Footer />
       <ButtonBackToTop />
-      <Snackbar
-        open={open}
-        autoHideDuration={4000}
-        onClose={() => dispatch(closeSnackbar())}
-      >
-        <Alert severity={type} variant="filled" sx={{ width: "100%" }}>
-          {message}
-        </Alert>
-      </Snackbar>
+      {message && (
+        <Snackbar
+          open={open}
+          autoHideDuration={4000}
+          onClose={() => dispatch(closeSnackbar())}
+        >
+          <Alert severity={type} variant="filled" sx={{ width: "100%" }}>
+            {message}
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 };

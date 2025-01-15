@@ -10,6 +10,10 @@ const HomePage = () => {
         <Link to={"/account/register"}>
           <PrimaryButton variant="contained">Register</PrimaryButton>
         </Link>
+        <br />
+        <Link to={"/collection/san-pham-moi"}>
+          <PrimaryButton variant="contained">Collection</PrimaryButton>
+        </Link>
       </div>
     </div>
   );
