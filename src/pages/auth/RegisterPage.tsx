@@ -14,7 +14,7 @@ import { InputType } from "@types-d/enums";
 import { cn } from "@utils/cn";
 import { CustomCheckbox } from "@components/checkbox";
 import { useAppDispatch } from "@redux/hooks";
-import { useRegisterMutation } from "@services/rootApi";
+import { useRegisterMutation } from "@services/authApi";
 import { useEffect } from "react";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
 

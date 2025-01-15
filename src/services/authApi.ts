@@ -1,27 +1,10 @@
 import { LoginFormData } from "@pages/auth/LoginPage";
 import { RegisterFormData } from "@pages/auth/RegisterPage";
 import { login } from "@redux/slices/authSlice";
-import { RootState } from "@redux/store";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiResponse } from "@types-d/type";
+import { baseApi } from "./baseApi";
 
-export const rootApi = createApi({
-  reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_BASE_URL,
-    prepareHeaders: (headers, { getState }) => {
-      console.log(import.meta.env.VITE_BASE_URL);
-      const state = getState() as RootState;
-      console.log("Current state:", state);
-
-      const token = state.auth.accessToken;
-
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => {
     return {
       register: builder.mutation<ApiResponse<object>, RegisterFormData>({
@@ -79,16 +62,9 @@ export const rootApi = createApi({
           };
         },
       }),
-      getAuthUser: builder.query({
-        query: () => "/auth-user",
-      }),
     };
   },
 });
 
-export const {
-  useRegisterMutation,
-  useLoginMutation,
-  useGetAuthUserQuery,
-  useVerifyOTPMutation,
-} = rootApi;
+export const { useRegisterMutation, useLoginMutation, useVerifyOTPMutation } =
+  authApi;

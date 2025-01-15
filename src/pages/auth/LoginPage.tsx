@@ -11,7 +11,7 @@ import {
   PrimaryButton,
 } from "@components/buttons";
 import { InputType } from "@types-d/enums";
-import { useLoginMutation } from "@services/rootApi";
+import { useLoginMutation } from "@services/authApi";
 import { useAppDispatch } from "@redux/hooks";
 import { useEffect } from "react";
 import { openSnackbar } from "@redux/slices/snackbarSlice";

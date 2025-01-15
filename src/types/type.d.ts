@@ -26,3 +26,11 @@ export interface ApiResponse<T> {
   errors?: string[];
   pagination?: MetaData;
 }
+
+export interface Brand {
+  id: number;
+  name: string;
+  imageUrl?: string;
+  createdAt: Date;
+  updatedAt?: Date;
+}
