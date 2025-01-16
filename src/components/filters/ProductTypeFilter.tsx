@@ -1,25 +1,25 @@
-import { PRODUCT_TYPES } from "@constants/filters/filter";
-import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
-import { GoPlus, GoDash } from "react-icons/go"; // Import biểu tượng
 import { Checkbox } from "@components/checkbox";
+import { PRODUCT_TYPES } from "@constants/filters/filter";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import {
+  selectProductTypes,
+  toggleProductType,
+} from "@redux/slices/filterSlice";
 import { useState } from "react";
+import { GoDash, GoPlus } from "react-icons/go";
 
 const ProductTypeFilter = () => {
-  const [isExpanded, setIsExpanded] = useState(true); // Trạng thái mở/đóng của Accordion
-  const [selectedProductTypes, setSelectedProductTypes] = useState<string[]>(
-    []
-  ); // Trạng thái các sản phẩm đã chọn
+  const dispatch = useAppDispatch();
+  const selectedProductTypes = useAppSelector(selectProductTypes);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleAccordion = () => {
-    setIsExpanded((prev) => !prev); // Đảo trạng thái mở/đóng
+    setIsExpanded((prev) => !prev);
   };
 
   const handleProductTypeChange = (typeId: string) => {
-    setSelectedProductTypes((prev) =>
-      prev.includes(typeId)
-        ? prev.filter((id) => id !== typeId)
-        : [...prev, typeId]
-    );
+    dispatch(toggleProductType(typeId));
   };
 
   return (
@@ -39,13 +39,13 @@ const ProductTypeFilter = () => {
             <GoDash size={20} color="#000" />
           ) : (
             <GoPlus size={20} color="#000" />
-          ) // Biểu tượng động
+          )
         }
       >
         <span className="font-medium text-[13px]">SẢN PHẨM</span>
       </AccordionSummary>
       <AccordionDetails>
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-6">
           {PRODUCT_TYPES.map((type) => (
             <Checkbox
               key={type.id}

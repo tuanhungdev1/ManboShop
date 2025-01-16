@@ -17,7 +17,7 @@ const Checkbox: React.FC<CheckBoxProps> = ({
   return (
     <div
       className={cn(
-        "flex items-center font-medium cursor-pointer select-none text-[13px]",
+        "group flex items-center font-medium cursor-pointer select-none text-[13px]",
         classname
       )}
       onClick={onClick}
@@ -28,7 +28,7 @@ const Checkbox: React.FC<CheckBoxProps> = ({
           "flex justify-center items-center w-[20px] h-[20px] border-[1px] transition-colors",
           isChecked
             ? "bg-primary-900 border-primary-900 text-white"
-            : "bg-white border-gray-400"
+            : "bg-white border-gray-400 group-hover:border-black" // Border đổi màu khi hover
         )}
       >
         {/* Hiển thị dấu kiểm khi được chọn */}

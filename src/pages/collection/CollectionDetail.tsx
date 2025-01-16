@@ -1,4 +1,4 @@
-import { ProductFilter } from "@components/filters";
+import { ProductFilter, ProductSort } from "@components/filters";
 import { Link } from "react-router-dom";
 
 const CollectionDetail = () => {
@@ -59,8 +59,13 @@ const CollectionDetail = () => {
           <span>Bộ sưu tập mới 2025</span>
         </div>
         <div className="flex items-center gap-4 font-medium">
-          <span className="opacity-60">927 sản phẩm</span>
-          <div></div>
+          <div>
+            <ProductSort
+              onSortChange={(sortId) => {
+                console.log("Selected sort:", sortId);
+              }}
+            />
+          </div>
         </div>
       </div>
 

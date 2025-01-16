@@ -1,36 +1,39 @@
-// store/slices/filterSlice.ts
-import { FilterState } from "@constants/filters/filter";
+// src/store/slices/filterSlice.ts
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface PriceRange {
+  min: number;
+  max: number;
+}
+
+interface FilterState {
+  productTypes: string[];
+  sizes: string[];
+  brands: string[];
+  colors: string[];
+  priceRange: PriceRange;
+  sortBy: string;
+}
+
 const initialState: FilterState = {
+  productTypes: [],
+  sizes: [],
   brands: [],
   colors: [],
-  productTypes: [],
+  priceRange: {
+    min: 100000,
+    max: 20000000,
+  },
+  sortBy: "featured",
 };
 
 const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
-    toggleBrand(state, action: PayloadAction<string>) {
-      const brandId = action.payload;
-      const index = state.brands.indexOf(brandId);
-      if (index === -1) {
-        state.brands.push(brandId);
-      } else {
-        state.brands.splice(index, 1);
-      }
-    },
-    toggleColor(state, action: PayloadAction<string>) {
-      const colorId = action.payload;
-      const index = state.colors.indexOf(colorId);
-      if (index === -1) {
-        state.colors.push(colorId);
-      } else {
-        state.colors.splice(index, 1);
-      }
-    },
-    toggleProductType(state, action: PayloadAction<string>) {
+    // Product Types
+    toggleProductType: (state, action: PayloadAction<string>) => {
       const typeId = action.payload;
       const index = state.productTypes.indexOf(typeId);
       if (index === -1) {
@@ -39,12 +42,80 @@ const filterSlice = createSlice({
         state.productTypes.splice(index, 1);
       }
     },
-    resetFilters() {
+
+    // Sizes
+    toggleSize: (state, action: PayloadAction<string>) => {
+      const sizeId = action.payload;
+      const index = state.sizes.indexOf(sizeId);
+      if (index === -1) {
+        state.sizes.push(sizeId);
+      } else {
+        state.sizes.splice(index, 1);
+      }
+    },
+
+    // Brands
+    toggleBrand: (state, action: PayloadAction<string>) => {
+      const brandId = action.payload;
+      const index = state.brands.indexOf(brandId);
+      if (index === -1) {
+        state.brands.push(brandId);
+      } else {
+        state.brands.splice(index, 1);
+      }
+    },
+
+    // Colors
+    toggleColor: (state, action: PayloadAction<string>) => {
+      const colorId = action.payload;
+      const index = state.colors.indexOf(colorId);
+      if (index === -1) {
+        state.colors.push(colorId);
+      } else {
+        state.colors.splice(index, 1);
+      }
+    },
+
+    // Price Range
+    setPriceRange: (state, action: PayloadAction<PriceRange>) => {
+      state.priceRange = action.payload;
+    },
+
+    // Sort
+    setSortBy: (state, action: PayloadAction<string>) => {
+      state.sortBy = action.payload;
+    },
+
+    // Reset all filters
+    resetFilters: () => {
       return initialState;
     },
   },
 });
 
-export const { toggleBrand, toggleColor, toggleProductType, resetFilters } =
-  filterSlice.actions;
+// Export actions
+export const {
+  toggleProductType,
+  toggleSize,
+  toggleBrand,
+  toggleColor,
+  setPriceRange,
+  setSortBy,
+  resetFilters,
+} = filterSlice.actions;
+
+// Selectors
+export const selectProductTypes = (state: { filter: FilterState }) =>
+  state.filter.productTypes;
+export const selectSizes = (state: { filter: FilterState }) =>
+  state.filter.sizes;
+export const selectBrands = (state: { filter: FilterState }) =>
+  state.filter.brands;
+export const selectColors = (state: { filter: FilterState }) =>
+  state.filter.colors;
+export const selectPriceRange = (state: { filter: FilterState }) =>
+  state.filter.priceRange;
+export const selectSortBy = (state: { filter: FilterState }) =>
+  state.filter.sortBy;
+
 export default filterSlice.reducer;

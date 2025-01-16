@@ -51,3 +51,30 @@ export const PRODUCT_TYPES = [
   { id: "thermal", label: "Áo giữ nhiệt" },
   { id: "long-sleeve-tee", label: "Áo thun tay dài" },
 ];
+
+interface Size {
+  id: string;
+  label: string;
+}
+
+export const SIZES: Size[] = [
+  { id: "size1", label: "XS" },
+  { id: "size2", label: "S" },
+  { id: "size3", label: "M" },
+  { id: "size4", label: "L" },
+  { id: "size5", label: "XL" },
+  { id: "size6", label: "XXL" },
+  { id: "size7", label: "29" },
+  { id: "size8", label: "30" },
+  { id: "size9", label: "31" },
+  { id: "size10", label: "32" },
+  { id: "size11", label: "33" },
+  { id: "size12", label: "34" },
+  { id: "size13", label: "35" },
+  { id: "size14", label: "38" },
+  { id: "size15", label: "39" },
+  { id: "size16", label: "40" },
+  { id: "size17", label: "41" },
+  { id: "size18", label: "42" },
+  { id: "size19", label: "43" },
+];

@@ -1,18 +1,18 @@
 import { Checkbox } from "@components/checkbox";
-import { BRANDS } from "@constants/filters/filter";
+import { SIZES } from "@constants/filters/filter";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
-import { selectBrands, toggleBrand } from "@redux/slices/filterSlice";
+import { selectSizes, toggleSize } from "@redux/slices/filterSlice";
 import { useState } from "react";
 import { GoDash, GoPlus } from "react-icons/go";
 
-const BrandFilter = () => {
+const SizeFilter = () => {
   const dispatch = useAppDispatch();
-  const selectedBrands = useAppSelector(selectBrands);
+  const selectedSizes = useAppSelector(selectSizes);
   const [isExpanded, setIsExpanded] = useState(true);
 
-  const handleBrandChange = (brandId: string) => {
-    dispatch(toggleBrand(brandId));
+  const handleSizeChange = (sizeId: string) => {
+    dispatch(toggleSize(sizeId));
   };
 
   const toggleAccordion = () => {
@@ -40,16 +40,16 @@ const BrandFilter = () => {
           )
         }
       >
-        <span className="font-medium text-[13px]">NHÃN HÀNG</span>
+        <span className="font-medium text-[13px]">KÍCH CỠ</span>
       </AccordionSummary>
       <AccordionDetails>
         <div className="flex flex-col gap-6">
-          {BRANDS.map((brand) => (
+          {SIZES.map((size) => (
             <Checkbox
-              key={brand.id}
-              label={brand.label}
-              onClick={() => handleBrandChange(brand.id)}
-              isChecked={selectedBrands.includes(brand.id)}
+              key={size.id}
+              label={size.label}
+              onClick={() => handleSizeChange(size.id)}
+              isChecked={selectedSizes.includes(size.id)}
             />
           ))}
         </div>
@@ -58,4 +58,4 @@ const BrandFilter = () => {
   );
 };
 
-export default BrandFilter;
+export default SizeFilter;
