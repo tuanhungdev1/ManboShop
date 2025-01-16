@@ -1,9 +1,10 @@
+import { ProductFilter } from "@components/filters";
 import { Link } from "react-router-dom";
 
 const CollectionDetail = () => {
   //const { collectionName } = useParams();
   return (
-    <div className="text-[13px] px-4">
+    <div className="text-[13px] px-4 pb-10">
       {/* Breadscrumb */}
       <div className="flex items-center gap-5 py-6">
         <Link
@@ -61,6 +62,13 @@ const CollectionDetail = () => {
           <span className="opacity-60">927 sản phẩm</span>
           <div></div>
         </div>
+      </div>
+
+      <div className="mt-[30px] flex gap-10 select-none">
+        <div className="border-r">
+          <ProductFilter />
+        </div>
+        <div className="flex-1 bg-blue-300"></div>
       </div>
     </div>
   );
