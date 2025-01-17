@@ -1,15 +1,38 @@
 import { Checkbox } from "@components/checkbox";
-import { BRANDS } from "@constants/filters/filter";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "@redux/hooks";
-import { selectBrands, toggleBrand } from "@redux/slices/filterSlice";
 import { useState } from "react";
 import { GoDash, GoPlus } from "react-icons/go";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import BrandFilterSkeleton from "./BrandFilterSkeleton";
+import { useGetBrandsQuery } from "@services/brandApi";
+import { selectBrands, toggleBrand } from "@redux/slices/filterSlice";
 
 const BrandFilter = () => {
   const dispatch = useAppDispatch();
   const selectedBrands = useAppSelector(selectBrands);
   const [isExpanded, setIsExpanded] = useState(true);
+
+  const {
+    data: brandsResponse,
+    isLoading,
+    error,
+  } = useGetBrandsQuery({
+    pageSize: 100,
+    pageNumber: 1,
+    orderBy: "ASC",
+  });
+
+  if (isLoading) {
+    return <BrandFilterSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="p-4 text-red-500">
+        Có lỗi xảy ra khi tải dữ liệu thương hiệu
+      </div>
+    );
+  }
 
   const handleBrandChange = (brandId: string) => {
     dispatch(toggleBrand(brandId));
@@ -44,14 +67,15 @@ const BrandFilter = () => {
       </AccordionSummary>
       <AccordionDetails>
         <div className="flex flex-col gap-6">
-          {BRANDS.map((brand) => (
-            <Checkbox
-              key={brand.id}
-              label={brand.label}
-              onClick={() => handleBrandChange(brand.id)}
-              isChecked={selectedBrands.includes(brand.id)}
-            />
-          ))}
+          {brandsResponse?.data &&
+            brandsResponse?.data.map((brand) => (
+              <Checkbox
+                key={brand.id}
+                label={brand.name}
+                onClick={() => handleBrandChange(brand.id.toString())}
+                isChecked={selectedBrands.includes(brand.id.toString())}
+              />
+            ))}
         </div>
       </AccordionDetails>
     </Accordion>
