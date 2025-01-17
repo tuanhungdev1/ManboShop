@@ -11,7 +11,7 @@ const ProductFilter = () => {
       <div className="flex items-center justify-between px-[18px] pb-[10px]">
         <span className="text-[20px] font-bold block ">BỘ LỌC</span>
         <div
-          className="text-[20px] cursor-pointer py-4
+          className="text-[20px] cursor-pointer py-4 hidden lg:block
         "
         >
           <IoArrowBack />

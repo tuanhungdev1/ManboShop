@@ -1,12 +1,35 @@
+import { useState, useEffect } from "react";
 import { FilterResults, ProductFilter, ProductSort } from "@components/filters";
 import { Link } from "react-router-dom";
+import { IoMdClose } from "react-icons/io";
+import { FiFilter } from "react-icons/fi";
+import { useAppDispatch } from "@redux/hooks";
+import { resetFilters } from "@redux/slices/filterSlice";
 
 const CollectionDetail = () => {
-  //const { collectionName } = useParams();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const dispatch = useAppDispatch();
+
+  
+  useEffect(() => {
+    if (isFilterOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isFilterOpen]);
+
+  const toggleFilter = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
   return (
-    <div className="text-[13px] px-4 pb-10">
-      {/* Breadscrumb */}
-      <div className="flex items-center gap-5 py-6">
+    <div className="text-[13px] pb-10 px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex flex-col">
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-5 py-6 font-medium">
         <Link
           to={"/"}
           className="transition-all duration-200 opacity-60 hover:opacity-100"
@@ -17,8 +40,9 @@ const CollectionDetail = () => {
         <span>Áo</span>
       </div>
 
+      {/* Header Section */}
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex flex-col gap-1">
           <div className="flex items-center gap-6">
             <div>
               <svg
@@ -54,32 +78,103 @@ const CollectionDetail = () => {
                 </defs>
               </svg>
             </div>
-            <div className="font-bold text-[24px]">Áo</div>
+            <div className="font-bold text-[20px] sm:text-[24px]">Áo</div>
           </div>
-          <span>Bộ sưu tập mới 2025</span>
+          <span className="text-[13px] font-medium">Bộ sưu tập mới 2025</span>
         </div>
+
+        
         <div className="flex items-center gap-4 font-medium">
-          <div>
+          <div className="hidden lg:block">
             <ProductSort
               onSortChange={(sortId) => {
                 console.log("Selected sort:", sortId);
               }}
             />
           </div>
+         
+          <button
+            onClick={toggleFilter}
+            className="flex items-center gap-2 lg:hidden bg-gray-100 px-3 py-2 rounded-md"
+          >
+            <FiFilter className="text-lg" />
+            <span>Lọc</span>
+          </button>
         </div>
       </div>
 
+      {/* Mobile Sort - Show on md and below */}
+      <div className="lg:hidden mt-4">
+        <ProductSort
+          onSortChange={(sortId) => {
+            console.log("Selected sort:", sortId);
+          }}
+        />
+      </div>
+
+      {/* Main Content */}
       <div className="mt-[30px] flex gap-10 select-none">
-        <div className="border-r">
+        {/* Desktop Filter Sidebar - Hide on md and below */}
+        <div className="hidden lg:block border-r">
           <ProductFilter />
         </div>
 
+        {/* Products Grid */}
         <div className="flex flex-col flex-1">
           <div>
             <FilterResults />
           </div>
           <div>
             <div className="w-full bg-blue-200"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Filter Sidebar - Show on md and below */}
+      <div
+        className={`fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
+          isFilterOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
+        onClick={toggleFilter}
+      >
+        <div
+          className={`fixed top-0 right-0 h-full w-[85vw] md:w-[60vw] bg-white transform transition-transform duration-300 ${
+            isFilterOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Filter Sidebar Header */}
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-lg font-medium">Bộ lọc</h2>
+            <button
+              onClick={toggleFilter}
+              className="p-2 text-2xl"
+              aria-label="Close filter"
+            >
+              <IoMdClose />
+            </button>
+          </div>
+
+          {/* Filter Sidebar Content */}
+          <div className="filter-sidebar overflow-y-auto h-[calc(100%-60px)] p-4 pb-32">
+            <ProductFilter />
+          </div>
+
+          {/* Filter Actions */}
+          <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
+            <div className="flex gap-4">
+              <button className="flex-1 py-3 px-4 border rounded-md text-center"
+                onClick={() => dispatch(resetFilters())}
+              >
+                Đặt lại
+              </button>
+              <button 
+                className="flex-1 py-3 px-4 bg-black text-white rounded-md text-center"
+                onClick={toggleFilter}
+              >
+                Xem kết quả
+              </button>
+            </div>
           </div>
         </div>
       </div>

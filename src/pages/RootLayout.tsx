@@ -22,7 +22,7 @@ const RootLayout = () => {
         <Header />
       </div>
 
-      <div className="pt-[130px] px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex flex-col">
+      <div className="pt-[140px] pb-[100px]">
         <Suspense fallback={<LoadingPage />}>
           <Outlet />
         </Suspense>

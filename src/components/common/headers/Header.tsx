@@ -1,16 +1,19 @@
 import { Link } from "react-router-dom";
 import { ClothingMenu, ActionIcons } from "../menus";
 import { CgMenuRightAlt } from "react-icons/cg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGetCategoriesQuery } from "@services/categoryApi";
 import { IoIosArrowDown } from "react-icons/io";
 import { useAppDispatch } from "@redux/hooks";
 import { hideBackdrop, showBackdrop } from "@redux/slices/backdropSlice";
+import { IoMdClose } from "react-icons/io";
 
 const Header = () => {
   const dispatch = useAppDispatch();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [openAccordions, setOpenAccordions] = useState<number[]>([]);
+  const [mobileCategoryId, setMobileCategoryId] = useState<number | null>(null);
+
   const {
     data: categoriesResponse,
     isLoading,
@@ -20,6 +23,18 @@ const Header = () => {
     pageNumber: 1,
     orderBy: "ASC",
   });
+
+  // Prevent body scroll when sidebar is open
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isSidebarOpen]);
 
   if (isLoading) {
     return null;
@@ -39,33 +54,40 @@ const Header = () => {
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
+    if (!isSidebarOpen) {
+      setMobileCategoryId(null);
+    }
   };
 
   const toggleAccordion = (categoryId: number, e: React.MouseEvent) => {
-    e.preventDefault(); // Ngăn chặn link navigation khi click vào toggle
+    e.preventDefault();
     setOpenAccordions((prev) =>
       prev.includes(categoryId)
         ? prev.filter((id) => id !== categoryId)
         : [...prev, categoryId]
     );
   };
+
+  const toggleMobileCategory = (categoryId: number) => {
+    setMobileCategoryId(mobileCategoryId === categoryId ? null : categoryId);
+  };
+
   return (
     <>
+      {/* Main Header */}
       <div className="relative z-50 bg-white">
-        <div className="px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex flex-col">
-          <div className="relative flex items-center justify-between mt-[14px] h-10">
+        {/* Top Section */}
+        <div className="px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw]">
+          <div className="relative flex items-center justify-between h-16 sm:h-20">
+            {/* Desktop Menu */}
             <div className="hidden lg:block">
               <ClothingMenu />
             </div>
-            <div className="cursor-pointer lg:absolute lg:-translate-x-1/2 lg:-translate-y-1/2 lg:top-1/2 lg:left-1/2">
-              <Link to={"/"}>
-                <svg
-                  width="94"
-                  height="23"
-                  viewBox="0 0 94 23"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+
+            {/* Logo */}
+            <div className="cursor-pointer w-[80px] sm:w-[94px] lg:w-auto lg:absolute lg:left-1/2 lg:-translate-x-1/2">
+              <Link to="/">
+                <svg className="w-full h-auto" viewBox="0 0 94 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M7.73931 18.9287H4.13467L3.56113 22.3807H0.357666L4.36349 0.619159H7.51049L11.5163 22.3807H8.31285L7.73931 18.9287ZM7.19549 15.509L5.9355 7.70725L4.67551 15.509H7.19549Z"
                     fill="black"
@@ -101,135 +123,193 @@ const Header = () => {
                 </svg>
               </Link>
             </div>
-            <div className="flex items-center gap-3">
+
+            {/* Action Icons */}
+            <div className="flex items-center gap-2 sm:gap-4">
               <ActionIcons />
-              <div
-                className="text-[23px] cursor-pointer lg:hidden pr-[10px]"
+              <button
+                className="text-2xl lg:hidden p-2"
                 onClick={toggleSidebar}
+                aria-label="Toggle menu"
               >
                 <CgMenuRightAlt />
-              </div>
+              </button>
             </div>
           </div>
         </div>
-        <div className="flex relative items-center text-[14px] font-normal px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw]">
-          <div className="cursor-pointer py-[10px] pr-2">
-            <span className="inline-block font-bold animate-shake">
-              Giá mới
-            </span>
-          </div>
-          <div className="px-4 py-[10px]">
-            <span className="transition-all duration-200 cursor-pointer hover:font-bold">
-              Hàng mới
-            </span>
-          </div>
-          {rootCategories &&
-            rootCategories.map((category) => (
-              <div
-                key={category.id}
-                className="transition-all duration-500 px-4 py-[10px] cursor-pointer group"
-                onMouseEnter={() => {
-                  if (
-                    category.subCategories &&
-                    category.subCategories.length > 0
-                  ) {
-                    dispatch(showBackdrop({ opacity: 0.4, zIndex: 40 }));
-                  }
-                }}
-                onMouseLeave={() => {
-                  if (
-                    category.subCategories &&
-                    category.subCategories.length > 0
-                  ) {
-                    dispatch(hideBackdrop());
-                  }
-                }}
-              >
-                <span className="transition-all duration-500 group-hover:font-bold">
-                  {category.name}
+
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:block border-t border-gray-100">
+          <div className="px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw]">
+            <div className="flex items-center space-x-6">
+              <div className="py-4">
+                <span className="font-bold animate-shake">Giá mới</span>
+              </div>
+              <div className="py-4">
+                <span className="hover:font-bold transition-all duration-200">
+                  Hàng mới
                 </span>
+              </div>
+              {rootCategories?.map((category) => (
+                <div
+                  key={category.id}
+                  className="relative group py-4"
+                  onMouseEnter={() => {
+                    if (category.subCategories?.length) {
+                      dispatch(showBackdrop({ opacity: 0.4, zIndex: 40 }));
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    if (category.subCategories?.length) {
+                      dispatch(hideBackdrop());
+                    }
+                  }}
+                >
+                  <span className="hover:font-bold transition-all duration-200">
+                    {category.name}
+                  </span>
 
-                {category.subCategories &&
-                  category.subCategories?.length > 0 && (
-                    <>
-                      <div className="absolute left-0 z-50 flex invisible w-full transition-all bg-white shadow-md opacity-0 duration-400 top-full mt-14 group-hover:opacity-100 group-hover:visible group-hover:mt-0">
-                        <div className="flex-1">
-                          <ul className="grid grid-cols-4 py-4 px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw]">
-                            {category.subCategories.map((subCategory) => (
-                              <li
-                                key={subCategory.id}
-                                className="relative group/item"
+                  {/* Desktop Dropdown */}
+                  {category.subCategories && category.subCategories?.length > 0 && (
+                    <div className="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 left-0 w-screen bg-white shadow-lg -ml-[2vw] top-full">
+                      <div className="px-[2vw] py-6">
+                        <div className="grid grid-cols-4 gap-6">
+                          {category.subCategories.map((subCategory) => (
+                            <div key={subCategory.id}>
+                              <Link
+                                to={`/category/${subCategory.id}`}
+                                className="font-medium block mb-4 hover:font-bold"
                               >
-                                <div className="flex items-center justify-between">
-                                  <Link
-                                    to={`/category/${subCategory.id}`}
-                                    className="block py-3 transition-all duration-300 group-hover/item:font-bold"
-                                  >
-                                    {subCategory.name}
-                                  </Link>
-                                  {subCategory.subCategories &&
-                                    subCategory.subCategories.length > 0 && (
-                                      <button
-                                        onClick={(e) =>
-                                          toggleAccordion(subCategory.id, e)
-                                        }
-                                        className="p-4 text-[20px]"
-                                      >
-                                        <IoIosArrowDown
-                                          className={`transition-transform duration-300 ${
-                                            openAccordions.includes(
-                                              subCategory.id
-                                            )
-                                              ? "rotate-180"
-                                              : ""
-                                          }`}
-                                        />
-                                      </button>
-                                    )}
-                                </div>
-
-                                {subCategory.subCategories &&
-                                  subCategory.subCategories.length > 0 && (
-                                    <div
-                                      className={`
-                              overflow-hidden 
-                              transition-all 
-                              duration-300
-                              ${
-                                openAccordions.includes(subCategory.id)
-                                  ? "max-h-[500px] opacity-100 visible"
-                                  : "max-h-0 opacity-0 invisible"
-                              }
-                            `}
-                                    >
-                                      <ul className="py-2 pl-4 bg-white">
-                                        {subCategory.subCategories.map(
-                                          (item) => (
-                                            <li key={item.id} className="py-2">
-                                              <Link
-                                                to={`/category/${item.id}`}
-                                                className="block hover:font-bold"
-                                              >
-                                                {item.name}
-                                              </Link>
-                                            </li>
-                                          )
-                                        )}
-                                      </ul>
-                                    </div>
-                                  )}
-                              </li>
-                            ))}
-                          </ul>
+                                {subCategory.name}
+                              </Link>
+                              {subCategory.subCategories?.map((item) => (
+                                <Link
+                                  key={item.id}
+                                  to={`/category/${item.id}`}
+                                  className="block py-2 text-sm hover:font-bold"
+                                >
+                                  {item.name}
+                                </Link>
+                              ))}
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    </>
+                    </div>
                   )}
-              </div>
-            ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      {/* Mobile Sidebar */}
+      <div
+        className={`fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
+          isSidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
+        onClick={toggleSidebar}
+      >
+        <div
+          className={`fixed top-0 right-0 h-full w-[85vw] sm:w-[60vw] bg-white transform transition-transform duration-300 ${
+            isSidebarOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Sidebar Header */}
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-lg font-medium">Menu</h2>
+            <button
+              onClick={toggleSidebar}
+              className="p-2 text-2xl"
+              aria-label="Close menu"
+            >
+              <IoMdClose />
+            </button>
+          </div>
+
+          {/* Sidebar Content */}
+          <div className="overflow-y-auto h-[calc(100%-60px)]">
+            <div className="p-4">
+              <Link
+                to="/"
+                className="block py-3 border-b"
+                onClick={toggleSidebar}
+              >
+                Giá mới
+              </Link>
+              <Link
+                to="/"
+                className="block py-3 border-b"
+                onClick={toggleSidebar}
+              >
+                Hàng mới
+              </Link>
+
+              {/* Mobile Categories */}
+              {rootCategories?.map((category) => (
+                <div key={category.id} className="border-b">
+                  <div className="flex items-center justify-between py-3">
+                    <Link
+                      to={`/category/${category.id}`}
+                      onClick={toggleSidebar}
+                      className="flex-1"
+                    >
+                      {category.name}
+                    </Link>
+                    {category.subCategories && category.subCategories?.length > 0 && (
+                      <button
+                        onClick={() => toggleMobileCategory(category.id)}
+                        className="p-2"
+                      >
+                        <IoIosArrowDown
+                          className={`transition-transform duration-300 ${
+                            mobileCategoryId === category.id ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Mobile Subcategories */}
+                  {category.subCategories && category.subCategories?.length > 0 && (
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ${
+                        mobileCategoryId === category.id
+                          ? "max-h-[1000px] opacity-100"
+                          : "max-h-0 opacity-0"
+                      }`}
+                    >
+                      {category.subCategories.map((subCategory) => (
+                        <div key={subCategory.id} className="pl-4">
+                          <Link
+                            to={`/category/${subCategory.id}`}
+                            onClick={toggleSidebar}
+                            className="block py-2 text-sm"
+                          >
+                            {subCategory.name}
+                          </Link>
+                          {subCategory.subCategories?.map((item) => (
+                            <Link
+                              key={item.id}
+                              to={`/category/${item.id}`}
+                              onClick={toggleSidebar}
+                              className="block py-2 pl-4 text-sm text-gray-600"
+                            >
+                              {item.name}
+                            </Link>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-      {}
     </>
   );
 };
