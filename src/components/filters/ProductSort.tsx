@@ -41,7 +41,7 @@ const ProductSort = ({ totalProducts = 0, onSortChange }: ProductSortProps) => {
   };
 
   const handleSortSelect = (option: SortOption) => {
-    dispatch(setSortBy(option.id));
+    dispatch(setSortBy(option.label));
     onSortChange?.(option.id);
     handleClose();
   };

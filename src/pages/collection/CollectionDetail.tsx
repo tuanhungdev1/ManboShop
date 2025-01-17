@@ -1,4 +1,4 @@
-import { ProductFilter, ProductSort } from "@components/filters";
+import { FilterResults, ProductFilter, ProductSort } from "@components/filters";
 import { Link } from "react-router-dom";
 
 const CollectionDetail = () => {
@@ -73,7 +73,15 @@ const CollectionDetail = () => {
         <div className="border-r">
           <ProductFilter />
         </div>
-        <div className="flex-1 bg-blue-300"></div>
+
+        <div className="flex flex-col flex-1">
+          <div>
+            <FilterResults />
+          </div>
+          <div>
+            <div className="w-full bg-blue-200"></div>
+          </div>
+        </div>
       </div>
     </div>
   );

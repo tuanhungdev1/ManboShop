@@ -4,8 +4,11 @@ import { CgMenuRightAlt } from "react-icons/cg";
 import { useState } from "react";
 import { useGetCategoriesQuery } from "@services/categoryApi";
 import { IoIosArrowDown } from "react-icons/io";
+import { useAppDispatch } from "@redux/hooks";
+import { hideBackdrop, showBackdrop } from "@redux/slices/backdropSlice";
 
 const Header = () => {
+  const dispatch = useAppDispatch();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [openAccordions, setOpenAccordions] = useState<number[]>([]);
   const {
@@ -39,7 +42,7 @@ const Header = () => {
   };
 
   const toggleAccordion = (categoryId: number, e: React.MouseEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Ngăn chặn link navigation khi click vào toggle
     setOpenAccordions((prev) =>
       prev.includes(categoryId)
         ? prev.filter((id) => id !== categoryId)
@@ -48,7 +51,7 @@ const Header = () => {
   };
   return (
     <>
-      <div className="relative z-50">
+      <div className="relative z-50 bg-white">
         <div className="px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex flex-col">
           <div className="relative flex items-center justify-between mt-[14px] h-10">
             <div className="hidden lg:block">
@@ -101,7 +104,7 @@ const Header = () => {
             <div className="flex items-center gap-3">
               <ActionIcons />
               <div
-                className="text-[23px] cursor-pointer lg:hidden"
+                className="text-[23px] cursor-pointer lg:hidden pr-[10px]"
                 onClick={toggleSidebar}
               >
                 <CgMenuRightAlt />
@@ -109,9 +112,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div
-          className={`flex relative items-center text-[14px] font-normal px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw]`}
-        >
+        <div className="flex relative items-center text-[14px] font-normal px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw]">
           <div className="cursor-pointer py-[10px] pr-2">
             <span className="inline-block font-bold animate-shake">
               Giá mới
@@ -127,6 +128,22 @@ const Header = () => {
               <div
                 key={category.id}
                 className="transition-all duration-500 px-4 py-[10px] cursor-pointer group"
+                onMouseEnter={() => {
+                  if (
+                    category.subCategories &&
+                    category.subCategories.length > 0
+                  ) {
+                    dispatch(showBackdrop({ opacity: 0.4, zIndex: 40 }));
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (
+                    category.subCategories &&
+                    category.subCategories.length > 0
+                  ) {
+                    dispatch(hideBackdrop());
+                  }
+                }}
               >
                 <span className="transition-all duration-500 group-hover:font-bold">
                   {category.name}
@@ -135,8 +152,7 @@ const Header = () => {
                 {category.subCategories &&
                   category.subCategories?.length > 0 && (
                     <>
-                      <div className="fixed inset-0 invisible transition-all duration-300 bg-black opacity-0 -z-10 group-hover:opacity-40 group-hover:visible"></div>
-                      <div className="absolute left-0 z-50 flex invisible w-full transition-all bg-white opacity-0 duration-400 top-full mt-14 group-hover:opacity-100 group-hover:visible group-hover:mt-0">
+                      <div className="absolute left-0 z-50 flex invisible w-full transition-all bg-white shadow-md opacity-0 duration-400 top-full mt-14 group-hover:opacity-100 group-hover:visible group-hover:mt-0">
                         <div className="flex-1">
                           <ul className="grid grid-cols-4 py-4 px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw]">
                             {category.subCategories.map((subCategory) => (

@@ -1,10 +1,12 @@
 import { PrimaryButton } from "@components/buttons";
+import { AnnouncementMarquee } from "@components/common/menus";
 
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
     <div>
+      <AnnouncementMarquee />
       Home Page
       <div>
         <Link to={"/account/register"}>

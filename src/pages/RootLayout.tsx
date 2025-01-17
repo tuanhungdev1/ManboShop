@@ -1,7 +1,8 @@
 import ButtonBackToTop from "@components/buttons/ButtonBackToTop";
+import { Backdrop } from "@components/common/backdrop";
 import { Footer } from "@components/common/footers";
 import { Header, TopHeader } from "@components/common/headers";
-import { AnnouncementMarquee } from "@components/common/menus";
+
 import LoadingPage from "@components/loadings/LoadingPage";
 import { Alert, Snackbar } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
@@ -15,11 +16,13 @@ const RootLayout = () => {
   const { open, message, type } = useAppSelector((state) => state.snackbar);
 
   return (
-    <>
-      <TopHeader />
-      <Header />
-      <AnnouncementMarquee />
-      <div className="px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex flex-col">
+    <div>
+      <div className="fixed z-50 w-screen">
+        <TopHeader />
+        <Header />
+      </div>
+
+      <div className="pt-[130px] px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex flex-col">
         <Suspense fallback={<LoadingPage />}>
           <Outlet />
         </Suspense>
@@ -37,7 +40,8 @@ const RootLayout = () => {
           </Alert>
         </Snackbar>
       )}
-    </>
+      <Backdrop />
+    </div>
   );
 };
 

@@ -12,8 +12,8 @@ interface FilterState {
   sizes: string[];
   brands: string[];
   colors: string[];
-  priceRange: PriceRange;
-  sortBy: string;
+  priceRange: PriceRange | null;
+  sortBy: string | null;
 }
 
 const initialState: FilterState = {
@@ -21,11 +21,8 @@ const initialState: FilterState = {
   sizes: [],
   brands: [],
   colors: [],
-  priceRange: {
-    min: 100000,
-    max: 20000000,
-  },
-  sortBy: "featured",
+  priceRange: null,
+  sortBy: null,
 };
 
 const filterSlice = createSlice({
@@ -86,6 +83,35 @@ const filterSlice = createSlice({
       state.sortBy = action.payload;
     },
 
+    resetProductTypes: (state) => {
+      state.productTypes = [];
+    },
+
+    // Reset Sizes
+    resetSizes: (state) => {
+      state.sizes = [];
+    },
+
+    // Reset Brands
+    resetBrands: (state) => {
+      state.brands = [];
+    },
+
+    // Reset Colors
+    resetColors: (state) => {
+      state.colors = [];
+    },
+
+    // Reset Price Range
+    resetPriceRange: (state) => {
+      state.priceRange = null;
+    },
+
+    // Reset Sort By
+    resetSortBy: (state) => {
+      state.sortBy = null;
+    },
+
     // Reset all filters
     resetFilters: () => {
       return initialState;
@@ -102,6 +128,12 @@ export const {
   setPriceRange,
   setSortBy,
   resetFilters,
+  resetBrands,
+  resetColors,
+  resetPriceRange,
+  resetProductTypes,
+  resetSizes,
+  resetSortBy,
 } = filterSlice.actions;
 
 // Selectors

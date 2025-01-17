@@ -5,3 +5,5 @@ export { default as BrandFilter } from "./BrandFilter";
 export { default as ColorFilter } from "./ColorFilter";
 export { default as PriceRangeFilter } from "./PriceRangeFilter";
 export { default as ProductSort } from "./ProductSort";
+export { default as FilterResults } from "./FilterResults";
+export { default as FilterResultsTag } from "./FilterResultsTag";
