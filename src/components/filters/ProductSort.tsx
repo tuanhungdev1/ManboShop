@@ -48,9 +48,6 @@ const ProductSort = ({ totalProducts = 0, onSortChange }: ProductSortProps) => {
 
   return (
     <div className="flex items-center justify-between gap-4 py-4 select-none">
-      <span className="text-gray-600">
-        {totalProducts.toLocaleString("vi-VN")} sản phẩm
-      </span>
 
       <div className="">
         <Button

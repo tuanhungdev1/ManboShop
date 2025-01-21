@@ -1,7 +1,8 @@
 import ButtonBackToTop from "@components/buttons/ButtonBackToTop";
 import { Backdrop } from "@components/common/backdrop";
+import Features from "@components/common/features/Features";
 import { Footer } from "@components/common/footers";
-import { Header, TopHeader } from "@components/common/headers";
+import { Header } from "@components/common/headers";
 
 import LoadingPage from "@components/loadings/LoadingPage";
 import { Alert, Snackbar } from "@mui/material";
@@ -18,15 +19,15 @@ const RootLayout = () => {
   return (
     <div>
       <div className="fixed z-50 w-screen">
-        <TopHeader />
         <Header />
       </div>
 
-      <div className="pt-[140px] pb-[100px]">
+      <div className="pt-[100px] pb-[100px] container mx-auto px-4">
         <Suspense fallback={<LoadingPage />}>
           <Outlet />
         </Suspense>
       </div>
+      <Features />
       <Footer />
       <ButtonBackToTop />
       {message && (

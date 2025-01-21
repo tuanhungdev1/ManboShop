@@ -3,14 +3,27 @@ import { FilterResults, ProductFilter, ProductSort } from "@components/filters";
 import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { FiFilter } from "react-icons/fi";
+import { BsGrid3X3Gap, BsListUl } from "react-icons/bs";
 import { useAppDispatch } from "@redux/hooks";
 import { resetFilters } from "@redux/slices/filterSlice";
+import { ProductList } from "@components/products";
+import { Breadcrumbs } from "@mui/material";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { useWindowSize } from '@hooks/useWindowSize';
 
 const CollectionDetail = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const dispatch = useAppDispatch();
+  const { width } = useWindowSize();
 
-  
+  useEffect(() => {
+    if (width >= 1024) {
+      setIsFilterOpen(false);
+      document.body.style.overflow = 'unset';
+    }
+  }, [width]);
+
   useEffect(() => {
     if (isFilterOpen) {
       document.body.style.overflow = 'hidden';
@@ -27,125 +40,99 @@ const CollectionDetail = () => {
   };
 
   return (
-    <div className="text-[13px] pb-10 px-4 sm:px-[2vw] md:px-[4vw] lg:px-[5vw] xl:px-[6vw] flex flex-col">
+    <div className="container mx-auto py-6">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-5 py-6 font-medium">
-        <Link
-          to={"/"}
-          className="transition-all duration-200 opacity-60 hover:opacity-100"
+      <Breadcrumbs 
+        separator={<NavigateNextIcon fontSize="small" />}
+        aria-label="breadcrumb"
+        className="mb-8"
+      >
+        <Link 
+          to="/" 
+          className="text-gray-600 hover:text-primary-900 text-sm font-medium"
         >
-          <span>Trang chủ</span>
+          Shop
         </Link>
-        <span className="font-medium opacity-40">/</span>
-        <span>Áo</span>
-      </div>
-
-      {/* Header Section */}
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-6">
-            <div>
-              <svg
-                width="29"
-                height="29"
-                viewBox="0 0 29 29"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g clip-path="url(#clip0_5317_29923)">
-                  <path
-                    d="M14.4999 27.45C7.35901 27.45 1.5481 21.6408 1.5481 14.4999C1.5481 7.35905 7.3573 1.54985 14.4999 1.54985C21.6425 1.54985 27.45 7.35905 27.45 14.4999C27.45 21.6408 21.6408 27.45 14.4999 27.45ZM14.4999 2.84571C8.07344 2.84571 2.84396 8.07348 2.84396 14.4999C2.84396 20.9264 8.07344 26.1559 14.4999 26.1559C20.9263 26.1559 26.1541 20.9281 26.1541 14.5016C26.1541 8.07519 20.9263 2.84741 14.4999 2.84741V2.84571Z"
-                    fill="#110E11"
-                  ></path>
-                  <path
-                    d="M14.5 29C6.50488 29 0 22.4951 0 14.5C0 6.50488 6.50488 0 14.5 0C22.4951 0 29 6.50488 29 14.5C29 22.4951 22.4951 29 14.5 29ZM14.5 0.618944C6.8459 0.618944 0.618944 6.8459 0.618944 14.5C0.618944 22.1541 6.8459 28.3811 14.5 28.3811C22.1541 28.3811 28.3811 22.1541 28.3811 14.5C28.3811 6.8459 22.1541 0.618944 14.5 0.618944Z"
-                    fill="#110E11"
-                  ></path>
-                  <path
-                    d="M22.0773 14.263C21.9579 14.3977 21.9579 14.6006 22.0773 14.7353L23.8011 16.6842C23.9699 16.8752 23.8898 17.177 23.6477 17.2588L21.1821 18.0841C21.0116 18.1421 20.9093 18.316 20.9451 18.4933L21.4635 21.0424C21.5146 21.2931 21.293 21.513 21.0423 21.4636L18.4932 20.9452C18.3176 20.9094 18.142 21.01 18.084 21.1822L17.2587 23.6478C17.1769 23.8899 16.8751 23.97 16.6841 23.8012L14.7352 22.0774C14.6005 21.958 14.3976 21.958 14.2629 22.0774L12.3157 23.8012C12.1247 23.97 11.8229 23.8899 11.7411 23.6478L10.9158 21.1822C10.8579 21.0117 10.684 20.9094 10.5066 20.9452L7.95753 21.4636C7.70688 21.5147 7.48693 21.2931 7.53637 21.0424L8.05472 18.4933C8.09052 18.3177 7.98992 18.1421 7.81771 18.0841L5.35217 17.2588C5.11004 17.177 5.02991 16.8752 5.19871 16.6842L6.92254 14.7353C7.0419 14.6006 7.0419 14.3977 6.92254 14.263L5.19871 12.3141C5.02991 12.1231 5.11004 11.8213 5.35217 11.7395L7.81771 10.9142C7.98822 10.8563 8.09052 10.6823 8.05472 10.505L7.53637 7.95592C7.48522 7.70527 7.70688 7.48532 7.95753 7.53477L10.5066 8.05311C10.6822 8.08892 10.8579 7.98832 10.9158 7.8161L11.7411 5.35056C11.8229 5.10844 12.1247 5.0283 12.3157 5.1971L14.2629 6.92093C14.3976 7.04029 14.6005 7.04029 14.7352 6.92093L16.6841 5.1971C16.8751 5.0283 17.1769 5.10844 17.2587 5.35056L18.084 7.8161C18.142 7.98661 18.3159 8.08892 18.4932 8.05311L21.0423 7.53477C21.293 7.48361 21.5129 7.70527 21.4635 7.95592L20.9451 10.505C20.9093 10.6806 21.0099 10.8563 21.1821 10.9142L23.6477 11.7395C23.8898 11.8213 23.9699 12.1231 23.8011 12.3141L22.0773 14.263Z"
-                    fill="#110E11"
-                  ></path>
-                </g>
-                <defs>
-                  <clipPath id="clip0_5317_29923">
-                    <rect
-                      width="29"
-                      height="29"
-                      fill="white"
-                      transform="matrix(1 0 0 -1 0 29)"
-                    ></rect>
-                  </clipPath>
-                </defs>
-              </svg>
-            </div>
-            <div className="font-bold text-[20px] sm:text-[24px]">Áo</div>
-          </div>
-          <span className="text-[13px] font-medium">Bộ sưu tập mới 2025</span>
-        </div>
-
-        
-        <div className="flex items-center gap-4 font-medium">
-          <div className="hidden lg:block">
-            <ProductSort
-              onSortChange={(sortId) => {
-                console.log("Selected sort:", sortId);
-              }}
-            />
-          </div>
-         
-          <button
-            onClick={toggleFilter}
-            className="flex items-center gap-2 lg:hidden bg-gray-100 px-3 py-2 rounded-md"
-          >
-            <FiFilter className="text-lg" />
-            <span>Lọc</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Sort - Show on md and below */}
-      <div className="lg:hidden mt-4">
-        <ProductSort
-          onSortChange={(sortId) => {
-            console.log("Selected sort:", sortId);
-          }}
-        />
-      </div>
+        <span 
+          className="text-sm text-gray-600 font-medium"
+        >
+          All Products
+        </span>
+      </Breadcrumbs>
 
       {/* Main Content */}
-      <div className="mt-[30px] flex gap-10 select-none">
-        {/* Desktop Filter Sidebar - Hide on md and below */}
-        <div className="hidden lg:block border-r">
+      <div className="lg:grid lg:grid-cols-[280px,1fr] lg:gap-8 mt-10">
+        {/* Desktop Filter Sidebar */}
+        <div className="hidden lg:block">
           <ProductFilter />
         </div>
 
-        {/* Products Grid */}
-        <div className="flex flex-col flex-1">
-          <div>
+        {/* Products Section */}
+        <div>
+          {/* Header Controls */}
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <div className="hidden lg:flex items-center gap-2">
+                <button 
+                  onClick={() => setViewMode('grid')}
+                  className={`p-1.5 ${viewMode === 'grid' ? 'text-primary-900' : 'text-gray-400'}`}
+                >
+                  <BsGrid3X3Gap className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={() => setViewMode('list')}
+                  className={`p-1.5 ${viewMode === 'list' ? 'text-primary-900' : 'text-gray-400'}`}
+                >
+                  <BsListUl className="w-5 h-5" />
+                </button>
+              </div>
+              <span className="text-sm text-gray-500">
+                Showing 1–16 of 72 results
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <ProductSort
+                onSortChange={(sortId) => {
+                  console.log("Selected sort:", sortId);
+                }}
+              />
+              <button
+                onClick={toggleFilter}
+                className="lg:hidden flex items-center gap-2 px-4 py-2 bg-gray-100 rounded"
+              >
+                <FiFilter className="text-lg" />
+                <span>Filter</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Filter Results */}
+          <div className="mb-6">
             <FilterResults />
           </div>
-          <div>
-            <div className="w-full bg-blue-200"></div>
-          </div>
+
+          {/* Products Grid */}
+          <ProductList viewMode={viewMode} />
         </div>
       </div>
 
-      {/* Mobile Filter Sidebar - Show on md and below */}
+      {/* Mobile Filter Sidebar */}
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
+        className={`fixed lg:hidden inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
           isFilterOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         onClick={toggleFilter}
       >
         <div
-          className={`fixed top-0 right-0 h-full w-[85vw] md:w-[60vw] bg-white transform transition-transform duration-300 ${
+          className={`fixed top-0 right-0 h-full w-[85vw] md:w-[60vw] bg-white transform transition-transform duration-300 flex flex-col ${
             isFilterOpen ? "translate-x-0" : "translate-x-full"
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Filter Sidebar Header */}
-          <div className="flex justify-between items-center p-4 border-b">
-            <h2 className="text-lg font-medium">Bộ lọc</h2>
+          {/* Filter Header */}
+          <div className="flex-none flex justify-between items-center p-4 border-b">
+            <h2 className="text-lg font-medium">Filters</h2>
             <button
               onClick={toggleFilter}
               className="p-2 text-2xl"
@@ -155,24 +142,25 @@ const CollectionDetail = () => {
             </button>
           </div>
 
-          {/* Filter Sidebar Content */}
-          <div className="filter-sidebar overflow-y-auto h-[calc(100%-60px)] p-4 pb-32">
+          {/* Filter Content */}
+          <div className="flex-1 overflow-y-auto overflow-x-hidden p-4">
             <ProductFilter />
           </div>
 
           {/* Filter Actions */}
-          <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
+          <div className="flex-none p-4 bg-white border-t">
             <div className="flex gap-4">
-              <button className="flex-1 py-3 px-4 border rounded-md text-center"
+              <button 
+                className="flex-1 py-3 px-4 border rounded-md text-center"
                 onClick={() => dispatch(resetFilters())}
               >
-                Đặt lại
+                Reset
               </button>
               <button 
                 className="flex-1 py-3 px-4 bg-black text-white rounded-md text-center"
                 onClick={toggleFilter}
               >
-                Xem kết quả
+                Show Results
               </button>
             </div>
           </div>

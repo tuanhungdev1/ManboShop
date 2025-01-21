@@ -1,10 +1,10 @@
-import { Checkbox } from "@components/checkbox";
-import { SIZES } from "@constants/filters/filter";
+import { useState } from "react";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import { FiChevronDown } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { selectSizes, toggleSize } from "@redux/slices/filterSlice";
-import { useState } from "react";
-import { GoDash, GoPlus } from "react-icons/go";
+import { SIZES } from "@constants/filters/filter";
+import Checkbox from "@components/checkbox/Checkbox";
 
 const SizeFilter = () => {
   const dispatch = useAppDispatch();
@@ -15,42 +15,52 @@ const SizeFilter = () => {
     dispatch(toggleSize(sizeId));
   };
 
-  const toggleAccordion = () => {
-    setIsExpanded((prev) => !prev);
-  };
-
   return (
     <Accordion
       expanded={isExpanded}
-      onChange={toggleAccordion}
-      defaultExpanded={true}
+      onChange={() => setIsExpanded(!isExpanded)}
+      elevation={0}
       sx={{
-        boxShadow: "none",
-        borderTop: isExpanded ? "none" : "0px solid #ccc",
-        pt: isExpanded ? "0px" : "10px",
-        pb: isExpanded ? "0px" : "10px",
+        '&.MuiAccordion-root': {
+          borderRadius: 0,
+          borderBottom: '1px solid #eee',
+        },
+        '&.MuiAccordion-root:before': {
+          display: 'none',
+        },
       }}
     >
       <AccordionSummary
-        expandIcon={
-          isExpanded ? (
-            <GoDash size={20} color="#000" />
-          ) : (
-            <GoPlus size={20} color="#000" />
-          )
-        }
+        expandIcon={<FiChevronDown className="text-[20px] text-black"/>}
+        sx={{
+          padding: '16px 0',
+          '& .MuiAccordionSummary-content': {
+            margin: 0,
+          },
+          '& .MuiAccordionSummary-expandIconWrapper': {
+            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s',
+          },
+        }}
       >
-        <span className="font-medium text-[13px]">KÍCH CỠ</span>
+        <span className="font-bold text-[17px]">Size</span>
       </AccordionSummary>
-      <AccordionDetails>
-        <div className="flex flex-col gap-6">
+      <AccordionDetails sx={{ padding: '0 0 16px 0' }}>
+        <div className="flex flex-col gap-4">
           {SIZES.map((size) => (
-            <Checkbox
-              key={size.id}
-              label={size.label}
-              onClick={() => handleSizeChange(size.id)}
-              isChecked={selectedSizes.includes(size.id)}
-            />
+            <div key={size.id} className="flex items-center justify-between">
+              <Checkbox
+                label={size.label}
+                isChecked={selectedSizes.includes(size.id)}
+                onClick={() => handleSizeChange(size.id)}
+                classname={selectedSizes.includes(size.id) ? 'font-medium' : ''}
+              />
+              {/* {size.count && (
+                <span className="text-gray-500 text-[13px]">
+                  ({size.count})
+                </span>
+              )} */}
+            </div>
           ))}
         </div>
       </AccordionDetails>

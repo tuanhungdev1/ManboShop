@@ -1,0 +1,69 @@
+/**
+ * Format a number to Vietnamese currency format
+ * @param price - The price to format
+ * @param currency - The currency symbol (default: '₫')
+ * @returns Formatted price string
+ * 
+ * Example:
+ * formatPrice(1000000) => "1.000.000₫"
+ * formatPrice(1500000, 'VNĐ') => "1.500.000 VNĐ"
+ */
+export const formatPrice = (price: number, currency: string = '₫'): string => {
+  try {
+    // Convert to number if input is string
+    const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+    
+    // Check if price is valid number
+    if (isNaN(numericPrice)) {
+      return '0₫';
+    }
+
+    // Format number with dots as thousand separators
+    const formattedPrice = numericPrice.toLocaleString('vi-VN', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    });
+
+    // Add currency symbol with space if it's more than 1 character
+    return currency.length > 1 
+      ? `${formattedPrice} ${currency}`
+      : `${formattedPrice}${currency}`;
+    
+  } catch (error) {
+    console.error('Error formatting price:', error);
+    return '0₫';
+  }
+};
+
+/**
+ * Format a price range
+ * @param minPrice - Minimum price
+ * @param maxPrice - Maximum price
+ * @returns Formatted price range string
+ * 
+ * Example:
+ * formatPriceRange(100000, 200000) => "100.000₫ - 200.000₫"
+ */
+export const formatPriceRange = (minPrice: number, maxPrice: number): string => {
+  return `${formatPrice(minPrice)} - ${formatPrice(maxPrice)}`;
+};
+
+/**
+ * Remove currency symbol and formatting from price string
+ * @param formattedPrice - The formatted price string
+ * @returns number
+ * 
+ * Example:
+ * unformatPrice("1.000.000₫") => 1000000
+ */
+export const unformatPrice = (formattedPrice: string): number => {
+  try {
+    // Remove currency symbol and all non-numeric characters except decimal point
+    const numericString = formattedPrice.replace(/[^\d,.-]/g, '');
+    // Convert to number
+    return parseFloat(numericString.replace(/\./g, ''));
+  } catch (error) {
+    console.error('Error unformatting price:', error);
+    return 0;
+  }
+}; 

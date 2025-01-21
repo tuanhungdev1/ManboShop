@@ -27,10 +27,12 @@ export interface ApiResponse<T> {
   pagination?: MetaData;
 }
 
-export interface Brand {
-  id: number;
-  name: string;
-  imageUrl?: string;
-  createdAt: Date;
-  updatedAt?: Date;
+
+
+export interface RequestParameters {
+  pageNumber?: number; // Mặc định là 1
+  pageSize?: number;   // Mặc định là 10, không vượt quá 50
+  searchTerm?: string;
+  orderBy?: string;
+  orderKey?: string;
 }

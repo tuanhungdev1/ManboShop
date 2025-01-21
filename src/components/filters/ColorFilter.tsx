@@ -1,20 +1,15 @@
-import { ColorBox } from "@components/box";
-import { COLORS } from "@constants/filters/filter";
+import { useState } from "react";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import { FiChevronDown } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { selectColors, toggleColor } from "@redux/slices/filterSlice";
-import { useState } from "react";
-import { GoDash, GoPlus } from "react-icons/go";
-
+import { COLORS } from "@constants/filters/filter";
+import { ColorBox } from "@components/box";
 
 const ColorFilter = () => {
   const dispatch = useAppDispatch();
   const selectedColors = useAppSelector(selectColors);
   const [isExpanded, setIsExpanded] = useState(true);
-
-  const toggleAccordion = () => {
-    setIsExpanded((prev) => !prev);
-  };
 
   const handleColorChange = (colorId: string) => {
     dispatch(toggleColor(colorId));
@@ -23,30 +18,47 @@ const ColorFilter = () => {
   return (
     <Accordion
       expanded={isExpanded}
-      onChange={toggleAccordion}
-      defaultExpanded={true}
+      onChange={() => setIsExpanded(!isExpanded)}
+      elevation={0}
       sx={{
-        boxShadow: "none",
-        borderTop: "none",
-        pt: "10px",
-        pb: "10px",
+        '&.MuiAccordion-root': {
+          borderRadius: 0,
+          borderBottom: '1px solid #eee',
+        },
+        '&.MuiAccordion-root:before': {
+          display: 'none',
+        },
       }}
     >
       <AccordionSummary
-        expandIcon={isExpanded ? <GoDash size={20} color="#000" /> : <GoPlus size={20} color="#000" />}
+        expandIcon={<FiChevronDown className="text-[20px] text-black"/>}
+        sx={{
+          padding: '16px 0',
+          '& .MuiAccordionSummary-content': {
+            margin: 0,
+          },
+          '& .MuiAccordionSummary-expandIconWrapper': {
+            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s',
+          },
+        }}
       >
-        <span className="font-medium text-[13px]">MÀU SẮC</span>
+        <span className="font-bold text-[18px]">Colors</span>
       </AccordionSummary>
-      <AccordionDetails>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
+      <AccordionDetails sx={{ padding: '0 0 16px 0' }}>
+        <div className="flex flex-wrap gap-3">
           {COLORS.map((color) => (
-            <ColorBox
-              key={color.id}
-              color={color}
-              isSelected={selectedColors.includes(color.id)}
-              onSelectedColorBox={() => handleColorChange(color.id)}
-              className="w-[24px] h-[24px]"
-            />
+            <div key={color.id} className="flex flex-col items-center gap-2">
+              <ColorBox
+                color={color}
+                isSelected={selectedColors.includes(color.id)}
+                onSelectedColorBox={() => handleColorChange(color.id)}
+                className="w-[24px] h-[24px] cursor-pointer hover:scale-110 transition-transform"
+              />
+              {/* <span className="text-[13px] text-gray-500">
+                {color.label}
+              </span> */}
+            </div>
           ))}
         </div>
       </AccordionDetails>

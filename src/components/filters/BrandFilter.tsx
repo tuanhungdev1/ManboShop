@@ -1,11 +1,11 @@
-import { Checkbox } from "@components/checkbox";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { useState } from "react";
-import { GoDash, GoPlus } from "react-icons/go";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import { FiChevronDown } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { selectBrands, toggleBrand } from "@redux/slices/filterSlice";
 import BrandFilterSkeleton from "./BrandFilterSkeleton";
 import { useGetBrandsQuery } from "@services/brandApi";
-import { selectBrands, toggleBrand } from "@redux/slices/filterSlice";
+import Checkbox from "@components/checkbox/Checkbox";
 
 const BrandFilter = () => {
   const dispatch = useAppDispatch();
@@ -38,44 +38,54 @@ const BrandFilter = () => {
     dispatch(toggleBrand(brandId));
   };
 
-  const toggleAccordion = () => {
-    setIsExpanded((prev) => !prev);
-  };
-
   return (
     <Accordion
       expanded={isExpanded}
-      onChange={toggleAccordion}
-      defaultExpanded={true}
+      onChange={() => setIsExpanded(!isExpanded)}
+      elevation={0}
       sx={{
-        boxShadow: "none",
-        borderTop: isExpanded ? "none" : "0px solid #ccc",
-        pt: isExpanded ? "0px" : "10px",
-        pb: isExpanded ? "0px" : "10px",
+        '&.MuiAccordion-root': {
+          borderRadius: 0,
+          borderBottom: '1px solid #eee',
+        },
+        '&.MuiAccordion-root:before': {
+          display: 'none',
+        },
       }}
+      className="bg-red-300"
     >
       <AccordionSummary
-        expandIcon={
-          isExpanded ? (
-            <GoDash size={20} color="#000" />
-          ) : (
-            <GoPlus size={20} color="#000" />
-          )
-        }
+        expandIcon={<FiChevronDown className="text-[20px] text-black"/>}
+        sx={{
+          padding: '16px 0',
+          '& .MuiAccordionSummary-content': {
+            margin: 0,
+          },
+          '& .MuiAccordionSummary-expandIconWrapper': {
+            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s',
+          },
+        }}
       >
-        <span className="font-medium text-[13px]">NHÃN HÀNG</span>
+        <span className="font-bold text-[17px]">Product Brands</span>
       </AccordionSummary>
-      <AccordionDetails>
-        <div className="flex flex-col gap-6">
-          {brandsResponse?.data &&
-            brandsResponse?.data.map((brand) => (
+      <AccordionDetails sx={{ padding: '0 0 16px 0' }}>
+        <div className="flex flex-col gap-4">
+          {brandsResponse?.data && brandsResponse?.data.map((brand) => (
+            <div className="flex items-center justify-between">
               <Checkbox
-                key={brand.id}
                 label={brand.name}
-                onClick={() => handleBrandChange(brand.id.toString())}
                 isChecked={selectedBrands.includes(brand.id.toString())}
+                onClick={() => handleBrandChange(brand.id.toString())}
+                classname={selectedBrands.includes(brand.id.toString()) ? 'font-medium' : ''}
               />
-            ))}
+              {/* {brand.productCount && (
+                <span className="text-gray-500 text-[13px]">
+                  ({brand.productCount})
+                </span>
+              )} */}
+            </div>
+          ))}
         </div>
       </AccordionDetails>
     </Accordion>

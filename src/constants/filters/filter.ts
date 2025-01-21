@@ -10,34 +10,29 @@ export interface Color {
   code: string;
 }
 
-export const BRANDS = [
-  { id: "aristino", label: "Aristino" },
-  { id: "aristino-golf", label: "Aristino Golf" },
-  { id: "aristino-business", label: "Aristino Business" },
-];
 
 export const COLORS: Color[] = [
   { id: "trắng", label: "Trắng", code: "#FFFFFF" },
   { id: "đen", label: "Đen", code: "#000000" },
   { id: "đỏ", label: "Đỏ", code: "#FF4D4F" },
-  { id: "xanh-dương", label: "Xanh dương", code: "#2196F3" },
-  { id: "xanh-lá", label: "Xanh lá", code: "#1B5E20" },
+  { id: "xanh dương", label: "Xanh dương", code: "#2196F3" },
+  { id: "xanh lá", label: "Xanh lá", code: "#1B5E20" },
   { id: "vàng", label: "Vàng", code: "#FFEB3B" },
   { id: "nâu", label: "Nâu", code: "#795548" },
-  { id: "xanh-bạc-hà", label: "Xanh bạc hà", code: "#E0F2F1" },
+  { id: "xanh bạc hà", label: "Xanh bạc hà", code: "#E0F2F1" },
   { id: "be", label: "Be", code: "#E1C699" },
-  { id: "xám-đậm", label: "Xám đậm", code: "#424242" },
-  { id: "xám-nhạt", label: "Xám nhạt", code: "#9E9E9E" },
+  { id: "xám đậm", label: "Xám đậm", code: "#424242" },
+  { id: "xám nhạt", label: "Xám nhạt", code: "#9E9E9E" },
   { id: "hồng", label: "Hồng", code: "#FFC0CB" },
   { id: "tím", label: "Tím", code: "#9C27B0" },
   { id: "cam", label: "Cam", code: "#FF9800" },
-  { id: "xanh-teal", label: "Xanh teal", code: "#009688" },
-  { id: "xanh-cyan", label: "Xanh cyan", code: "#00BCD4" },
-  { id: "xanh-navy", label: "Xanh navy", code: "#001F54" },
-  { id: "xanh-ô-liu", label: "Xanh ô-liu", code: "#808000" },
-  { id: "vàng-gold", label: "Vàng gold", code: "#FFD700" },
+  { id: "xanh teal", label: "Xanh teal", code: "#009688" },
+  { id: "xanh cyan", label: "Xanh cyan", code: "#00BCD4" },
+  { id: "xanh navy", label: "Xanh navy", code: "#001F54" },
+  { id: "xanh ô liu", label: "Xanh ô-liu", code: "#808000" },
+  { id: "vàng gold", label: "Vàng gold", code: "#FFD700" },
   { id: "bạc", label: "Bạc", code: "#C0C0C0" },
-  { id: "cam-đào", label: "Cam đào", code: "#FFDAB9" },
+  { id: "cam đào", label: "Cam đào", code: "#FFDAB9" },
 ];
 
 

@@ -7,7 +7,7 @@ interface PriceRange {
   max: number;
 }
 
-interface FilterState {
+export interface FilterState {
   productTypes: string[];
   sizes: string[];
   brands: string[];
