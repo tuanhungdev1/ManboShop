@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import CollectionLayout from "@pages/collection/CollectionLayout";
 import CollectionDetail from "@pages/collection/CollectionDetail";
+import ProductDetail from "@pages/products/ProductDetail";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "/product/:id",
+        element: <ProductDetail/>
       },
       {
         element: <CollectionLayout />,

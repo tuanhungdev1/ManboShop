@@ -22,7 +22,7 @@ const PriceRangeFilter = () => {
   };
 
   const handlePriceChangeCommitted = (
-    event: Event | React.SyntheticEvent<Element, Event>,
+    _event: Event | React.SyntheticEvent<Element, Event>,
     newValue: number | number[]
   ) => {
     const [min, max] = newValue as [number, number];

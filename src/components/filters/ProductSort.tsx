@@ -23,7 +23,7 @@ interface ProductSortProps {
   onSortChange?: (sortId: string) => void;
 }
 
-const ProductSort = ({ totalProducts = 0, onSortChange }: ProductSortProps) => {
+const ProductSort = ({ onSortChange }: ProductSortProps) => {
   const dispatch = useAppDispatch();
   const currentSort = useAppSelector(selectSortBy);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
