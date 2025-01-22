@@ -1,5 +1,6 @@
 import { Product } from "@types-d/product";
 import { formatPrice } from "@utils/format";
+import { isNewProduct, slugify } from "@utils/utils";
 import { Link } from "react-router-dom";
 
 interface ProductCardProps {
@@ -9,19 +10,11 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, viewMode }: ProductCardProps) => {
 
-  const isNewProduct = (product: Product) => {
-    const currentDate = new Date().getTime(); // Get timestamp
-    if (product.createdAt) {
-      const createdDate = new Date(product.createdAt).getTime();
-      const daysDifference = (currentDate - createdDate) / (1000 * 60 * 60 * 24);
-      return daysDifference <= 30;
-    }
-    return false;
-  };
+
 
   return (
     <Link 
-      to={`/product/${product.id}`} 
+      to={`/product/${slugify(product.name)}`} 
       className={`group ${viewMode === 'list' ? 'flex gap-6' : 'block'}`}
     >
       <div className={`relative select-none overflow-hidden ${

@@ -25,7 +25,10 @@ export const productApi = baseApi.injectEndpoints({
     getProduct: builder.query<ApiResponse<Product>, number>({
       query: (id) => `Products/${id}`,
     }),
-
+// Get product by SLUG NAME
+  getProductBySlugName: builder.query<ApiResponse<Product>, string>({
+  query: (slug) => `Products/bySlug/${slug}`,
+}),
     // Get products by category
     getProductsByCategory: builder.query<ApiResponse<Product[]>, number>({
       query: (categoryId) => `Products/category/${categoryId}`,
@@ -86,6 +89,7 @@ export const productApi = baseApi.injectEndpoints({
 export const {
   useGetProductsQuery,
   useGetProductQuery,
+  useGetProductBySlugNameQuery,
   useGetProductsByCategoryQuery,
   useGetProductsByBrandQuery,
   useCreateProductMutation,

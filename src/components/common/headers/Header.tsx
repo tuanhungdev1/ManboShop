@@ -28,7 +28,7 @@ const Header = () => {
               <Link to="/" className="text-sm font-medium hover:text-gray-600">
                 Home
               </Link>
-              <div className="static group py-6" 
+              <Link to={"/collection"} className="static group py-6" 
                 onMouseEnter={() => dispatch(showBackdrop({
                   isVisible: true,
                 }))}
@@ -45,7 +45,7 @@ const Header = () => {
                   </svg>
                 </button>
                 <MegaMenu />
-              </div>
+              </Link>
               <Link to="/our-story" className="text-sm font-medium hover:text-gray-600">
                 Our Story
               </Link>

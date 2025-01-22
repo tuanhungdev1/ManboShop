@@ -15,6 +15,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   return (
     <Breadcrumbs aria-label="breadcrumb" sx={{
         fontWeight: "500",
+        color: "#000"
         
     }}>
       {items.map((item, index) => (

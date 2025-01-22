@@ -48,6 +48,7 @@ export interface ProductVariant {
 export interface VariantValue {
   id: number;
   value: string;
+  variantId: number;
   imageUrl?: string;
   createdAt: string;
   updatedAt?: string;
