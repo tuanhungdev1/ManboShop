@@ -12,7 +12,7 @@ const HomePage = () => {
           <PrimaryButton variant="contained">Register</PrimaryButton>
         </Link>
         <br />
-        <Link to={"/collection/san-pham-moi"}>
+        <Link to={"/collection"}>
           <PrimaryButton variant="contained">Collection</PrimaryButton>
         </Link>
       </div>
