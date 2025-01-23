@@ -5,7 +5,7 @@ import { FaCcMastercard } from "react-icons/fa";
 
 const PaymentListFooter = () => {
   return (
-    <div className="mt-12">
+    <div className="mt-8">
       <span className="uppercase text-[14px] font-medium cursor-pointer">
         Thanh toán
       </span>

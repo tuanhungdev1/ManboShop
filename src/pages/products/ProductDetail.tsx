@@ -1,5 +1,8 @@
 import { useParams } from "react-router-dom";
-import { useGetProductBySlugNameQuery } from "@services/productApi";
+import {
+  useGetProductBySlugNameQuery,
+  useGetProductsQuery,
+} from "@services/productApi";
 import { formatPrice } from "@utils/format";
 import ProductDetailSkeleton from "@components/products/ProductDetailSkeleton";
 import Breadcrumb from "@components/breadcrumb/Breadcrumb";
@@ -9,6 +12,8 @@ import { ProductVariantValue, VariantValue } from "@types-d/product";
 import { CiHeart } from "react-icons/ci";
 import { FiMinus } from "react-icons/fi";
 import { GoPlus } from "react-icons/go";
+import ProductSlider from "@components/products/ProductSlider";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -29,6 +34,15 @@ const ProductDetail = () => {
     error,
   } = useGetProductBySlugNameQuery(slug ?? "");
 
+  const { data: relatedProductsData } = useGetProductsQuery(
+    product?.data?.category?.id
+      ? {
+          categoryId: product.data.category.id,
+          pageNumber: 1,
+          pageSize: 10,
+        }
+      : skipToken
+  );
   const productVariants =
     product && product.data?.variants && product.data.variants.length > 0
       ? [...product.data.variants].sort((a, b) => a.name.localeCompare(b.name))
@@ -276,10 +290,10 @@ const ProductDetail = () => {
             </div>
 
             {/* Add to Cart Button */}
-            <div className="flex items-center mt-6 ">
+            <div className="flex items-center mt-6">
               <div className="flex items-center h-full overflow-hidden rounded-md border-black border-[2px]">
                 <button
-                  className="px-4 py-4 items-center flex justify-center hover:bg-slate-100 transition-all duration-300"
+                  className=" px-4 py-4 items-center flex justify-center hover:bg-slate-100 transition-all duration-300"
                   onClick={() => handleQuantityChange(-1)}
                 >
                   <FiMinus />
@@ -324,6 +338,16 @@ const ProductDetail = () => {
               ))}
             </ul>
           </div>
+        </div>
+
+        <div className="mt-20">
+          {relatedProductsData && (
+            <ProductSlider
+              title="Related Products"
+              products={relatedProductsData.data ?? []}
+              viewMode="grid"
+            />
+          )}
         </div>
       </div>
     )

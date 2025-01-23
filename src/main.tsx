@@ -14,6 +14,9 @@ import { store } from "@redux/store";
 import CollectionLayout from "@pages/collection/CollectionLayout";
 import CollectionDetail from "@pages/collection/CollectionDetail";
 import ProductDetail from "@pages/products/ProductDetail";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import ProductSearchPage from "@pages/search/ProductSearchPage";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -25,9 +28,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
       },
+
       {
         path: "/product/:slug",
-        element: <ProductDetail/>
+        element: <ProductDetail />,
       },
       {
         element: <CollectionLayout />,
