@@ -16,7 +16,6 @@ import CollectionDetail from "@pages/collection/CollectionDetail";
 import ProductDetail from "@pages/products/ProductDetail";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ProductSearchPage from "@pages/search/ProductSearchPage";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
