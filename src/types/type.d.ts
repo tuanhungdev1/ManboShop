@@ -27,11 +27,9 @@ export interface ApiResponse<T> {
   pagination?: MetaData;
 }
 
-
-
 export interface RequestParameters {
-  pageNumber?: number; // Mặc định là 1
-  pageSize?: number;   // Mặc định là 10, không vượt quá 50
+  pageNumber?: number;
+  pageSize?: number;
   searchTerm?: string;
   orderBy?: string;
   orderKey?: string;

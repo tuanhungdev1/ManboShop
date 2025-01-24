@@ -16,6 +16,15 @@ import CollectionDetail from "@pages/collection/CollectionDetail";
 import ProductDetail from "@pages/products/ProductDetail";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import UserProtectedLayout from "@pages/user/UserProtectedLayout";
+import UserLayout from "@pages/user/UserLayout";
+import PersonalInformationPage from "@pages/user/PersonalInformationPage";
+import OrderPage from "@pages/user/OrderPage";
+import WishlistPage from "@pages/user/WishlistPage";
+import SaveCardPage from "@pages/user/SaveCardPage";
+import NotificationPage from "@pages/user/NotificationPage";
+import SettingPage from "@pages/user/SettingPage";
+import AddressPage from "@pages/user/AddressPage";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -52,6 +61,39 @@ const router = createBrowserRouter([
           {
             path: "register",
             element: <RegisterPage />,
+          },
+        ],
+      },
+      {
+        element: <UserProtectedLayout />,
+        children: [
+          {
+            path: "/user/profile",
+            element: <PersonalInformationPage />,
+          },
+          {
+            path: "/user/wishlists",
+            element: <WishlistPage />,
+          },
+          {
+            path: "/user/addresses",
+            element: <AddressPage />,
+          },
+          {
+            path: "/user/orders",
+            element: <OrderPage />,
+          },
+          {
+            path: "/user/saved-cards",
+            element: <SaveCardPage />,
+          },
+          {
+            path: "/user/notifications",
+            element: <NotificationPage />,
+          },
+          {
+            path: "/user/settings",
+            element: <SettingPage />,
           },
         ],
       },
