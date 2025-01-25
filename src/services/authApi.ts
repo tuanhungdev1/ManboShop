@@ -3,6 +3,7 @@ import { RegisterFormData } from "@pages/auth/RegisterPage";
 import { login } from "@redux/slices/authSlice";
 import { ApiResponse } from "@types-d/type";
 import { baseApi } from "./baseApi";
+import { TokenDto } from "@types-d/token";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => {
@@ -34,11 +35,18 @@ export const authApi = baseApi.injectEndpoints({
           };
         },
       }),
+      // Check email availability
+      checkEmail: builder.mutation<ApiResponse<boolean>, string>({
+        query: (email) => ({
+          url: `Auth/check-email/${email}`,
+          method: "POST",
+        }),
+      }),
       login: builder.mutation<ApiResponse<object>, LoginFormData>({
-        query: ({ password, username, isRememberMe }) => {
+        query: ({ password, username, isRemember }) => {
           return {
             url: "/Auth/login",
-            body: { password, username, isRememberMe },
+            body: { password, username, isRemember },
             method: "POST",
           };
         },
@@ -46,7 +54,21 @@ export const authApi = baseApi.injectEndpoints({
           try {
             const { data } = await queryFulfilled;
             // Dispatch action login từ authSlice khi có response thành công
-            dispatch(login(data));
+            dispatch(
+              login({
+                ...data,
+                token: {
+                  accessToken: data.token?.accessToken || "",
+                  refreshToken: data.token?.refreshToken || "",
+                  isRemembered: _arg.isRemember,
+                },
+              })
+            );
+
+            if (_arg.isRemember) {
+              localStorage.setItem("accessToken", data.token?.accessToken!);
+              localStorage.setItem("refreshToken", data.token?.refreshToken!);
+            }
           } catch (error) {
             // Handle error nếu cần
             console.error("Login failed:", error);
@@ -61,6 +83,13 @@ export const authApi = baseApi.injectEndpoints({
             method: "POST",
           };
         },
+      }),
+      refreshToken: builder.mutation<ApiResponse<object>, TokenDto>({
+        query: (tokenDto) => ({
+          url: "Auth/refresh-token",
+          method: "POST",
+          body: tokenDto,
+        }),
       }),
     };
   },

@@ -12,7 +12,7 @@ import {
 } from "@components/buttons";
 import { InputType } from "@types-d/enums";
 import { cn } from "@utils/cn";
-import { CustomCheckbox } from "@components/checkbox";
+import { Checkbox, CustomCheckbox } from "@components/checkbox";
 import { useAppDispatch } from "@redux/hooks";
 import { useRegisterMutation } from "@services/authApi";
 import { useEffect } from "react";
@@ -79,7 +79,7 @@ const RegisterPage = () => {
     control,
     handleSubmit,
     watch,
-
+    setValue,
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: yupResolver(schema),
@@ -92,7 +92,6 @@ const RegisterPage = () => {
   const termsAccepted = watch("terms");
 
   const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
-    console.log(data);
     register(data);
   };
 
@@ -192,51 +191,25 @@ const RegisterPage = () => {
           placeholder="Xác nhận mật khẩu"
         />
 
-        <div>
-          <Controller
-            name="terms"
-            control={control}
-            render={({ field }) => (
-              <CustomCheckbox
-                {...field}
-                checked={field.value}
-                onChange={(e) => {
-                  field.onChange(e.target.checked);
-                }}
-                label="Tôi đồng ý với điều khoản và điều kiện"
-                labelStyle={{
-                  fontSize: "14px",
-                  fontWeight: 400,
-                }}
-              />
-            )}
+        <div className="flex flex-col gap-2">
+          <Checkbox
+            label="Tôi đồng ý với điều khoản và điều kiện"
+            isChecked={termsAccepted}
+            onClick={() => setValue("terms", !termsAccepted)}
+            classname="mb-2"
           />
 
-          <Controller
-            name="subscribes"
-            control={control}
-            render={({ field }) => (
-              <CustomCheckbox
-                {...field}
-                checked={field.value}
-                sx={{}}
-                onChange={(e) => {
-                  field.onChange(e.target.checked);
-                }}
-                label="Đăng ký nhận thư mời ưu đãi từ KG Vietnam"
-                labelStyle={{
-                  fontSize: "14px",
-                  fontWeight: 400,
-                }}
-              />
-            )}
+          <Checkbox
+            label="Đăng ký nhận thư mời ưu đãi từ KG Vietnam"
+            isChecked={watch("subscribes")}
+            onClick={() => setValue("subscribes", !watch("subscribes"))}
           />
         </div>
 
         <PrimaryButton
           type="submit"
           fullWidth
-          size="large"
+          size="medium"
           variant="contained"
           color="primary"
           className={cn(

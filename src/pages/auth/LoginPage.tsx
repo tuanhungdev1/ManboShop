@@ -18,11 +18,12 @@ import { openSnackbar } from "@redux/slices/snackbarSlice";
 import { ApiErrorResponse } from "@types-d/type";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
+import { Checkbox } from "@components/checkbox";
 
 export interface LoginFormData {
   username: string;
   password: string;
-  isRememberMe: boolean;
+  isRemember: boolean;
 }
 
 const schema = yup.object().shape({
@@ -34,7 +35,7 @@ const schema = yup.object().shape({
     .string()
     .required("Mật khẩu là bắt buộc")
     .min(8, "Mật khẩu phải có ít nhất 8 ký tự"),
-  isRememberMe: yup.boolean().default(false),
+  isRemember: yup.boolean().default(false),
 });
 
 const LoginPage = () => {
@@ -45,15 +46,24 @@ const LoginPage = () => {
   const {
     control,
     handleSubmit,
+    setValue,
+    watch,
     register,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      isRemember: false,
+    },
   });
 
-  const onSubmit: SubmitHandler<LoginFormData> = (data) => {
-    console.log(data);
+  const isRemember = watch("isRemember");
 
+  const handleRememberMe = () => {
+    setValue("isRemember", !isRemember);
+  };
+
+  const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     login(data);
   };
 
@@ -81,7 +91,6 @@ const LoginPage = () => {
     }
   }, [isError, dispatch, data, isSuccess, navigate, error]);
 
-  console.log(data, error);
   return (
     <div className="mx-auto text-[14px] sm:w-[450px] w-full mt-5">
       <div className="flex items-center w-full text-[14px] text-center">
@@ -123,6 +132,13 @@ const LoginPage = () => {
           type={InputType.Password}
           error={errors.password?.message}
           {...register("password")}
+        />
+
+        <Checkbox
+          label="Ghi nhớ đăng nhập"
+          isChecked={isRemember}
+          onClick={handleRememberMe}
+          classname="mt-2"
         />
 
         <PrimaryButton

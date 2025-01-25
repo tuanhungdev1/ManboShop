@@ -19,9 +19,10 @@ const PrimaryButton: React.FC<CustomButtonProps> = ({
         fontFamily: "Montserrat, sans-serif",
         fontSize: "14px",
         textTransform: "none",
-        padding: "10px 16px",
+        padding: "12px 16px",
         backgroundColor: "#110E11",
-        borderRadius: 0,
+        borderRadius: "8px",
+
         color: "#fff",
         "&:hover": {
           backgroundColor: "#292729",

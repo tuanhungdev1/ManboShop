@@ -27,7 +27,7 @@ const TextInput: React.FC<TextInputProps> = ({
       fullWidth
       slotProps={{
         input: {
-          className: "h-12 px-4 py-2 !rounded-[0px]",
+          className: "h-12 px-4 py-2 !rounded-[8px]",
         },
         htmlInput: { className: "!p-0" },
       }}
