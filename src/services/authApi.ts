@@ -1,9 +1,8 @@
 import { LoginFormData } from "@pages/auth/LoginPage";
 import { RegisterFormData } from "@pages/auth/RegisterPage";
 import { login } from "@redux/slices/authSlice";
-import { ApiResponse } from "@types-d/type";
+import { ApiResponse, Token } from "@types-d/type";
 import { baseApi } from "./baseApi";
-import { TokenDto } from "@types-d/token";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => {
@@ -84,7 +83,7 @@ export const authApi = baseApi.injectEndpoints({
           };
         },
       }),
-      refreshToken: builder.mutation<ApiResponse<object>, TokenDto>({
+      refreshToken: builder.mutation<ApiResponse<object>, Token>({
         query: (tokenDto) => ({
           url: "Auth/refresh-token",
           method: "POST",
@@ -95,5 +94,9 @@ export const authApi = baseApi.injectEndpoints({
   },
 });
 
-export const { useRegisterMutation, useLoginMutation, useVerifyOTPMutation } =
-  authApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useVerifyOTPMutation,
+  useRefreshTokenMutation,
+} = authApi;
