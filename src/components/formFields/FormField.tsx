@@ -2,6 +2,7 @@
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { FormHelperText } from "@mui/material";
 import { InputType } from "@types-d/enums";
+import { cn } from "@utils/cn";
 
 interface ComponentProps<T extends FieldValues> {
   onChange: (...event: any[]) => void;
@@ -21,7 +22,7 @@ interface FormFieldProps<T extends FieldValues> {
   name: Path<T>;
   type?: InputType;
   placeholder?: string;
-  labelStyle?: React.CSSProperties;
+  labelStyle?: string;
   error?: string;
   Component: React.ComponentType<ComponentProps<T>>;
 }
@@ -37,7 +38,9 @@ const FormField = <T extends FieldValues>({
 }: FormFieldProps<T>) => {
   return (
     <div>
-      <p className="mb-2 text-[14px] text-black opacity-80">{label}</p>
+      <p className={cn("mb-2 text-[14px] text-black font-medium", labelStyle)}>
+        {label}
+      </p>
       <Controller
         name={name}
         control={control}
@@ -50,7 +53,6 @@ const FormField = <T extends FieldValues>({
               name={String(name)}
               type={type}
               control={control}
-              labelStyle={labelStyle}
               errorMessage={error}
             />
             {error && <FormHelperText error>{error}</FormHelperText>}

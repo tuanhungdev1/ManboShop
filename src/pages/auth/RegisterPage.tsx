@@ -1,4 +1,4 @@
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ import {
 } from "@components/buttons";
 import { InputType } from "@types-d/enums";
 import { cn } from "@utils/cn";
-import { Checkbox, CustomCheckbox } from "@components/checkbox";
+import { Checkbox } from "@components/checkbox";
 import { useAppDispatch } from "@redux/hooks";
 import { useRegisterMutation } from "@services/authApi";
 import { useEffect } from "react";
@@ -91,8 +91,17 @@ const RegisterPage = () => {
 
   const termsAccepted = watch("terms");
 
-  const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
-    register(data);
+  const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
+    try {
+      await register(data).unwrap();
+    } catch (error: any) {
+      dispatch(
+        openSnackbar({
+          type: "error",
+          message: error?.data?.message || "Đăng kí thông tin thất bại",
+        })
+      );
+    }
   };
 
   useEffect(() => {

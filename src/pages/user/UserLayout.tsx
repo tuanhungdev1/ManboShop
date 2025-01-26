@@ -12,7 +12,7 @@ const UserLayout = () => {
     <div>
       <h1 className="text-4xl font-medium pt-6">My Profile</h1>
       <Grid container spacing={4} marginTop={6}>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} lg={4} xl={3}>
           <div className="border-gray-100 border-[2px] pb-6">
             <div className="flex items-center py-4 px-4 border-b-[2px] border-gray-100">
               <Avatar
@@ -52,7 +52,7 @@ const UserLayout = () => {
             </div>
           </div>
         </Grid>
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} lg={8} xl={9}>
           <Outlet />
         </Grid>
       </Grid>

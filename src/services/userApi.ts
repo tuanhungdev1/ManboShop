@@ -4,9 +4,9 @@ import {
   ChangePasswordDto,
   User,
   UserForCreateDto,
-  UserForUpdateDto,
   UserRequestParameters,
 } from "@types-d/user";
+import { UpdateProfileFormData } from "@components/modals/UpdateProfileModal";
 // Adjust the import based on your DTOs
 
 export const userApi = baseApi.injectEndpoints({
@@ -46,12 +46,9 @@ export const userApi = baseApi.injectEndpoints({
     }),
 
     // Update user
-    updateUser: builder.mutation<
-      ApiResponse<User>,
-      { id: number; userForUpdateDto: UserForUpdateDto }
-    >({
-      query: ({ id, userForUpdateDto }) => ({
-        url: `Users/${id}`,
+    updateUser: builder.mutation<ApiResponse<User>, UpdateProfileFormData>({
+      query: (userForUpdateDto) => ({
+        url: `Users/current`,
         method: "PUT",
         body: userForUpdateDto,
       }),
