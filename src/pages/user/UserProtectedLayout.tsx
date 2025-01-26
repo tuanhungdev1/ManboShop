@@ -1,31 +1,33 @@
 import { useGetUserQuery } from "@services/userApi";
 import UserLayout from "./UserLayout";
+import { LoadingPage } from "@components/loadings";
 import { Navigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "@redux/hooks";
 import { saveUser } from "@redux/slices/authSlice";
-import { LoadingPage } from "@components/loadings";
 
 const UserProtectedLayout = () => {
-  const { data, isLoading, error, isSuccess } = useGetUserQuery();
+  const { data, error, isLoading, isSuccess } = useGetUserQuery();
   const dispatch = useAppDispatch();
+  const [showLoading, setShowLoading] = useState(true);
 
   useEffect(() => {
     if (isSuccess) {
       dispatch(saveUser(data));
     }
-  }, [isSuccess]);
+  }, [isSuccess, data, dispatch]);
 
-  if (isLoading) {
-    return <LoadingPage />;
-  }
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        setShowLoading(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
 
-  console.log(error);
-
-  if (error) {
-    console.log(error);
-    return <Navigate to={"/account/login"} replace />;
-  }
+  if (isLoading || showLoading) return <LoadingPage />;
+  if (error) return <Navigate to={"/account/login"} />;
 
   return (
     <div>

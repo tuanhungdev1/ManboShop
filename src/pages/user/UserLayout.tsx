@@ -1,10 +1,13 @@
-import { Typography, TextField, Grid, Paper, Avatar } from "@mui/material";
+import { Avatar, Grid } from "@mui/material";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 import { menuItems } from "@constants/menus/profileMenu";
+import { useAppSelector } from "@redux/hooks";
+import { selectUser } from "@redux/slices/authSlice";
 
 const UserLayout = () => {
   const location = useLocation();
+  const user = useAppSelector(selectUser);
   return (
     <div>
       <h1 className="text-4xl font-medium pt-6">My Profile</h1>
@@ -13,13 +16,13 @@ const UserLayout = () => {
           <div className="border-gray-100 border-[2px] pb-6">
             <div className="flex items-center py-4 px-4 border-b-[2px] border-gray-100">
               <Avatar
-                alt="Robert Fox"
-                src="/path/to/image.jpg"
+                alt={user?.firstName}
+                src={user?.profilePictureUrl}
                 sx={{ width: 56, height: 56 }}
               />
               <div className="flex flex-col ml-4">
                 <span className="text-sm font-semibold">Hello 👋</span>
-                <span className="text-lg font-bold">Robert Fox</span>
+                <span className="text-lg font-bold">{`${user?.firstName} ${user?.lastName}`}</span>
               </div>
             </div>
             <div className="flex flex-col mt-6">

@@ -1,6 +1,6 @@
 import usePreventScroll from "@hooks/usePreventScroll";
 import { createPortal } from "react-dom";
-import { PulseLoader } from "react-spinners";
+import { BarLoader } from "react-spinners";
 
 const LoadingPage = () => {
   usePreventScroll();
@@ -8,8 +8,8 @@ const LoadingPage = () => {
     <div className="fixed inset-0 z-10 flex flex-col items-center justify-center gap-5 -translate-y-20 bg-white">
       <div>
         <svg
-          width="94"
-          height="23"
+          width="200"
+          height="50"
           viewBox="0 0 94 23"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +49,7 @@ const LoadingPage = () => {
         </svg>
       </div>
 
-      <PulseLoader color="#87b9e2" speedMultiplier={0.6} margin={4} />
+      <BarLoader />
     </div>,
     document.body
   );
