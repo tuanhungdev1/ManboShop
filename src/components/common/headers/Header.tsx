@@ -130,7 +130,7 @@ const Header = () => {
 
               {/* Wishlist */}
               <Link
-                to="/wishlist"
+                to="/user/wishlists"
                 className="p-2 hover:bg-gray-100 rounded-full"
               >
                 <FiHeart className="w-5 h-5" />
@@ -186,6 +186,8 @@ const Header = () => {
           </div>
         </div>
       )}
+
+      {/* Cart Sidebar */}
     </header>
   );
 };

@@ -2,25 +2,62 @@ import { PrimaryButton } from "@components/buttons";
 import { FormField } from "@components/formFields";
 import { TextInput } from "@components/formInputs";
 import UpdateProfileModal from "@components/modals/UpdateProfileModal";
-import { Avatar, Grid } from "@mui/material";
-import { useAppSelector } from "@redux/hooks";
-import { selectUser } from "@redux/slices/authSlice";
-import { useState } from "react";
+import { Avatar, Grid, Skeleton } from "@mui/material";
+
+import { useGetUserQuery } from "@services/userApi";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiEdit } from "react-icons/fi";
 
 const PersonalInformationPage = () => {
+  const { data: userData, isLoading, isFetching, refetch } = useGetUserQuery();
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
-  const user = useAppSelector(selectUser);
   const { control } = useForm();
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  if (isLoading || isFetching) {
+    return (
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Skeleton variant="circular" width={100} height={100} />
+              <div>
+                <Skeleton width={200} height={40} />
+                <Skeleton width={150} height={20} />
+              </div>
+            </div>
+            <Skeleton
+              variant="rectangular"
+              width={120}
+              height={50}
+              sx={{ borderRadius: "8px" }}
+            />
+          </div>
+        </Grid>
+        {[...Array(5)].map((_, index) => (
+          <Grid item xs={12} md={6} key={index}>
+            <Skeleton
+              variant="rectangular"
+              height={70}
+              sx={{ borderRadius: "8px" }}
+            />
+          </Grid>
+        ))}
+      </Grid>
+    );
+  }
   return (
     <Grid container spacing={4}>
       <Grid item xs={12}>
         <div className="flex items-center justify-between">
           <div className="relative">
             <Avatar
-              alt={user?.firstName}
-              src={user?.profilePictureUrl}
+              alt={userData?.data!.firstName}
+              src={userData?.data!.profilePictureUrl}
               sx={{ width: 100, height: 100 }}
             />
           </div>
@@ -49,7 +86,7 @@ const PersonalInformationPage = () => {
           Component={(props) => (
             <TextInput
               {...props}
-              value={user?.firstName || ""}
+              value={userData?.data!.firstName || ""}
               className="select-none pointer-events-none"
               inputStyle={{
                 "& .MuiOutlinedInput-input": {
@@ -68,7 +105,7 @@ const PersonalInformationPage = () => {
           Component={(props) => (
             <TextInput
               {...props}
-              value={user?.lastName || ""}
+              value={userData?.data!.lastName || ""}
               className="select-none pointer-events-none"
               inputStyle={{
                 "& .MuiOutlinedInput-input": {
@@ -87,7 +124,7 @@ const PersonalInformationPage = () => {
           Component={(props) => (
             <TextInput
               {...props}
-              value={user?.email || ""}
+              value={userData?.data!.email || ""}
               className="select-none pointer-events-none"
               inputStyle={{
                 "& .MuiOutlinedInput-input": {
@@ -106,7 +143,7 @@ const PersonalInformationPage = () => {
           Component={(props) => (
             <TextInput
               {...props}
-              value={user?.phoneNumber || ""}
+              value={userData?.data!.phoneNumber || ""}
               className="select-none pointer-events-none"
               inputStyle={{
                 "& .MuiOutlinedInput-input": {
@@ -125,7 +162,7 @@ const PersonalInformationPage = () => {
           Component={(props) => (
             <TextInput
               {...props}
-              value={user?.address || ""}
+              value={userData?.data!.address || ""}
               className="select-none pointer-events-none"
               inputStyle={{
                 "& .MuiOutlinedInput-input": {
@@ -138,6 +175,7 @@ const PersonalInformationPage = () => {
         />
       </Grid>
       <UpdateProfileModal
+        refetch={() => refetch()}
         open={openUpdateModal}
         onClose={() => setOpenUpdateModal(false)}
       />

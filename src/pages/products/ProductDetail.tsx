@@ -14,8 +14,13 @@ import { FiMinus } from "react-icons/fi";
 import { GoPlus } from "react-icons/go";
 import ProductSlider from "@components/products/ProductSlider";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { useAddProductFavoriteMutation } from "@services/favoriteApi";
+import { Favorite } from "@types-d/favorite";
+import { useAppDispatch } from "@redux/hooks";
+import { openSnackbar } from "@redux/slices/snackbarSlice";
 
 const ProductDetail = () => {
+  const dispatch = useAppDispatch();
   const { slug } = useParams<{ slug: string }>();
   const [hoveredImage, setHoveredImage] = useState<string | null>(null);
   const [selectedVariants, setSelectedVariants] = useState<VariantValue[]>([]);
@@ -33,6 +38,40 @@ const ProductDetail = () => {
     isLoading,
     error,
   } = useGetProductBySlugNameQuery(slug ?? "");
+
+  const [AddProductFavorite, { data: favoriteResponse, isSuccess }] =
+    useAddProductFavoriteMutation();
+
+  const handleAddProductFavorite = async () => {
+    const favorite: Favorite = {
+      productId: product?.data?.id!,
+    };
+
+    try {
+      await AddProductFavorite(favorite).unwrap();
+    } catch (error: any) {
+      const message = error.data.Message;
+
+      dispatch(
+        openSnackbar({
+          type: "error",
+          message:
+            message || "Không thể thêm sản phẩm vào danh sách yêu thích!",
+        })
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(
+        openSnackbar({
+          type: "success",
+          message: favoriteResponse.message,
+        })
+      );
+    }
+  }, [isSuccess, favoriteResponse]);
 
   const { data: relatedProductsData } = useGetProductsQuery(
     product?.data?.category?.id
@@ -315,7 +354,7 @@ const ProductDetail = () => {
               <button className="bg-primary-900 hover:bg-gray-800 border-[2px] border-black hover:border-gray-800 transition-all  duration-300 flex-1 text-white px-4 h-12 rounded-md ml-4">
                 Add to Cart
               </button>
-              <div className="ml-4">
+              <div className="ml-4" onClick={handleAddProductFavorite}>
                 <button className="border-[2px] border-black hover:text-red-500 duration-300 transition-all hover:text-[35px] rounded-md h-12 w-12 flex items-center justify-center text-[30px]">
                   <CiHeart />
                 </button>

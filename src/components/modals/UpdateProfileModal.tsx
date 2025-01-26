@@ -45,9 +45,11 @@ const updateProfileSchema = yup.object().shape({
 const UpdateProfileModal = ({
   open,
   onClose,
+  refetch,
 }: {
   open: boolean;
   onClose: () => void;
+  refetch: () => void;
 }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
@@ -92,6 +94,7 @@ const UpdateProfileModal = ({
       );
 
       dispatch(saveUser(data));
+      refetch();
       onClose();
     }
   }, [isSuccess, data?.message, dispatch]);
