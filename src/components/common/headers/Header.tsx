@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
 import { FiHeart, FiShoppingBag, FiUser } from "react-icons/fi";
 import { MegaMenu } from "./MegaMenu";
@@ -7,11 +7,29 @@ import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { hideBackdrop, showBackdrop } from "@redux/slices/backdropSlice";
 import { cn } from "@utils/cn";
 import { selectAccessToken } from "@redux/slices/authSlice";
+import { IoMdClose } from "react-icons/io";
+import { Tooltip } from "@mui/material";
+import CartList from "@components/cartList/CartList";
 
 const Header = () => {
   const accessToken = useAppSelector(selectAccessToken);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const dispatch = useAppDispatch();
+
+  const [isOpenCartSidebar, setIsOpenCartSidebar] = useState(false);
+
+  const toggleCartSidebar = () => setIsOpenCartSidebar(!isOpenCartSidebar);
+
+  useEffect(() => {
+    if (isOpenCartSidebar) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpenCartSidebar]);
 
   return (
     <header className="relative bg-white z-50">
@@ -121,11 +139,16 @@ const Header = () => {
             {/* Right Actions */}
             <div className="flex items-center space-x-4">
               {/* Search */}
+
               <button
                 onClick={() => setIsSearchOpen(true)}
                 className="p-2 hover:bg-gray-100 rounded-full"
               >
-                <CgSearch className="w-5 h-5" />
+                <Tooltip title="Tìm kiếm">
+                  <div>
+                    <CgSearch className="w-5 h-5" />
+                  </div>
+                </Tooltip>
               </button>
 
               {/* Wishlist */}
@@ -133,13 +156,25 @@ const Header = () => {
                 to="/user/wishlists"
                 className="p-2 hover:bg-gray-100 rounded-full"
               >
-                <FiHeart className="w-5 h-5" />
+                <Tooltip title="Yêu thích">
+                  <div>
+                    <FiHeart className="w-5 h-5" />
+                  </div>
+                </Tooltip>
               </Link>
 
               {/* Cart */}
-              <Link to="/cart" className="p-2 hover:bg-gray-100 rounded-full">
-                <FiShoppingBag className="w-5 h-5" />
-              </Link>
+
+              <div
+                className="p-2 hover:bg-gray-100 rounded-full cursor-pointer"
+                onClick={toggleCartSidebar}
+              >
+                <Tooltip title="Giỏ hàng">
+                  <div>
+                    <FiShoppingBag className="w-5 h-5" />
+                  </div>
+                </Tooltip>
+              </div>
 
               {/* Login */}
               {!accessToken ? (
@@ -154,7 +189,11 @@ const Header = () => {
                   to="/user/profile"
                   className="p-2 hover:bg-gray-100 rounded-full"
                 >
-                  <FiUser className="w-5 h-5" />
+                  <Tooltip title="Tài khoản">
+                    <div>
+                      <FiUser className="w-5 h-5" />
+                    </div>
+                  </Tooltip>
                 </Link>
               )}
             </div>
@@ -188,6 +227,54 @@ const Header = () => {
       )}
 
       {/* Cart Sidebar */}
+      <div
+        className={`fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
+          isOpenCartSidebar ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
+        onClick={toggleCartSidebar}
+      >
+        <div
+          className={`fixed top-0 right-0 h-full w-[85vw] md:w-[60vw] bg-white transform transition-transform duration-300 flex flex-col ${
+            isOpenCartSidebar ? "translate-x-0" : "translate-x-full"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Cart Sidebar Header */}
+          <div className="flex-none flex justify-between items-center p-4 border-b">
+            <h2 className="text-lg font-medium">Giỏ hàng</h2>
+            <button
+              onClick={toggleCartSidebar}
+              className="p-2 text-2xl"
+              aria-label="Close Cart Sidebar"
+            >
+              <IoMdClose />
+            </button>
+          </div>
+
+          {/* Cart Sidebar Content */}
+          <div className="flex-1 overflow-y-auto overflow-x-hidden p-4">
+            <CartList />
+          </div>
+
+          {/* Cart Sidebar Actions */}
+          <div className="flex-none p-4 bg-white border-t">
+            <div className="flex gap-4">
+              <button
+                className="flex-1 py-3 px-4 border rounded-md text-center"
+                onClick={() => {}}
+              >
+                Xem giỏ hàng
+              </button>
+              <button
+                className="flex-1 py-3 px-4 bg-black text-white rounded-md text-center"
+                onClick={() => {}}
+              >
+                Thanh toán
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
   );
 };
