@@ -35,6 +35,7 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
       headers.set("Accept", "application/json");
       return headers;
     },
+    credentials: "include",
   });
 
   const result = await fetchBaseQueryInstance(args, api, extraOptions);
@@ -103,5 +104,6 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: customBaseQuery,
+  tagTypes: ["Cart"],
   endpoints: () => ({}),
 });

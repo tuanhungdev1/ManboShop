@@ -4,12 +4,14 @@ import { baseApi } from "@services/baseApi";
 import snackbarReducer from "@redux/slices/snackbarSlice";
 import filterReducer from "./slices/filterSlice";
 import backdropReducer from "./slices/backdropSlice";
+import cartReducer from "./slices/cartSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     snackbar: snackbarReducer,
     filter: filterReducer,
     backdrop: backdropReducer,
+    cart: cartReducer,
     [baseApi.reducerPath]: baseApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

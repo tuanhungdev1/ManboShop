@@ -11,6 +11,12 @@ import { IoMdClose } from "react-icons/io";
 import { Tooltip } from "@mui/material";
 import CartList from "@components/cartList/CartList";
 
+import {
+  selectCartTotalAmount,
+  selectCartTotalItems,
+} from "@redux/slices/cartSlice";
+import { formatPrice } from "@utils/format";
+
 const Header = () => {
   const accessToken = useAppSelector(selectAccessToken);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -19,6 +25,9 @@ const Header = () => {
   const [isOpenCartSidebar, setIsOpenCartSidebar] = useState(false);
 
   const toggleCartSidebar = () => setIsOpenCartSidebar(!isOpenCartSidebar);
+
+  const totalCount = useAppSelector(selectCartTotalItems);
+  const totalAmount = useAppSelector(selectCartTotalAmount);
 
   useEffect(() => {
     if (isOpenCartSidebar) {
@@ -166,7 +175,7 @@ const Header = () => {
               {/* Cart */}
 
               <div
-                className="p-2 hover:bg-gray-100 rounded-full cursor-pointer"
+                className="p-2 hover:bg-gray-100 rounded-full cursor-pointer relative"
                 onClick={toggleCartSidebar}
               >
                 <Tooltip title="Giỏ hàng">
@@ -174,6 +183,10 @@ const Header = () => {
                     <FiShoppingBag className="w-5 h-5" />
                   </div>
                 </Tooltip>
+
+                {totalCount > 0 && (
+                  <div className="absolute bg-black w-[9px] h-[9px] top-1 right-1 flex items-center justify-center rounded-full"></div>
+                )}
               </div>
 
               {/* Login */}
@@ -234,7 +247,7 @@ const Header = () => {
         onClick={toggleCartSidebar}
       >
         <div
-          className={`fixed top-0 right-0 h-full w-[85vw] md:w-[60vw] bg-white transform transition-transform duration-300 flex flex-col ${
+          className={`fixed top-0 right-0 h-full w-[85vw] md:w-[50vw] lg:w-[40vw] xl:w-[40vw] bg-white transform transition-transform duration-300 flex flex-col ${
             isOpenCartSidebar ? "translate-x-0" : "translate-x-full"
           }`}
           onClick={(e) => e.stopPropagation()}
@@ -258,6 +271,10 @@ const Header = () => {
 
           {/* Cart Sidebar Actions */}
           <div className="flex-none p-4 bg-white border-t">
+            <div className="flex items-center justify-between mb-4 py-2 font-semibold text-xl">
+              <span>Tổng tiền</span>
+              <span>{formatPrice(totalAmount)}</span>
+            </div>
             <div className="flex gap-4">
               <button
                 className="flex-1 py-3 px-4 border rounded-md text-center"

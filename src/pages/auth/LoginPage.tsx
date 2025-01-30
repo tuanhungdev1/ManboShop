@@ -72,7 +72,6 @@ const LoginPage = () => {
       const fetchError = error as FetchBaseQueryError;
       if ("data" in fetchError) {
         const errorData = fetchError.data as ApiErrorResponse;
-        console.log(errorData);
         dispatch(openSnackbar({ type: "error", message: errorData.Message }));
       } else {
         const serializedError = error as SerializedError;

@@ -18,6 +18,8 @@ import { useAddProductFavoriteMutation } from "@services/favoriteApi";
 import { Favorite } from "@types-d/favorite";
 import { useAppDispatch } from "@redux/hooks";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
+import { CartItemForCreate } from "@types-d/cart";
+import { useAddItemToCartMutation } from "@services/cartApi";
 
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
@@ -41,6 +43,8 @@ const ProductDetail = () => {
 
   const [AddProductFavorite, { data: favoriteResponse, isSuccess }] =
     useAddProductFavoriteMutation();
+
+  const [addToCart, { isLoading: isAddingToCart }] = useAddItemToCartMutation();
 
   const handleAddProductFavorite = async () => {
     const favorite: Favorite = {
@@ -134,6 +138,44 @@ const ProductDetail = () => {
     }
 
     return arrText.join(", ");
+  };
+
+  const handleAddToCart = async () => {
+    if (!selectedProductVariantValue) {
+      dispatch(
+        openSnackbar({
+          type: "error",
+          message: "Vui lòng chọn một biến thể sản phẩm!",
+        })
+      );
+
+      return;
+    }
+
+    const cartItem: CartItemForCreate = {
+      productId: product?.data?.id!,
+      productVariantValueId: selectedProductVariantValue?.id,
+      quantity: quantity ?? 1,
+    };
+
+    try {
+      await addToCart(cartItem).unwrap();
+
+      dispatch(
+        openSnackbar({
+          type: "success",
+          message: "Sản phẩm đã được thêm vào giỏ hàng!",
+        })
+      );
+    } catch (error: any) {
+      dispatch(
+        openSnackbar({
+          type: "error",
+          message:
+            error.data?.Message || "Không thể thêm sản phẩm vào giỏ hàng!",
+        })
+      );
+    }
   };
 
   useEffect(() => {
@@ -351,8 +393,12 @@ const ProductDetail = () => {
                   <GoPlus />
                 </button>
               </div>
-              <button className="bg-primary-900 hover:bg-gray-800 border-[2px] border-black hover:border-gray-800 transition-all  duration-300 flex-1 text-white px-4 h-12 rounded-md ml-4">
-                Add to Cart
+              <button
+                onClick={handleAddToCart}
+                disabled={isAddingToCart}
+                className="bg-primary-900 hover:bg-gray-800 border-[2px] border-black hover:border-gray-800 transition-all  duration-300 flex-1 text-white px-4 h-12 rounded-md ml-4"
+              >
+                {isAddingToCart ? "Đang thêm..." : "Thêm vào giỏ hàng"}
               </button>
               <div className="ml-4" onClick={handleAddProductFavorite}>
                 <button className="border-[2px] border-black hover:text-red-500 duration-300 transition-all hover:text-[35px] rounded-md h-12 w-12 flex items-center justify-center text-[30px]">

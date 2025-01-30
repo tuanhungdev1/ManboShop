@@ -3,11 +3,14 @@ import { Backdrop } from "@components/common/backdrop";
 import Features from "@components/common/features/Features";
 import { Footer } from "@components/common/footers";
 import { Header } from "@components/common/headers";
+import { CartProvider } from "@components/common/providers";
 
 import LoadingPage from "@components/loadings/LoadingPage";
 import { Alert, Snackbar } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
+
 import { closeSnackbar } from "@redux/slices/snackbarSlice";
+
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
@@ -19,7 +22,9 @@ const RootLayout = () => {
   return (
     <div>
       <div className="fixed z-50 w-screen">
-        <Header />
+        <CartProvider>
+          <Header />
+        </CartProvider>
       </div>
 
       <div className="pt-[100px] pb-[100px] container mx-auto px-4">
