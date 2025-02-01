@@ -276,15 +276,17 @@ const Header = () => {
               <span>{formatPrice(totalAmount)}</span>
             </div>
             <div className="flex gap-4">
-              <button
-                className="flex-1 py-3 px-4 border rounded-md text-center"
-                onClick={() => {}}
-              >
-                Xem giỏ hàng
-              </button>
+              <Link to={"/shopping-cart"} className="flex-1">
+                <button
+                  className="flex-1 py-3 px-4 border rounded-md text-center w-full h-full"
+                  onClick={toggleCartSidebar}
+                >
+                  Xem giỏ hàng
+                </button>
+              </Link>
               <button
                 className="flex-1 py-3 px-4 bg-black text-white rounded-md text-center"
-                onClick={() => {}}
+                onClick={toggleCartSidebar}
               >
                 Thanh toán
               </button>

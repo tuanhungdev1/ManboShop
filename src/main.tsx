@@ -17,7 +17,6 @@ import ProductDetail from "@pages/products/ProductDetail";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import UserProtectedLayout from "@pages/user/UserProtectedLayout";
-import UserLayout from "@pages/user/UserLayout";
 import PersonalInformationPage from "@pages/user/PersonalInformationPage";
 import OrderPage from "@pages/user/OrderPage";
 import WishlistPage from "@pages/user/WishlistPage";
@@ -25,6 +24,8 @@ import SaveCardPage from "@pages/user/SaveCardPage";
 import NotificationPage from "@pages/user/NotificationPage";
 import SettingPage from "@pages/user/SettingPage";
 import AddressPage from "@pages/user/AddressPage";
+import ProtectedLayout from "@pages/shoppingCart/ProtectedLayout";
+import ShoppingCartPage from "@pages/shoppingCart/ShoppingCartPage";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -94,6 +95,15 @@ const router = createBrowserRouter([
           {
             path: "/user/settings",
             element: <SettingPage />,
+          },
+        ],
+      },
+      {
+        element: <ProtectedLayout />,
+        children: [
+          {
+            path: "/shopping-cart",
+            element: <ShoppingCartPage />,
           },
         ],
       },
