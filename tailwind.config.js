@@ -11,7 +11,7 @@ export default {
         primary: {
           900: "#110E11",
           800: "#3D3D3D",
-
+          500: "#EE9923",
           300: "#D1D1D1",
         },
         second: {

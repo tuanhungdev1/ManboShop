@@ -86,7 +86,13 @@ const LoginPage = () => {
 
     if (isSuccess) {
       dispatch(openSnackbar({ type: "success", message: data.message }));
-      navigate("/");
+      const redirectUrl = localStorage.getItem("redirectAfterLogin");
+      if (redirectUrl) {
+        localStorage.removeItem("redirectAfterLogin");
+        navigate(redirectUrl);
+      } else {
+        navigate("/");
+      }
     }
   }, [isError, dispatch, data, isSuccess, navigate, error]);
 

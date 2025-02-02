@@ -20,6 +20,12 @@ import { useAppDispatch } from "@redux/hooks";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
 import { CartItemForCreate } from "@types-d/cart";
 import { useAddItemToCartMutation } from "@services/cartApi";
+import { Rate } from "@components/rate";
+import {
+  useGetAverageRatingQuery,
+  useGetFeedbacksByProductQuery,
+} from "@services/feedbackApi";
+import { FeedbackList } from "@components/feedbackList";
 
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
@@ -30,6 +36,11 @@ const ProductDetail = () => {
   const [selectedProductVariantValue, setSelectedProductVariantValue] =
     useState<ProductVariantValue | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [feedbackPageSize, setFeedbackPageSize] = useState(1);
+
+  const handleFeedbackPageSizeChange = (page: number) => {
+    setFeedbackPageSize(Math.max(1, page));
+  };
 
   const handleQuantityChange = (change: number) => {
     setQuantity((prev) => Math.max(1, prev + change));
@@ -40,6 +51,22 @@ const ProductDetail = () => {
     isLoading,
     error,
   } = useGetProductBySlugNameQuery(slug ?? "");
+
+  const { data: productRate } = useGetAverageRatingQuery(
+    product?.data?.id ? product.data.id : skipToken
+  );
+
+  const { data: productFeedback } = useGetFeedbacksByProductQuery(
+    product?.data?.id
+      ? {
+          productId: product.data.id,
+          feedbackRequestParameters: {
+            pageNumber: feedbackPageSize,
+            pageSize: 5,
+          },
+        }
+      : skipToken
+  );
 
   const [AddProductFavorite, { data: favoriteResponse, isSuccess }] =
     useAddProductFavoriteMutation();
@@ -277,6 +304,18 @@ const ProductDetail = () => {
               <span>{product.data.name}</span>
             </h1>
 
+            <div className="mt-4 pb-2 flex items-center gap-4">
+              {productRate?.data !== undefined && (
+                <Rate numberRate={productRate.data} size="large" />
+              )}
+
+              <span className="text-lg select-none mt-1 opacity-65 font-medium">{`${Number(
+                productRate?.data
+              ).toFixed(1)} (${
+                productFeedback?.pagination?.totalCount
+              } Reviews)`}</span>
+            </div>
+
             <div className="flex items-center mt-4">
               <span className="text-xl font-semibold text-primary-900">
                 {formatPrice(
@@ -423,6 +462,22 @@ const ProductDetail = () => {
               ))}
             </ul>
           </div>
+        </div>
+
+        <div className="mt-20 pb-10">
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-semibold">Đánh giá sản phẩm</h1>
+            <span className="text-xl font-medium opacity-50">{`(${productFeedback?.pagination?.totalCount} Reviews)`}</span>
+          </div>
+          {productFeedback &&
+            productFeedback?.data &&
+            productFeedback.pagination && (
+              <FeedbackList
+                onPageChange={handleFeedbackPageSizeChange}
+                feedbackList={productFeedback?.data}
+                pagination={productFeedback?.pagination}
+              />
+            )}
         </div>
 
         <div className="mt-20">
