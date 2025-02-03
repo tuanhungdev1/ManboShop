@@ -25,7 +25,8 @@ import {
   useGetAverageRatingQuery,
   useGetFeedbacksByProductQuery,
 } from "@services/feedbackApi";
-import { FeedbackList } from "@components/feedbackList";
+import { FeedbackItemSkeleton, FeedbackList } from "@components/feedbackList";
+import { CreateFeedbackForm } from "@components/form";
 
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
@@ -56,17 +57,18 @@ const ProductDetail = () => {
     product?.data?.id ? product.data.id : skipToken
   );
 
-  const { data: productFeedback } = useGetFeedbacksByProductQuery(
-    product?.data?.id
-      ? {
-          productId: product.data.id,
-          feedbackRequestParameters: {
-            pageNumber: feedbackPageSize,
-            pageSize: 5,
-          },
-        }
-      : skipToken
-  );
+  const { data: productFeedback, isLoading: isFeedbackloading } =
+    useGetFeedbacksByProductQuery(
+      product?.data?.id
+        ? {
+            productId: product.data.id,
+            feedbackRequestParameters: {
+              pageNumber: feedbackPageSize,
+              pageSize: 5,
+            },
+          }
+        : skipToken
+    );
 
   const [AddProductFavorite, { data: favoriteResponse, isSuccess }] =
     useAddProductFavoriteMutation();
@@ -469,7 +471,9 @@ const ProductDetail = () => {
             <h1 className="text-2xl font-semibold">Đánh giá sản phẩm</h1>
             <span className="text-xl font-medium opacity-50">{`(${productFeedback?.pagination?.totalCount} Reviews)`}</span>
           </div>
-          {productFeedback &&
+
+          {!isFeedbackloading &&
+            productFeedback &&
             productFeedback?.data &&
             productFeedback.pagination && (
               <FeedbackList
@@ -478,6 +482,18 @@ const ProductDetail = () => {
                 pagination={productFeedback?.pagination}
               />
             )}
+
+          {isFeedbackloading && (
+            <div className="flex flex-col">
+              {[...Array(4)].map((_, index) => (
+                <FeedbackItemSkeleton key={index} />
+              ))}
+            </div>
+          )}
+
+          <div>
+            <CreateFeedbackForm productId={product.data.id} />
+          </div>
         </div>
 
         <div className="mt-20">

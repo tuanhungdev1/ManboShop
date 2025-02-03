@@ -19,13 +19,14 @@ export interface FeedbackDto {
 
 export interface FeedbackForCreateDto {
   content: string;
-  star: number;
-  userId: number;
-  productId: number;
+  title: string;
+  star?: number;
+  productId?: number;
 }
 
 export interface FeedbackForUpdateDto {
   content: string;
+  title: string;
   star: number;
 }
 
