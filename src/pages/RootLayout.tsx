@@ -27,7 +27,7 @@ const RootLayout = () => {
         </CartProvider>
       </div>
 
-      <div className="pt-[100px] pb-[100px] container mx-auto px-4">
+      <div className="pt-[100px] pb-[100px]">
         <Suspense fallback={<LoadingPage />}>
           <Outlet />
         </Suspense>

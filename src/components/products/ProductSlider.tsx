@@ -77,7 +77,7 @@ const ProductSlider = ({
 
   return (
     <>
-      <div className="flex items-center justify-between mb-10 px-[10px]">
+      <div className="flex items-center justify-between mb-10">
         <h1 className="text-2xl font-semibold select-none">{title}</h1>
         <div className="flex items-center gap-2">
           <button
@@ -95,10 +95,10 @@ const ProductSlider = ({
           </button>
         </div>
       </div>
-      <div className="relative">
+      <div className="relative px-4">
         <Slider ref={sliderRef} {...settings} className="pb-6">
           {products.slice(0, 10).map((product) => (
-            <div key={product.id} className="px-2">
+            <div key={product.id} className="">
               <ProductCard product={product} viewMode={viewMode} />
             </div>
           ))}

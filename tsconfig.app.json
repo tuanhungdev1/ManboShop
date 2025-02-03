@@ -33,7 +33,8 @@
       "@styles/*": ["src/styles/*"],
       "@redux/*": ["src/redux/*"],
       "@contexts/*": ["src/contexts/*"],
-      "@services/*": ["src/services/*"]
+      "@services/*": ["src/services/*"],
+      "@sections/*": ["src/sections/*"]
     }
   },
   "include": ["src"]

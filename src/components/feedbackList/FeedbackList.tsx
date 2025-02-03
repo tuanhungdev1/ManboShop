@@ -1,4 +1,4 @@
-import { Pagination } from "@mui/material";
+import { dividerClasses, Pagination } from "@mui/material";
 import { FeedbackDto } from "@types-d/feedback";
 import { MetaData } from "@types-d/type";
 import FeedbackItem from "./FeedbackItem";
@@ -17,6 +17,14 @@ const FeedbackList: React.FC<FeedbackListProps> = ({
   const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
     onPageChange(page); // Gọi callback để load dữ liệu mới
   };
+
+  if (feedbackList.length === 0) {
+    return (
+      <div className="py-10 opacity-50 font-medium text-sm">
+        Sản phẩm chưa có đánh giá
+      </div>
+    );
+  }
 
   return (
     <div className="py-10">

@@ -50,6 +50,7 @@ export const feedbackApi = baseApi.injectEndpoints({
 
     getAverageRating: builder.query<ApiResponse<number>, number>({
       query: (productId) => `Feedbacks/product/${productId}/average-rating`,
+      providesTags: ["Feedback", "FeedbackAverage"],
     }),
 
     createFeedback: builder.mutation<
@@ -61,7 +62,7 @@ export const feedbackApi = baseApi.injectEndpoints({
         method: "POST",
         body: feedbackDto,
       }),
-      invalidatesTags: ["Feedback"],
+      invalidatesTags: ["Feedback", "FeedbackAverage"],
     }),
 
     updateFeedback: builder.mutation<
