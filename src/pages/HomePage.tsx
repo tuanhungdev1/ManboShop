@@ -1,26 +1,16 @@
-import { PrimaryButton } from "@components/buttons";
-import { TestimonialSection } from "@sections/homePage";
-
-import { Link } from "react-router-dom";
+import { HeroSection, TestimonialSection } from "@sections/homePage";
 
 const HomePage = () => {
   return (
-    <div>
-      <div className="">
-        <div>
-          <Link to={"/account/register"}>
-            <PrimaryButton variant="contained">Register</PrimaryButton>
-          </Link>
-          <br />
-          <Link to={"/collection"}>
-            <PrimaryButton variant="contained">Collection</PrimaryButton>
-          </Link>
-        </div>
-      </div>
+    <main className="">
+      <section>
+        <HeroSection />
+      </section>
+      <section className="h-[1000px]"></section>
       <section>
         <TestimonialSection />
       </section>
-    </div>
+    </main>
   );
 };
 

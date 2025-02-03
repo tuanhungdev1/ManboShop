@@ -8,30 +8,32 @@ import { useAppDispatch } from "@redux/hooks";
 import { resetFilters } from "@redux/slices/filterSlice";
 import { ProductList } from "@components/products";
 import { Breadcrumbs } from "@mui/material";
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { useWindowSize } from '@hooks/useWindowSize';
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { useWindowSize } from "@hooks/useWindowSize";
+import { MetaData } from "@types-d/type";
 
 const CollectionDetail = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [pagination, setPagination] = useState<MetaData | null>(null);
   const dispatch = useAppDispatch();
   const { width } = useWindowSize();
 
   useEffect(() => {
     if (width >= 1024) {
       setIsFilterOpen(false);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
   }, [width]);
 
   useEffect(() => {
     if (isFilterOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isFilterOpen]);
 
@@ -39,25 +41,24 @@ const CollectionDetail = () => {
     setIsFilterOpen(!isFilterOpen);
   };
 
+  const handlePaginationChange = (metaData: MetaData) => {
+    setPagination(metaData);
+  };
   return (
     <div className="container mx-auto py-6">
       {/* Breadcrumb */}
-      <Breadcrumbs 
+      <Breadcrumbs
         separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb"
         className="mb-8"
       >
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className="text-gray-600 hover:text-primary-900 text-sm font-medium"
         >
           Shop
         </Link>
-        <span 
-          className="text-sm text-gray-600 font-medium"
-        >
-          All Products
-        </span>
+        <span className="text-sm text-gray-600 font-medium">All Products</span>
       </Breadcrumbs>
 
       {/* Main Content */}
@@ -73,21 +74,25 @@ const CollectionDetail = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
               <div className="hidden lg:flex items-center gap-2">
-                <button 
-                  onClick={() => setViewMode('grid')}
-                  className={`p-1.5 ${viewMode === 'grid' ? 'text-primary-900' : 'text-gray-400'}`}
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`p-1.5 ${
+                    viewMode === "grid" ? "text-primary-900" : "text-gray-400"
+                  }`}
                 >
                   <BsGrid3X3Gap className="w-5 h-5" />
                 </button>
-                <button 
-                  onClick={() => setViewMode('list')}
-                  className={`p-1.5 ${viewMode === 'list' ? 'text-primary-900' : 'text-gray-400'}`}
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`p-1.5 ${
+                    viewMode === "list" ? "text-primary-900" : "text-gray-400"
+                  }`}
                 >
                   <BsListUl className="w-5 h-5" />
                 </button>
               </div>
-              <span className="text-sm text-gray-500">
-                Showing 1–16 of 72 results
+              <span className="text-sm text-gray-500 font-medium">
+                {`Showing ${pagination?.currentPage} – ${pagination?.totalPage} of ${pagination?.totalCount} results`}
               </span>
             </div>
 
@@ -113,7 +118,10 @@ const CollectionDetail = () => {
           </div>
 
           {/* Products Grid */}
-          <ProductList viewMode={viewMode} />
+          <ProductList
+            viewMode={viewMode}
+            onPaginationChange={handlePaginationChange}
+          />
         </div>
       </div>
 
@@ -150,13 +158,13 @@ const CollectionDetail = () => {
           {/* Filter Actions */}
           <div className="flex-none p-4 bg-white border-t">
             <div className="flex gap-4">
-              <button 
+              <button
                 className="flex-1 py-3 px-4 border rounded-md text-center"
                 onClick={() => dispatch(resetFilters())}
               >
                 Reset
               </button>
-              <button 
+              <button
                 className="flex-1 py-3 px-4 bg-black text-white rounded-md text-center"
                 onClick={toggleFilter}
               >

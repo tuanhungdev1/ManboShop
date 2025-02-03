@@ -20,14 +20,14 @@ const RootLayout = () => {
   const { open, message, type } = useAppSelector((state) => state.snackbar);
 
   return (
-    <div>
+    <div className="overflow-hidden">
       <div className="fixed z-50 w-screen">
         <CartProvider>
           <Header />
         </CartProvider>
       </div>
 
-      <div className="pt-[100px] pb-[100px]">
+      <div className="pb-[100px]">
         <Suspense fallback={<LoadingPage />}>
           <Outlet />
         </Suspense>

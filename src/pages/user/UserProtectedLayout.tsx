@@ -30,7 +30,7 @@ const UserProtectedLayout = () => {
   if (error) return <Navigate to={"/account/login"} />;
 
   return (
-    <div>
+    <div className="pt-[100px]">
       <UserLayout />
     </div>
   );

@@ -105,7 +105,7 @@ const CreateFeedbackForm: React.FC<CreateFeedbackFormProps> = ({
     <div>
       <h1 className="text-xl font-semibold mb-6">Add your Review</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={4}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <div className="flex flex-col gap-2">
               <span className="font-medium text-sm mb-2">Your Rating</span>

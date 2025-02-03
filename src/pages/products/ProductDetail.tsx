@@ -241,7 +241,7 @@ const ProductDetail = () => {
 
   return (
     product.data && (
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 pt-[100px]">
         {/* Breadcrumb */}
         <Breadcrumb
           items={[
