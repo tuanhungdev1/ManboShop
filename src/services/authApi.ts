@@ -3,6 +3,8 @@ import { RegisterFormData } from "@pages/auth/RegisterPage";
 import { login } from "@redux/slices/authSlice";
 import { ApiResponse, Token } from "@types-d/type";
 import { baseApi } from "./baseApi";
+import { openSnackbar } from "@redux/slices/snackbarSlice";
+import { authStorage } from "@utils/authStorage";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => {
@@ -52,25 +54,28 @@ export const authApi = baseApi.injectEndpoints({
         async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;
-            // Dispatch action login từ authSlice khi có response thành công
-            dispatch(
-              login({
-                ...data,
-                token: {
-                  accessToken: data.token?.accessToken || "",
-                  refreshToken: data.token?.refreshToken || "",
-                  isRemembered: _arg.isRemember,
-                },
-              })
-            );
+
+            const authData = {
+              ...data,
+              token: {
+                accessToken: data.token?.accessToken || "",
+                refreshToken: data.token?.refreshToken || "",
+                isRemembered: _arg.isRemember,
+              },
+            };
 
             if (_arg.isRemember) {
-              localStorage.setItem("accessToken", data.token?.accessToken!);
-              localStorage.setItem("refreshToken", data.token?.refreshToken!);
+              dispatch(login(authData));
+            } else {
+              authStorage.saveAuthData(authData.token, _arg.isRemember);
             }
-          } catch (error) {
-            // Handle error nếu cần
-            console.error("Login failed:", error);
+          } catch (error: any) {
+            dispatch(
+              openSnackbar({
+                type: "error",
+                message: error.data.Message || "Đăng nhập thất bại",
+              })
+            );
           }
         },
       }),

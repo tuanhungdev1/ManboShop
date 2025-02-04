@@ -1,33 +1,21 @@
-// services/baseApi.ts
 import { RootState } from "@redux/store";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { ApiResponse, Token } from "@types-d/type";
 import { logout, setToken } from "@redux/slices/authSlice";
-
-export function getAccessToken(): string | null {
-  return (
-    localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken")
-  );
-}
-
-export function getRefreshToken(): string | null {
-  return (
-    localStorage.getItem("refreshToken") ||
-    sessionStorage.getItem("refreshToken")
-  );
-}
+import { authStorage } from "@utils/authStorage";
 
 const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
   const state = api.getState() as RootState;
   const remember = state.auth.isRemembered;
+
   const fetchBaseQueryInstance = fetchBaseQuery({
     baseUrl: import.meta.env.VITE_BASE_URL,
-    prepareHeaders: (headers, { getState }) => {
-      const state = getState() as RootState;
-      const token = state.auth.accessToken;
+    prepareHeaders: (headers, {}) => {
+      const token = state.auth.accessToken ?? authStorage.getAccessToken();
 
+      console.log(token);
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
@@ -44,8 +32,8 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
   if (result.error && result.error.status === 401) {
     try {
       // Get current tokens
-      const currentAccessToken = getAccessToken();
-      const currentRefreshToken = getRefreshToken();
+      const currentAccessToken = authStorage.getAccessToken();
+      const currentRefreshToken = authStorage.getRefreshToken();
 
       if (!currentAccessToken || !currentRefreshToken) {
         return result;
@@ -55,6 +43,7 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
         accessToken: currentAccessToken,
         refreshToken: currentRefreshToken,
       };
+
       // Attempt to refresh token
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}/Auth/refresh-token`,
@@ -75,14 +64,12 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
 
       const { accessToken, refreshToken } = data.token!;
 
-      // Save new tokens
-      const storage = remember ? localStorage : sessionStorage;
-      storage.setItem("accessToken", accessToken);
-      storage.setItem("refreshToken", refreshToken);
+      // Save new tokens using authStorage
+      authStorage.saveTokens(accessToken, refreshToken, remember);
 
       const token: Token = {
-        accessToken: accessToken,
-        refreshToken: refreshToken,
+        accessToken,
+        refreshToken,
       };
 
       // Update the state with new access token
@@ -94,6 +81,7 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
     } catch (refreshError) {
       // If refresh token fails, logout or handle accordingly
       api.dispatch(logout());
+      authStorage.clearAuthData();
       return result;
     }
   }

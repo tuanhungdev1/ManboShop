@@ -10,8 +10,8 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  accessToken: localStorage.getItem("accessToken"),
-  refreshToken: localStorage.getItem("refreshToken"),
+  accessToken: null,
+  refreshToken: null,
   isRemembered: false,
   user: null,
 };
@@ -21,14 +21,16 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action: PayloadAction<ApiResponse<object>>) => {
-      state.accessToken = action.payload.token?.accessToken || null;
-      state.refreshToken = action.payload.token?.refreshToken || null;
-      state.isRemembered = action.payload.token?.isRemembered || false;
+      const token = action.payload.token;
+      if (token) {
+        state.accessToken = token.accessToken || null;
+        state.refreshToken = token.refreshToken || null;
+        state.isRemembered = token.isRemembered || false;
+      }
     },
 
-    logout: (state) => {
-      state.accessToken = null;
-      state.refreshToken = null;
+    logout: () => {
+      return initialState;
     },
 
     saveUser: (state, action: PayloadAction<ApiResponse<User>>) => {

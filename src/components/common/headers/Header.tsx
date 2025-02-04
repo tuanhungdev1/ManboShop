@@ -6,7 +6,7 @@ import { MegaMenu } from "./MegaMenu";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { hideBackdrop, showBackdrop } from "@redux/slices/backdropSlice";
 import { cn } from "@utils/cn";
-import { selectAccessToken } from "@redux/slices/authSlice";
+import { selectUser } from "@redux/slices/authSlice";
 import { IoMdClose } from "react-icons/io";
 import { Tooltip } from "@mui/material";
 import CartList from "@components/cartList/CartList";
@@ -18,7 +18,8 @@ import {
 import { formatPrice } from "@utils/format";
 
 const Header = () => {
-  const accessToken = useAppSelector(selectAccessToken);
+  const user = useAppSelector(selectUser);
+  console.log(user);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -190,7 +191,7 @@ const Header = () => {
               </div>
 
               {/* Login */}
-              {!accessToken ? (
+              {!user ? (
                 <Link
                   to="/account/login"
                   className="hidden lg:block px-6 py-2 bg-black text-white rounded-md text-sm font-medium hover:bg-gray-800"
