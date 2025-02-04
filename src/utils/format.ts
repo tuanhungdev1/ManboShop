@@ -69,15 +69,16 @@ export const unformatPrice = (formattedPrice: string): number => {
     return 0;
   }
 };
-
 export function formatDateTime(dateTimeString: string): string {
   const date = new Date(dateTimeString);
+  const now = new Date();
+
+  const isCurrentYear = date.getFullYear() === now.getFullYear(); // Kiểm tra có phải năm hiện tại không
 
   const options: Intl.DateTimeFormatOptions = {
-    year: "numeric", // Năm
-    month: "long", // Tháng
+    month: "long", // Tháng (dạng chữ)
     day: "numeric", // Ngày
-    weekday: "long", // Thứ trong tuần
+    ...(isCurrentYear ? {} : { year: "numeric" }), // Chỉ thêm năm nếu khác năm hiện tại
   };
 
   const formattedDate = date.toLocaleDateString("vi-VN", options);
@@ -85,10 +86,10 @@ export function formatDateTime(dateTimeString: string): string {
   const timeOptions: Intl.DateTimeFormatOptions = {
     hour: "2-digit", // Giờ
     minute: "2-digit", // Phút
-    second: "2-digit", // Giây
+    hour12: false, // Hiển thị theo định dạng 24h
   };
 
   const formattedTime = date.toLocaleTimeString("vi-VN", timeOptions);
 
-  return `${formattedDate} - ${formattedTime}`;
+  return `Ngày ${formattedDate} lúc ${formattedTime}`;
 }

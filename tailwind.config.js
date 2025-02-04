@@ -21,7 +21,7 @@ export default {
       keyframes: {
         marquee: {
           "0%": { transform: "translateX(0%)" },
-          "100%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(-50%)" },
         },
         colorAndRotate: {
           "0%, 100%": { color: "black", transform: "rotate(0deg)" },
@@ -38,7 +38,7 @@ export default {
         },
       },
       animation: {
-        marquee: "marquee 25s linear infinite",
+        marquee: "marquee 80s linear infinite",
         colorRotate: "colorAndRotate 1s infinite",
         shake: "shake 0.9s ease-in-out infinite",
       },

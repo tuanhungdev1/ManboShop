@@ -97,8 +97,7 @@ const FeedbackItem: React.FC<FeedbackItemProps> = ({ feedback }) => {
         </div>
         <div>
           <span className="text-sm text-gray-400 font-medium">
-            Posted on{" "}
-            <span className="text-gray-800">
+            <span className="text-black opacity-50">
               {formatDateTime(feedback.createdAt.toString())}
             </span>
           </span>
