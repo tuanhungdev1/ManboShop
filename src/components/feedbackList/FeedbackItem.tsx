@@ -7,6 +7,7 @@ import {
   useUnlikeFeedbackMutation,
 } from "@services/feedbackApi";
 import { FeedbackDto } from "@types-d/feedback";
+import { authStorage } from "@utils/authStorage";
 import { formatDateTime } from "@utils/format";
 import { AiFillLike } from "react-icons/ai";
 import { HiOutlineDotsVertical } from "react-icons/hi";
@@ -19,7 +20,8 @@ interface FeedbackItemProps {
 const FeedbackItem: React.FC<FeedbackItemProps> = ({ feedback }) => {
   const navigate = useNavigate();
 
-  const accessToken = useAppSelector(selectAccessToken);
+  const accessToken =
+    useAppSelector(selectAccessToken) ?? authStorage.getAuthData()?.accessToken;
 
   const [likeFeedback] = useLikeFeedbackMutation();
 

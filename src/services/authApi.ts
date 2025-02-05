@@ -6,6 +6,14 @@ import { baseApi } from "./baseApi";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
 import { authStorage } from "@utils/authStorage";
 
+export interface LoginGoogleDto {
+  credential: string;
+}
+
+export interface LoginFacebookDto {
+  credential: string;
+}
+
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => {
     return {
@@ -43,6 +51,25 @@ export const authApi = baseApi.injectEndpoints({
           method: "POST",
         }),
       }),
+      googleLogin: builder.mutation<ApiResponse<object>, LoginGoogleDto>({
+        query: ({ credential }) => ({
+          url: `Auth/google-login`,
+          body: {
+            credential: credential,
+          },
+          method: "POST",
+        }),
+        invalidatesTags: ["User"],
+      }),
+      facebookLogin: builder.mutation<ApiResponse<object>, LoginFacebookDto>({
+        query: ({ credential }) => ({
+          url: "/auth/facebook-login",
+          method: "POST",
+          body: {
+            credential: credential,
+          },
+        }),
+      }),
       login: builder.mutation<ApiResponse<object>, LoginFormData>({
         query: ({ password, username, isRemember }) => {
           return {
@@ -78,6 +105,7 @@ export const authApi = baseApi.injectEndpoints({
             );
           }
         },
+        invalidatesTags: ["User", "CurentUser"],
       }),
       verifyOTP: builder.mutation({
         query: ({ email, verificationCode }) => {
@@ -104,4 +132,6 @@ export const {
   useLoginMutation,
   useVerifyOTPMutation,
   useRefreshTokenMutation,
+  useGoogleLoginMutation,
+  useFacebookLoginMutation,
 } = authApi;

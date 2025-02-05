@@ -1,10 +1,12 @@
+import { Token } from "@types-d/type";
+
 export const authStorage = {
-  saveAuthData: (data: object, isRemember: boolean) => {
+  saveAuthData: (data: Token, isRemember: boolean) => {
     const storage = isRemember ? localStorage : sessionStorage;
     storage.setItem("auth", JSON.stringify(data));
   },
 
-  getAuthData: (): object | null => {
+  getAuthData: (): Token | null => {
     const data = localStorage.getItem("auth") || sessionStorage.getItem("auth");
     return data ? JSON.parse(data) : null;
   },
@@ -14,14 +16,8 @@ export const authStorage = {
     sessionStorage.removeItem("auth");
   },
 
-  saveTokens: (
-    accessToken: string,
-    refreshToken: string,
-    isRemember: boolean
-  ) => {
-    const storage = isRemember ? localStorage : sessionStorage;
-    storage.setItem("accessToken", accessToken);
-    storage.setItem("refreshToken", refreshToken);
+  saveSessionTokens: (token: Token) => {
+    sessionStorage.setItem("auth", JSON.stringify(token));
   },
 
   getAccessToken: (): string | null => {

@@ -26,6 +26,7 @@ import SettingPage from "@pages/user/SettingPage";
 import AddressPage from "@pages/user/AddressPage";
 import ProtectedLayout from "@pages/shoppingCart/ProtectedLayout";
 import ShoppingCartPage from "@pages/shoppingCart/ShoppingCartPage";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -113,10 +114,12 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <RouterProvider router={router} />
-      </ThemeProvider>
-    </Provider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </Provider>
+    </GoogleOAuthProvider>
   </StrictMode>
 );

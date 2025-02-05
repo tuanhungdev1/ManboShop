@@ -11,6 +11,7 @@ export const favoriteApi = baseApi.injectEndpoints({
         method: "POST",
         body: favorite,
       }),
+      invalidatesTags: ["User"],
     }),
 
     getFavoritesProduct: builder.query<ApiResponse<Product[]>, void>({
@@ -23,6 +24,7 @@ export const favoriteApi = baseApi.injectEndpoints({
         method: "DELETE",
         body: favorite,
       }),
+      invalidatesTags: ["User"],
     }),
   }),
 });

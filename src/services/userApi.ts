@@ -24,7 +24,8 @@ export const userApi = baseApi.injectEndpoints({
     }),
 
     getUser: builder.query<ApiResponse<User>, void>({
-      query: () => `Users/current`, // Assuming the endpoint is /Users/me
+      query: () => `Users/current`,
+      providesTags: ["User"],
     }),
     // Get user by ID
     getUserById: builder.query<ApiResponse<User>, number>({

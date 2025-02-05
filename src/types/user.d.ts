@@ -7,6 +7,8 @@ export interface User {
   address?: string;
   profilePictureUrl?: string;
   phoneNumber?: string;
+  totalFavoriteProducts: number;
+  totalCartProducts: number;
   createdAt: Date;
   updatedAt?: Date;
   roles: string[];

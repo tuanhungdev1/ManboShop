@@ -19,21 +19,17 @@ export interface UpdateProfileFormData {
   address?: string;
 }
 
+const noNumbersRegex = /^[^\d]+$/;
+
 const updateProfileSchema = yup.object().shape({
   firstname: yup
     .string()
     .max(100, "Tên không được vượt quá 100 ký tự")
-    .matches(
-      /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂÊÔơưăêô\s]+$/,
-      "Tên không được chứa số hoặc ký tự đặc biệt"
-    ),
+    .matches(noNumbersRegex, "Tên không được chứa số"),
   lastname: yup
     .string()
     .max(100, "Họ không được vượt quá 100 ký tự")
-    .matches(
-      /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂÊÔơưăêô\s]+$/,
-      "Họ không được chứa số hoặc ký tự đặc biệt"
-    ),
+    .matches(noNumbersRegex, "Họ không được chứa số"),
   phoneNumber: yup
     .string()
     .matches(/^[0-9]+$/, "Số điện thoại chỉ được chứa số")

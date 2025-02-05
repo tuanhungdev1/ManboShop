@@ -6,7 +6,11 @@ import { MegaMenu } from "./MegaMenu";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { hideBackdrop, showBackdrop } from "@redux/slices/backdropSlice";
 import { cn } from "@utils/cn";
-import { selectUser } from "@redux/slices/authSlice";
+import {
+  saveUser,
+  selectAccessToken,
+  selectUser,
+} from "@redux/slices/authSlice";
 import { IoMdClose } from "react-icons/io";
 import { Tooltip } from "@mui/material";
 import CartList from "@components/cartList/CartList";
@@ -16,10 +20,12 @@ import {
   selectCartTotalItems,
 } from "@redux/slices/cartSlice";
 import { formatPrice } from "@utils/format";
+import { authStorage } from "@utils/authStorage";
+import { useGetUserQuery } from "@services/userApi";
 
 const Header = () => {
   const user = useAppSelector(selectUser);
-  console.log(user);
+
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -29,6 +35,25 @@ const Header = () => {
 
   const totalCount = useAppSelector(selectCartTotalItems);
   const totalAmount = useAppSelector(selectCartTotalAmount);
+
+  const accessToken =
+    useAppSelector(selectAccessToken) ?? authStorage.getAuthData()?.accessToken;
+
+  const { data, isSuccess, refetch } = useGetUserQuery(undefined, {
+    skip: !accessToken,
+  });
+
+  useEffect(() => {
+    if (accessToken) {
+      refetch();
+    }
+  }, [accessToken, refetch]);
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      dispatch(saveUser(data));
+    }
+  }, [isSuccess, data, dispatch]);
 
   useEffect(() => {
     if (isOpenCartSidebar) {
@@ -164,13 +189,17 @@ const Header = () => {
               {/* Wishlist */}
               <Link
                 to="/user/wishlists"
-                className="p-2 hover:bg-gray-100 rounded-full"
+                className="p-2 hover:bg-gray-100 rounded-full relative"
               >
                 <Tooltip title="Yêu thích">
                   <div>
                     <FiHeart className="w-5 h-5" />
                   </div>
                 </Tooltip>
+
+                {user && user?.totalFavoriteProducts > 0 && (
+                  <div className="absolute bg-black w-[9px] h-[9px] top-1 right-1 flex items-center justify-center rounded-full"></div>
+                )}
               </Link>
 
               {/* Cart */}

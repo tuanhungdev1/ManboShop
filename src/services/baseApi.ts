@@ -13,9 +13,9 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
   const fetchBaseQueryInstance = fetchBaseQuery({
     baseUrl: import.meta.env.VITE_BASE_URL,
     prepareHeaders: (headers, {}) => {
-      const token = state.auth.accessToken ?? authStorage.getAccessToken();
+      const token =
+        state.auth.accessToken ?? authStorage.getAuthData()?.accessToken;
 
-      console.log(token);
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
@@ -32,8 +32,10 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
   if (result.error && result.error.status === 401) {
     try {
       // Get current tokens
-      const currentAccessToken = authStorage.getAccessToken();
-      const currentRefreshToken = authStorage.getRefreshToken();
+      const currentAccessToken =
+        state.auth.accessToken ?? authStorage.getAuthData()?.accessToken;
+      const currentRefreshToken =
+        state.auth.refreshToken ?? authStorage.getAuthData()?.refreshToken;
 
       if (!currentAccessToken || !currentRefreshToken) {
         return result;
@@ -65,15 +67,18 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
       const { accessToken, refreshToken } = data.token!;
 
       // Save new tokens using authStorage
-      authStorage.saveTokens(accessToken, refreshToken, remember);
 
       const token: Token = {
         accessToken,
         refreshToken,
       };
 
-      // Update the state with new access token
-      api.dispatch(setToken(token));
+      if (remember) {
+        // Update the state with new access token
+        api.dispatch(setToken(token));
+      } else {
+        authStorage.saveSessionTokens(data.token!);
+      }
 
       // Retry the original request with the new token
       const retryResult = await fetchBaseQueryInstance(args, api, extraOptions);
@@ -92,6 +97,15 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: customBaseQuery,
-  tagTypes: ["Cart", "Address", "Feedback", "FeedbackAverage"],
+  tagTypes: [
+    "Cart",
+    "Address",
+    "Feedback",
+    "FeedbackAverage",
+    "Login",
+    "Auth",
+    "User",
+    "CurentUser",
+  ],
   endpoints: () => ({}),
 });
