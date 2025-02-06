@@ -1,24 +1,34 @@
 import { CgClose } from "react-icons/cg";
+import { SORT_OPTIONS } from "./ProductSort";
 
 interface FilterResultsTagProp {
-  data: string[] | { min: number; max: number } | { sortBy: string };
+  label?: string;
+  data:
+    | string[]
+    | { min: number; max: number }
+    | { sortBy: string }
+    | { searchTerm: string };
   onClose?: () => void;
 }
 
 const FilterResultsTag: React.FC<FilterResultsTagProp> = ({
   data,
+  label,
   onClose,
 }) => {
   let displayText = "";
 
   if (Array.isArray(data)) {
-    displayText = data.join(", ");
+    displayText = `${label ?? ""} ${data.join(", ")}`;
   } else if ("min" in data && "max" in data) {
     displayText = `Giá: ${data.min.toLocaleString(
       "vi-VN"
     )} - ${data.max.toLocaleString("vi-VN")} VND`;
   } else if ("sortBy" in data) {
-    displayText = `Sắp xếp: ${data.sortBy}`;
+    const sort = SORT_OPTIONS.find((item) => item.id === data.sortBy);
+    displayText = `Sắp xếp: ${sort?.label}`;
+  } else if ("searchTerm" in data) {
+    displayText = `Tìm kiếm: ${data.searchTerm}`;
   }
 
   return (

@@ -9,7 +9,6 @@ import { cn } from "@utils/cn";
 import {
   saveUser,
   selectAccessToken,
-  selectIsRemembered,
   selectUser,
 } from "@redux/slices/authSlice";
 import { IoMdClose } from "react-icons/io";
@@ -23,10 +22,13 @@ import {
 import { formatPrice } from "@utils/format";
 import { authStorage } from "@utils/authStorage";
 import { useGetUserQuery } from "@services/userApi";
+import { setSearchTerm } from "@redux/slices/filterSlice";
+import { CiSearch } from "react-icons/ci";
 
 const Header = () => {
   const user = useAppSelector(selectUser);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchTermValue, setSearchTermValue] = useState("");
   const dispatch = useAppDispatch();
 
   const [isOpenCartSidebar, setIsOpenCartSidebar] = useState(false);
@@ -42,6 +44,14 @@ const Header = () => {
   const { data, isSuccess, refetch } = useGetUserQuery(undefined, {
     skip: !accessToken,
   });
+
+  const handleSearchChange = (event: any) => {
+    setSearchTermValue(event.target.value);
+  };
+
+  const handleSearchSubmmit = () => {
+    dispatch(setSearchTerm(searchTermValue));
+  };
 
   useEffect(() => {
     if (accessToken) {
@@ -250,15 +260,24 @@ const Header = () => {
           <div className="container mx-auto px-4 pt-20">
             <div className="bg-white rounded-lg p-4">
               <div className="flex items-center border-b gap-1 pb-2 border-gray-200">
-                <CgSearch className="w-5 h-5 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Search products..."
-                  className="w-full p-2 focus:outline-none"
+                  className="w-full p-2 focus:outline-none placeholder:text-sm placeholder:font-medium"
                   autoFocus
+                  onChange={(e) => handleSearchChange(e)}
                 />
                 <button
-                  onClick={() => setIsSearchOpen(false)}
+                  onClick={handleSearchSubmmit}
+                  className="w-[40px] h-[40px] transition-all duration-300 flex items-center justify-center hover:bg-gray-100 rounded-full"
+                >
+                  <CiSearch className="w-5 h-5 text-gray-400" />
+                </button>
+                <button
+                  onClick={() => {
+                    setIsSearchOpen(false);
+                    setSearchTermValue("");
+                  }}
                   className="w-[40px] h-[40px] text-[30px] transition-all duration-300 flex items-center justify-center hover:bg-gray-100 rounded-full"
                 >
                   ×

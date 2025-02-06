@@ -5,18 +5,22 @@ import { Product, ProductRequestParameters } from "@types-d/product";
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Get all products with filters
-    getProducts: builder.query<ApiResponse<Product[]>, ProductRequestParameters>({
+    getProducts: builder.query<
+      ApiResponse<Product[]>,
+      ProductRequestParameters
+    >({
       query: (params) => ({
         url: "Products",
         params: {
           PageSize: params.pageSize,
           PageNumber: params.pageNumber,
+          SearchTerm: params.searchTerm,
           OrderBy: params.orderBy,
-          BrandId: params.brandId,
-          CategoryId: params.categoryId,
-          MinPrice: params.minPrice,
-          MaxPrice: params.maxPrice,
-          OrderPrice: params.orderPrice,
+          Brands: params.brands,
+          Colors: params.colors,
+          Sizes: params.sizes,
+          Categories: params.categories,
+          PriceRange: params.priceRange,
         },
       }),
     }),
@@ -25,10 +29,10 @@ export const productApi = baseApi.injectEndpoints({
     getProduct: builder.query<ApiResponse<Product>, number>({
       query: (id) => `Products/${id}`,
     }),
-// Get product by SLUG NAME
-  getProductBySlugName: builder.query<ApiResponse<Product>, string>({
-  query: (slug) => `Products/bySlug/${slug}`,
-}),
+    // Get product by SLUG NAME
+    getProductBySlugName: builder.query<ApiResponse<Product>, string>({
+      query: (slug) => `Products/bySlug/${slug}`,
+    }),
     // Get products by category
     getProductsByCategory: builder.query<ApiResponse<Product[]>, number>({
       query: (categoryId) => `Products/category/${categoryId}`,
@@ -97,6 +101,3 @@ export const {
   useDeleteProductMutation,
   useUpdateProductQuantityMutation,
 } = productApi;
-
-
-

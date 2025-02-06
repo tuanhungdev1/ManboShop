@@ -24,14 +24,13 @@ const ProductList = ({ viewMode, onPaginationChange }: ProductListProps) => {
   const { data, isLoading, isFetching, isSuccess } = useGetProductsQuery({
     pageNumber: currentPage,
     pageSize,
-    brandId: filters.brands.length > 0 ? Number(filters.brands[0]) : undefined,
-    categoryId:
-      filters.productTypes.length > 0
-        ? Number(filters.productTypes[0])
-        : undefined,
-    minPrice: filters.priceRange?.min,
-    maxPrice: filters.priceRange?.max,
-    orderPrice: filters.sortBy || undefined,
+    orderBy: filters.sortBy ?? undefined,
+    priceRange: filters.priceRange ?? undefined,
+    sizes: filters.sizes,
+    brands: filters.brands,
+    searchTerm: filters.searchTerm ?? undefined,
+    categories: filters.productTypes,
+    colors: filters.colors,
   });
 
   useEffect(() => {

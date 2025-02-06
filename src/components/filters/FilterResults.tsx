@@ -5,12 +5,14 @@ import {
   resetFilters,
   resetPriceRange,
   resetProductTypes,
+  resetSearchTerm,
   resetSizes,
   resetSortBy,
   selectBrands,
   selectColors,
   selectPriceRange,
   selectProductTypes,
+  selectSearchTerm,
   selectSizes,
   selectSortBy,
 } from "@redux/slices/filterSlice";
@@ -24,11 +26,13 @@ const FilterResults = () => {
   const availableSizes = useAppSelector(selectSizes);
   const priceRange = useAppSelector(selectPriceRange);
   const sortBy = useAppSelector(selectSortBy);
+  const searchTerm = useAppSelector(selectSearchTerm);
 
   return (
     <div className="flex flex-wrap items-center gap-4">
       {brands && brands.length > 0 && (
         <FilterResultsTag
+          label="Thương hiệu:"
           data={brands}
           onClose={() => dispatch(resetBrands())}
         />
@@ -36,6 +40,7 @@ const FilterResults = () => {
 
       {colors && colors.length > 0 && (
         <FilterResultsTag
+          label="Màu sắc:"
           data={colors}
           onClose={() => dispatch(resetColors())}
         />
@@ -43,6 +48,7 @@ const FilterResults = () => {
 
       {productCategories && productCategories.length > 0 && (
         <FilterResultsTag
+          label="Danh mục:"
           data={productCategories}
           onClose={() => dispatch(resetProductTypes())}
         />
@@ -50,6 +56,7 @@ const FilterResults = () => {
 
       {availableSizes && availableSizes.length > 0 && (
         <FilterResultsTag
+          label="Kích cỡ:"
           data={availableSizes}
           onClose={() => dispatch(resetSizes())}
         />
@@ -65,6 +72,14 @@ const FilterResults = () => {
         <FilterResultsTag
           data={{ sortBy }}
           onClose={() => dispatch(resetSortBy())}
+        />
+      )}
+
+      {searchTerm && (
+        <FilterResultsTag
+          label="Tìm kiếm:"
+          data={{ searchTerm }}
+          onClose={() => dispatch(resetSearchTerm())}
         />
       )}
 

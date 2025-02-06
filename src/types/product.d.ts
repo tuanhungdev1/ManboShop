@@ -1,3 +1,4 @@
+import { PriceRange } from "@redux/slices/filterSlice";
 import { Brand } from "./brand";
 import { Category } from "./category";
 import { RequestParameters } from "./type";
@@ -13,7 +14,7 @@ export interface Product {
   quantity: number;
   category?: Category;
   brand?: Brand;
-  createdAt: string; 
+  createdAt: string;
   updatedAt?: string;
   productImages: ProductImage[];
   attributes: ProductAttributeValue[];
@@ -70,12 +71,10 @@ export interface ProductVariantDetail {
   value: string;
 }
 
-
-  export interface ProductRequestParameters extends RequestParameters {
-    brandId?: number;
-    categoryId?: number;
-    minPrice?: number;
-    maxPrice?: number;
-    orderPrice?: string;
-  }
-
+export interface ProductRequestParameters extends RequestParameters {
+  brands?: string[];
+  categories?: string[];
+  colors?: string[];
+  sizes?: string[];
+  priceRange?: PriceRange;
+}

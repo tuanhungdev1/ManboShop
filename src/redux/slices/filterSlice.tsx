@@ -2,7 +2,7 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface PriceRange {
+export interface PriceRange {
   min: number;
   max: number;
 }
@@ -14,6 +14,7 @@ export interface FilterState {
   colors: string[];
   priceRange: PriceRange | null;
   sortBy: string | null;
+  searchTerm: string | null;
 }
 
 const initialState: FilterState = {
@@ -23,6 +24,7 @@ const initialState: FilterState = {
   colors: [],
   priceRange: null,
   sortBy: null,
+  searchTerm: null,
 };
 
 const filterSlice = createSlice({
@@ -83,6 +85,10 @@ const filterSlice = createSlice({
       state.sortBy = action.payload;
     },
 
+    setSearchTerm: (state, action: PayloadAction<string>) => {
+      state.searchTerm = action.payload;
+    },
+
     resetProductTypes: (state) => {
       state.productTypes = [];
     },
@@ -112,6 +118,9 @@ const filterSlice = createSlice({
       state.sortBy = null;
     },
 
+    resetSearchTerm: (state) => {
+      state.searchTerm = null;
+    },
     // Reset all filters
     resetFilters: () => {
       return initialState;
@@ -127,6 +136,7 @@ export const {
   toggleColor,
   setPriceRange,
   setSortBy,
+  setSearchTerm,
   resetFilters,
   resetBrands,
   resetColors,
@@ -134,6 +144,7 @@ export const {
   resetProductTypes,
   resetSizes,
   resetSortBy,
+  resetSearchTerm,
 } = filterSlice.actions;
 
 // Selectors
@@ -149,5 +160,7 @@ export const selectPriceRange = (state: { filter: FilterState }) =>
   state.filter.priceRange;
 export const selectSortBy = (state: { filter: FilterState }) =>
   state.filter.sortBy;
+export const selectSearchTerm = (state: { filter: FilterState }) =>
+  state.filter.searchTerm;
 
 export default filterSlice.reducer;

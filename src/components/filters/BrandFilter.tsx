@@ -34,8 +34,8 @@ const BrandFilter = () => {
     );
   }
 
-  const handleBrandChange = (brandId: string) => {
-    dispatch(toggleBrand(brandId));
+  const handleBrandChange = (brand: string) => {
+    dispatch(toggleBrand(brand));
   };
 
   return (
@@ -44,48 +44,53 @@ const BrandFilter = () => {
       onChange={() => setIsExpanded(!isExpanded)}
       elevation={0}
       sx={{
-        '&.MuiAccordion-root': {
+        "&.MuiAccordion-root": {
           borderRadius: 0,
-          borderBottom: '1px solid #eee',
+          borderBottom: "1px solid #eee",
         },
-        '&.MuiAccordion-root:before': {
-          display: 'none',
+        "&.MuiAccordion-root:before": {
+          display: "none",
         },
       }}
       className="bg-red-300"
     >
       <AccordionSummary
-        expandIcon={<FiChevronDown className="text-[20px] text-black"/>}
+        expandIcon={<FiChevronDown className="text-[20px] text-black" />}
         sx={{
-          padding: '16px 0',
-          '& .MuiAccordionSummary-content': {
+          padding: "16px 0",
+          "& .MuiAccordionSummary-content": {
             margin: 0,
           },
-          '& .MuiAccordionSummary-expandIconWrapper': {
-            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s',
+          "& .MuiAccordionSummary-expandIconWrapper": {
+            transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.2s",
           },
         }}
       >
         <span className="font-bold text-[17px]">Product Brands</span>
       </AccordionSummary>
-      <AccordionDetails sx={{ padding: '0 0 16px 0' }}>
+      <AccordionDetails sx={{ padding: "0 0 16px 0" }}>
         <div className="flex flex-col gap-4">
-          {brandsResponse?.data && brandsResponse?.data.map((brand) => (
-            <div className="flex items-center justify-between">
-              <Checkbox
-                label={brand.name}
-                isChecked={selectedBrands.includes(brand.id.toString())}
-                onClick={() => handleBrandChange(brand.id.toString())}
-                classname={selectedBrands.includes(brand.id.toString()) ? 'font-medium' : ''}
-              />
-              {/* {brand.productCount && (
+          {brandsResponse?.data &&
+            brandsResponse?.data.map((brand) => (
+              <div className="flex items-center justify-between">
+                <Checkbox
+                  label={brand.name}
+                  isChecked={selectedBrands.includes(brand.name.toString())}
+                  onClick={() => handleBrandChange(brand.name.toString())}
+                  classname={
+                    selectedBrands.includes(brand.id.toString())
+                      ? "font-medium"
+                      : ""
+                  }
+                />
+                {/* {brand.productCount && (
                 <span className="text-gray-500 text-[13px]">
                   ({brand.productCount})
                 </span>
               )} */}
-            </div>
-          ))}
+              </div>
+            ))}
         </div>
       </AccordionDetails>
     </Accordion>

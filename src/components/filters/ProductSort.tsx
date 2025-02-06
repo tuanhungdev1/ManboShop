@@ -10,7 +10,7 @@ interface SortOption {
   label: string;
 }
 
-const SORT_OPTIONS: SortOption[] = [
+export const SORT_OPTIONS: SortOption[] = [
   { id: "featured", label: "Sản phẩm nổi bật" },
   { id: "newest", label: "Sản phẩm mới" },
   { id: "bestseller", label: "Bán chạy nhất" },
@@ -41,14 +41,13 @@ const ProductSort = ({ onSortChange }: ProductSortProps) => {
   };
 
   const handleSortSelect = (option: SortOption) => {
-    dispatch(setSortBy(option.label));
-    onSortChange?.(option.id);
+    dispatch(setSortBy(option.id));
+    onSortChange?.(option.label);
     handleClose();
   };
 
   return (
     <div className="flex items-center justify-between gap-4 py-4 select-none">
-
       <div className="">
         <Button
           onClick={handleClick}

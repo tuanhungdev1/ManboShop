@@ -45,7 +45,7 @@ const CollectionDetail = () => {
     setPagination(metaData);
   };
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto py-6 px-4">
       {/* Breadcrumb */}
       <Breadcrumbs
         separator={<NavigateNextIcon fontSize="small" />}
@@ -69,7 +69,7 @@ const CollectionDetail = () => {
         </div>
 
         {/* Products Section */}
-        <div>
+        <div className="">
           {/* Header Controls */}
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
@@ -97,11 +97,7 @@ const CollectionDetail = () => {
             </div>
 
             <div className="flex items-center gap-4">
-              <ProductSort
-                onSortChange={(sortId) => {
-                  console.log("Selected sort:", sortId);
-                }}
-              />
+              <ProductSort onSortChange={() => {}} />
               <button
                 onClick={toggleFilter}
                 className="lg:hidden flex items-center gap-2 px-4 py-2 bg-gray-100 rounded"
