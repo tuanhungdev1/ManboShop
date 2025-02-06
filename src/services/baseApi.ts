@@ -13,8 +13,9 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
   const fetchBaseQueryInstance = fetchBaseQuery({
     baseUrl: import.meta.env.VITE_BASE_URL,
     prepareHeaders: (headers, {}) => {
-      const token =
-        state.auth.accessToken ?? authStorage.getAuthData()?.accessToken;
+      const token = remember
+        ? state.auth.accessToken
+        : authStorage.getAuthData()?.accessToken;
 
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);

@@ -74,7 +74,7 @@ export const feedbackApi = baseApi.injectEndpoints({
         method: "PUT",
         body: feedbackDto,
       }),
-      invalidatesTags: ["Feedback"],
+      invalidatesTags: ["Feedback", "FeedbackAverage", "Feedback"],
     }),
 
     deleteFeedback: builder.mutation<ApiResponse<object>, number>({
@@ -82,7 +82,7 @@ export const feedbackApi = baseApi.injectEndpoints({
         url: `Feedbacks/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Feedback"],
+      invalidatesTags: ["Feedback", "FeedbackAverage", "Feedback"],
     }),
 
     likeFeedback: builder.mutation<ApiResponse<FeedbackLikeDto>, number>({

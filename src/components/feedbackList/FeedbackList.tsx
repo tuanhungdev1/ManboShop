@@ -1,4 +1,4 @@
-import { dividerClasses, Pagination } from "@mui/material";
+import { Pagination } from "@mui/material";
 import { FeedbackDto } from "@types-d/feedback";
 import { MetaData } from "@types-d/type";
 import FeedbackItem from "./FeedbackItem";

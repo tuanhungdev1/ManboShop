@@ -9,6 +9,7 @@ import { cn } from "@utils/cn";
 import {
   saveUser,
   selectAccessToken,
+  selectIsRemembered,
   selectUser,
 } from "@redux/slices/authSlice";
 import { IoMdClose } from "react-icons/io";
@@ -25,7 +26,6 @@ import { useGetUserQuery } from "@services/userApi";
 
 const Header = () => {
   const user = useAppSelector(selectUser);
-
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const dispatch = useAppDispatch();
 
