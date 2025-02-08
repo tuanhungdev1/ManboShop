@@ -10,7 +10,7 @@ import { isNewProduct } from "@utils/utils";
 import { useEffect, useState } from "react";
 import { ProductVariantValue, VariantValue } from "@types-d/product";
 import { CiHeart } from "react-icons/ci";
-import { FiMinus } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiMinus } from "react-icons/fi";
 import { GoPlus } from "react-icons/go";
 import ProductSlider from "@components/products/ProductSlider";
 import { skipToken } from "@reduxjs/toolkit/query";
@@ -38,6 +38,35 @@ const ProductDetail = () => {
     useState<ProductVariantValue | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [feedbackPageSize, setFeedbackPageSize] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentVariantImages, setCurrentVariantImages] = useState<string[]>(
+    []
+  );
+
+  const handleColorVariantSelect = (variantValue: VariantValue) => {
+    const selectedVariantImages = variantValue.variantValueImages.map(
+      (img) => img.imageUrl
+    );
+    setCurrentVariantImages(selectedVariantImages);
+    setCurrentImageIndex(0);
+    handleVariantSelect(variantValue);
+  };
+  // Hàm xử lý slide ảnh
+  const handleSlideImage = (direction: string) => {
+    if (direction === "next") {
+      setCurrentImageIndex((prev) =>
+        prev === currentVariantImages.length - 1 ? 0 : prev + 1
+      );
+    } else {
+      setCurrentImageIndex((prev) =>
+        prev === 0 ? currentVariantImages.length - 1 : prev - 1
+      );
+    }
+  };
+
+  const handleThumbnailClick = (index: number) => {
+    setCurrentImageIndex(index);
+  };
 
   const handleFeedbackPageSizeChange = (page: number) => {
     setFeedbackPageSize(Math.max(1, page));
@@ -94,6 +123,20 @@ const ProductDetail = () => {
       );
     }
   };
+
+  useEffect(() => {
+    if (product?.data?.variants) {
+      const colorVariant = product.data.variants.find((v) =>
+        v.name.includes("Màu")
+      );
+      if (colorVariant && colorVariant.values[0]) {
+        const defaultImages = colorVariant.values[0].variantValueImages.map(
+          (img) => img.imageUrl
+        );
+        setCurrentVariantImages(defaultImages);
+      }
+    }
+  }, [product]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -255,29 +298,46 @@ const ProductDetail = () => {
           {/* Product Image */}
           <div className="md:w-1/2 relative">
             <img
-              src={
-                hoveredImage ||
-                product.data.productImages[0]?.imageUrl ||
-                "/path/to/placeholder-image.jpg"
-              }
+              src={currentVariantImages[currentImageIndex]}
               alt={product.data.name}
               className="w-full h-[500px] md:h-[600px] lg:h-[700px] object-cover rounded-md relative transition duration-300 ease-in-out"
             />
+            <button
+              onClick={() => handleSlideImage("prev")}
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full"
+            >
+              <FiChevronLeft className="text-2xl" />
+            </button>
+
+            <button
+              onClick={() => handleSlideImage("next")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full"
+            >
+              <FiChevronRight className="text-2xl" />
+            </button>
             {isNewProduct(product.data) && (
               <span className="absolute top-4 left-2 ml-2 font-medium text-white bg-green-500 px-2 py-1  text-sm">
                 New
               </span>
             )}
-            <div className="flex gap-2 mt-2 flex-wrap">
-              {product.data.productImages.map((image, index) => (
-                <img
+            <div className="flex gap-2 mt-4 flex-wrap">
+              {currentVariantImages.map((image, index) => (
+                <div
                   key={index}
-                  src={image.imageUrl}
-                  alt={product.data!.name}
-                  className="w-20 h-20 object-cover rounded-md cursor-pointer"
-                  onMouseEnter={() => setHoveredImage(image.imageUrl!)}
-                  onMouseLeave={() => setHoveredImage(null)}
-                />
+                  className={`relative cursor-pointer rounded-md overflow-hidden ${
+                    currentImageIndex === index ? "border-2 border-black" : ""
+                  }`}
+                  onClick={() => handleThumbnailClick(index)}
+                >
+                  <img
+                    src={image}
+                    alt={`Thumbnail ${index + 1}`}
+                    className="w-20 h-20 object-cover rounded-md"
+                  />
+                  {currentImageIndex === index && (
+                    <div className="absolute inset-0 bg-black/10 " />
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -376,11 +436,15 @@ const ProductDetail = () => {
                               ? "outline-[2px] outline scale-110"
                               : ""
                           }`}
-                          onClick={() => handleVariantSelect(item)}
+                          onClick={() =>
+                            variant.name.includes("Màu")
+                              ? handleColorVariantSelect(item)
+                              : handleVariantSelect(item)
+                          }
                         >
-                          {item.imageUrl ? (
+                          {item.variantValueImages.length > 0 ? (
                             <img
-                              src={item.imageUrl}
+                              src={item.variantValueImages[0].imageUrl}
                               alt={item.value}
                               className="w-[50px] h-[50px] object-cover rounded"
                             />

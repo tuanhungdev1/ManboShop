@@ -50,9 +50,17 @@ export interface VariantValue {
   id: number;
   value: string;
   variantId: number;
-  imageUrl?: string;
+  variantValueImages: VariantValueImage[];
   createdAt: string;
   updatedAt?: string;
+}
+
+export interface VariantValueImage {
+  id: number;
+  variantValueId: number;
+  imageUrl: string;
+  createdAt: Date;
+  updatedAt?: Date;
 }
 
 export interface ProductVariantValue {
@@ -72,9 +80,9 @@ export interface ProductVariantDetail {
 }
 
 export interface ProductRequestParameters extends RequestParameters {
-  brands?: string[];
-  categories?: string[];
-  colors?: string[];
-  sizes?: string[];
-  priceRange?: PriceRange;
+  brands?: string;
+  categories?: string;
+  colors?: string;
+  sizes?: string;
+  priceRange?: string;
 }

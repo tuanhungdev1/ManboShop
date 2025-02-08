@@ -6,6 +6,7 @@ import ProductSkeleton from "./ProductSkeleton";
 import { Pagination } from "@mui/material";
 import ProductCard from "./ProductCard";
 import { MetaData } from "@types-d/type";
+import { formatQueryParams } from "@utils/queryParams";
 
 interface ProductListProps {
   viewMode: "grid" | "list";
@@ -21,17 +22,9 @@ const ProductList = ({ viewMode, onPaginationChange }: ProductListProps) => {
   const filters = useAppSelector((state) => state.filter);
 
   // Query products với các params
-  const { data, isLoading, isFetching, isSuccess } = useGetProductsQuery({
-    pageNumber: currentPage,
-    pageSize,
-    orderBy: filters.sortBy ?? undefined,
-    priceRange: filters.priceRange ?? undefined,
-    sizes: filters.sizes,
-    brands: filters.brands,
-    searchTerm: filters.searchTerm ?? undefined,
-    categories: filters.productTypes,
-    colors: filters.colors,
-  });
+  const { data, isLoading, isFetching, isSuccess } = useGetProductsQuery(
+    formatQueryParams(filters, currentPage, pageSize)
+  );
 
   useEffect(() => {
     if (isSuccess && data.pagination) {
