@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
 import { FiHeart, FiShoppingBag, FiUser } from "react-icons/fi";
@@ -24,12 +24,14 @@ import { authStorage } from "@utils/authStorage";
 import { useGetUserQuery } from "@services/userApi";
 import { setSearchTerm } from "@redux/slices/filterSlice";
 import { CiSearch } from "react-icons/ci";
+import { openSnackbar } from "@redux/slices/snackbarSlice";
 
 const Header = () => {
   const user = useAppSelector(selectUser);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTermValue, setSearchTermValue] = useState("");
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [isOpenCartSidebar, setIsOpenCartSidebar] = useState(false);
 
@@ -75,6 +77,35 @@ const Header = () => {
       document.body.style.overflow = "unset";
     };
   }, [isOpenCartSidebar]);
+
+  const handleNavigateToCheckout = () => {
+    if (totalCount === 0) {
+      dispatch(
+        openSnackbar({
+          type: "warning",
+          message: "Giỏ hàng trống không thể đặt hàng!",
+        })
+      );
+
+      return;
+    }
+
+    if (!accessToken && !authStorage.getAuthData()?.accessToken) {
+      dispatch(
+        openSnackbar({
+          type: "warning",
+          message: "Vui lòng đăng nhập để đặt hàng!",
+        })
+      );
+
+      const redirect = "/checkout";
+      localStorage.setItem("redirectAfterLogin", redirect);
+      navigate("/login");
+      return;
+    }
+
+    navigate("/checkout");
+  };
 
   return (
     <header className="relative bg-white z-50">
@@ -333,9 +364,13 @@ const Header = () => {
                   Xem giỏ hàng
                 </button>
               </Link>
+
               <button
                 className="flex-1 py-3 px-4 bg-black text-white rounded-md text-center"
-                onClick={toggleCartSidebar}
+                onClick={() => {
+                  toggleCartSidebar();
+                  handleNavigateToCheckout();
+                }}
               >
                 Thanh toán
               </button>

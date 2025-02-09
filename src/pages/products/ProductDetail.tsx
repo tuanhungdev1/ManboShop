@@ -8,7 +8,11 @@ import ProductDetailSkeleton from "@components/products/ProductDetailSkeleton";
 import Breadcrumb from "@components/breadcrumb/Breadcrumb";
 import { isNewProduct } from "@utils/utils";
 import { useEffect, useState } from "react";
-import { ProductVariantValue, VariantValue } from "@types-d/product";
+import {
+  ProductRequestParameters,
+  ProductVariantValue,
+  VariantValue,
+} from "@types-d/product";
 import { CiHeart } from "react-icons/ci";
 import { FiChevronLeft, FiChevronRight, FiMinus } from "react-icons/fi";
 import { GoPlus } from "react-icons/go";
@@ -31,7 +35,6 @@ import { CreateFeedbackForm } from "@components/form";
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
   const { slug } = useParams<{ slug: string }>();
-  const [hoveredImage, setHoveredImage] = useState<string | null>(null);
   const [selectedVariants, setSelectedVariants] = useState<VariantValue[]>([]);
   const [selectedSku, setSelectedSku] = useState<string | null>("");
   const [selectedProductVariantValue, setSelectedProductVariantValue] =
@@ -148,16 +151,14 @@ const ProductDetail = () => {
       );
     }
   }, [isSuccess, favoriteResponse]);
-
-  const { data: relatedProductsData } = useGetProductsQuery(
-    product?.data?.category?.id
-      ? {
-          categoryId: product.data.category.id,
-          pageNumber: 1,
-          pageSize: 10,
-        }
-      : skipToken
-  );
+  const requestParameters = product?.data?.brand?.name
+    ? ({
+        brands: product.data.brand.name,
+        pageNumber: 1,
+        pageSize: 10,
+      } as ProductRequestParameters)
+    : skipToken;
+  const { data: relatedProductsData } = useGetProductsQuery(requestParameters);
   const productVariants =
     product && product.data?.variants && product.data.variants.length > 0
       ? [...product.data.variants].sort((a, b) => a.name.localeCompare(b.name))

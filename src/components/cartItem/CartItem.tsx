@@ -32,7 +32,7 @@ const CartItemComponent: React.FC<CartItemComponentProps> = ({ cartItem }) => {
       return {
         name: variant.name,
         value: matchedValue?.value || "Không xác định",
-        imageUrl: matchedValue?.imageUrl || null,
+        imageUrl: matchedValue?.variantValueImages || null,
       };
     });
 
@@ -67,6 +67,11 @@ const CartItemComponent: React.FC<CartItemComponentProps> = ({ cartItem }) => {
     }
   };
 
+  const firstImage =
+    variantData?.variantDetails && Array.isArray(variantData.variantDetails)
+      ? variantData.variantDetails.find((item) => item.imageUrl!.length > 0)
+          ?.imageUrl?.[0] ?? null
+      : null;
   return (
     <>
       <div className="flex py-8 border-b relative items-stretch">
@@ -74,7 +79,7 @@ const CartItemComponent: React.FC<CartItemComponentProps> = ({ cartItem }) => {
           <Link to={`/product/${slugify(cartItem.product.name)}`}>
             <img
               src={
-                variantData?.variantDetails.find((v) => v.imageUrl)?.imageUrl ||
+                firstImage?.imageUrl ?? // Add optional chaining for array access
                 "https://via.placeholder.com/100"
               }
               alt={cartItem.product.name}

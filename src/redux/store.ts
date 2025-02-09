@@ -17,6 +17,7 @@ import snackbarReducer from "@redux/slices/snackbarSlice";
 import filterReducer from "./slices/filterSlice";
 import backdropReducer from "./slices/backdropSlice";
 import cartReducer from "./slices/cartSlice";
+import checkoutReducer from "./slices/checkoutSlice";
 
 const authPersistConfig = {
   key: "auth",
@@ -24,6 +25,18 @@ const authPersistConfig = {
   whitelist: ["accessToken", "refreshToken", "user"],
 };
 
+const checkoutPersistConfig = {
+  key: "checkout",
+  storage,
+  whitelist: [
+    "activeStep",
+    "selectedAddressId",
+    "newAddress",
+    "paymentMethod",
+    "note",
+    "existingAddresses",
+  ],
+};
 // const cartPersistConfig = {
 //   key: "cart",
 //   storage,
@@ -62,7 +75,10 @@ const authPersistConfig = {
 // });
 
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
-
+const persistedCheckoutReducer = persistReducer(
+  checkoutPersistConfig,
+  checkoutReducer
+);
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
@@ -70,6 +86,7 @@ export const store = configureStore({
     filter: filterReducer,
     backdrop: backdropReducer,
     cart: cartReducer,
+    checkout: persistedCheckoutReducer,
     [baseApi.reducerPath]: baseApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

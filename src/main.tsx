@@ -27,6 +27,11 @@ import AddressPage from "@pages/user/AddressPage";
 import ProtectedLayout from "@pages/shoppingCart/ProtectedLayout";
 import ShoppingCartPage from "@pages/shoppingCart/ShoppingCartPage";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import CheckoutGuard from "@pages/checkout/CheckoutGuard";
+import CheckoutLayout from "@pages/checkout/CheckoutLayout";
+import CheckoutAddress from "@pages/checkout/CheckoutAddress";
+import CheckoutPayment from "@pages/checkout/CheckoutPayment";
+import CheckoutPreview from "@pages/checkout/CheckoutPreview";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -105,6 +110,28 @@ const router = createBrowserRouter([
           {
             path: "/shopping-cart",
             element: <ShoppingCartPage />,
+          },
+          {
+            path: "/checkout",
+            element: (
+              <CheckoutGuard>
+                <CheckoutLayout />
+              </CheckoutGuard>
+            ),
+            children: [
+              {
+                path: "address",
+                element: <CheckoutAddress />,
+              },
+              {
+                path: "payment",
+                element: <CheckoutPayment />,
+              },
+              {
+                path: "preview",
+                element: <CheckoutPreview />,
+              },
+            ],
           },
         ],
       },

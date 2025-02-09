@@ -63,7 +63,7 @@ const ShoppingCartItem: React.FC<ShoppingCartItemComponentProps> = ({
       return {
         name: variant.name,
         value: matchedValue?.value || "Không xác định",
-        imageUrl: matchedValue?.imageUrl || null,
+        imageUrl: matchedValue?.variantValueImages || null,
       };
     });
 
@@ -97,6 +97,12 @@ const ShoppingCartItem: React.FC<ShoppingCartItemComponentProps> = ({
       );
     }
   };
+
+  const firstImage =
+    variantData?.variantDetails && Array.isArray(variantData.variantDetails)
+      ? variantData.variantDetails.find((item) => item.imageUrl!.length > 0)
+          ?.imageUrl?.[0] ?? null
+      : null;
   return (
     <Grid
       container
@@ -119,10 +125,7 @@ const ShoppingCartItem: React.FC<ShoppingCartItemComponentProps> = ({
         <div className="flex items-center flex-1">
           <Link to={`/product/${slugify(cartItem.product.name)}`}>
             <img
-              src={
-                variantData?.variantDetails.find((v) => v.imageUrl)?.imageUrl ||
-                "https://via.placeholder.com/100"
-              }
+              src={firstImage?.imageUrl || "https://via.placeholder.com/100"}
               alt={cartItem.product.name}
               style={{ width: 80, height: 80, marginRight: 16 }}
             />

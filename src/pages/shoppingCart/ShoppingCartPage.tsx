@@ -16,7 +16,7 @@ const ShoppingCartPage = () => {
   const deliveryCharge = 5; // Example delivery charge
   const discount = 0; // Example discount
   return (
-    <div className="px-1">
+    <div className=" mt-[50px]">
       <div className="text-4xl font-medium mt-4 mb-12">Shopping Cart</div>
       <Grid container spacing={4} marginTop={6}>
         <Grid
