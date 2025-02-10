@@ -1,12 +1,89 @@
-// CheckoutLayout.tsx
-import { Step, StepLabel, Stepper } from "@mui/material";
+import { Step, StepLabel, Stepper, Button, Grid, Box } from "@mui/material";
 import { useAppSelector } from "@redux/hooks";
-import { selectCheckoutActiveStep } from "@redux/slices/checkoutSlice";
-import { Outlet } from "react-router-dom";
+import { selectCheckoutState } from "@redux/slices/checkoutSlice";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { GoHome } from "react-icons/go";
 import { MdPayment } from "react-icons/md";
 import { BsFileText } from "react-icons/bs";
+import { ButtonComponent } from "@components/buttons";
+import { formatPrice } from "@utils/format";
+import { selectCartTotalAmount } from "@redux/slices/cartSlice";
+import { useEffect, useState } from "react";
+import { useCheckoutCartMutation } from "@services/cartApi";
+import { OrderStatus } from "@types-d/enums";
+import CustomModal, { ModalStatus } from "@components/modals/CustomModal";
+
+const OrderSuccessModal = ({
+  isOpen,
+  onClose,
+  onBackToHome,
+  handleOrderRedirect,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onBackToHome: () => void;
+  handleOrderRedirect: () => void;
+}) => (
+  <CustomModal
+    isOpen={isOpen}
+    onClose={onClose}
+    status="success"
+    title="Your order is confirmed"
+    message={
+      <>
+        Thanks for shopping! Your order hasn't shipped yet,
+        <br />
+        but we will send you an email when it does.
+      </>
+    }
+    secondaryButton={{
+      label: "Back to Home",
+      onClick: onBackToHome,
+    }}
+    primaryButton={{
+      label: "View Order",
+      onClick: handleOrderRedirect,
+    }}
+  />
+);
+
+const LoadingModal = ({ isOpen }: { isOpen: boolean }) => (
+  <CustomModal
+    isOpen={isOpen}
+    status="loading"
+    title="Processing Order"
+    message="Please wait while we process your order..."
+    showCloseButton={false}
+  />
+);
+
+// 3. Error Modal
+const ErrorModal = ({
+  isOpen,
+  onClose,
+  onRetry,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onRetry: () => void;
+}) => (
+  <CustomModal
+    isOpen={isOpen}
+    onClose={onClose}
+    status="error"
+    title="Order Failed"
+    message="There was an error processing your order. Please try again."
+    primaryButton={{
+      label: "Try Again",
+      onClick: onRetry,
+    }}
+    secondaryButton={{
+      label: "Cancel",
+      onClick: onClose,
+    }}
+  />
+);
 
 // Custom styling cho Stepper
 const CustomStepper = styled(Stepper)({
@@ -44,66 +121,230 @@ const CustomStep = styled(Step)({
 });
 
 const CheckoutLayout: React.FC = () => {
-  const steps: { label: string; icon: React.ElementType }[] = [
-    {
-      label: "Address",
-      icon: GoHome,
-    },
-    {
-      label: "Payment Method",
-      icon: MdPayment,
-    },
-    {
-      label: "Review",
-      icon: BsFileText,
-    },
+  const { paymentMethod, selectedAddressId, cartId, note } =
+    useAppSelector(selectCheckoutState);
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    status: ModalStatus;
+  }>({
+    isOpen: false,
+    status: "loading",
+  });
+
+  const steps = [
+    { label: "Address", icon: GoHome, path: "/checkout/address" },
+    { label: "Payment Method", icon: MdPayment, path: "/checkout/payment" },
+    { label: "Review", icon: BsFileText, path: "/checkout/preview" },
   ];
 
-  const activeStep = useAppSelector(selectCheckoutActiveStep);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const subTotal = useAppSelector(selectCartTotalAmount);
+  const deliveryCharge = 5; // Example delivery charge
+  const discount = 0; // Example discount
+  const grandTotal = subTotal + deliveryCharge - discount;
+  // Xác định bước hiện tại dựa trên đường dẫn
+  const activeStep = steps.findIndex((step) => step.path === location.pathname);
+
+  const [checkout] = useCheckoutCartMutation();
+
+  const handleCheckout = async () => {
+    try {
+      setModalState({ isOpen: true, status: "loading" });
+      if (selectedAddressId && paymentMethod && cartId) {
+        await checkout({
+          addressId: selectedAddressId,
+          cartId: cartId,
+          paymentMethod: paymentMethod,
+          note: note,
+          status: OrderStatus.Pending,
+        }).unwrap();
+
+        setModalState({ isOpen: true, status: "success" });
+      }
+    } catch (error: any) {
+      setModalState({ isOpen: true, status: "error" });
+    }
+  };
+
+  const handleBackToHome = () => {
+    setModalState({ isOpen: false, status: "success" });
+    navigate("/");
+  };
+
+  const handleOrderRedirect = () => {
+    setModalState({ isOpen: false, status: "success" });
+    navigate("/user/order");
+  };
+
+  useEffect(() => {
+    navigate("/checkout/address");
+  }, []);
+
+  const handleNext = () => {
+    if (activeStep < steps.length - 1) {
+      navigate(steps[activeStep + 1].path);
+    }
+  };
+
+  const handleBack = () => {
+    if (activeStep > 0) {
+      navigate(steps[activeStep - 1].path);
+    }
+  };
 
   return (
     <div className="mt-[50px]">
-      <h1 className="text-5xl font-medium mb-[80px]">Payment Method</h1>
-      <div className="max-w-[1000px] mx-auto px-4">
-        <CustomStepper activeStep={activeStep}>
-          {steps.map((step) => (
-            <CustomStep key={step.label}>
-              <StepLabel
-                StepIconComponent={() => (
-                  <div
-                    className={`flex flex-col items-center gap-4 text-center ${
-                      activeStep >= steps.indexOf(step)
-                        ? "opacity-100"
-                        : "opacity-50"
-                    }`}
-                  >
-                    <div
-                      className={`
-                    w-[50px] h-[50px] 
-                    text-2xl
-                    border-2 border-black 
-                    rounded-lg
-                    flex items-center justify-center
-                    ${
-                      activeStep >= steps.indexOf(step)
-                        ? "bg-black text-white"
-                        : "bg-white text-black"
-                    }
-                  `}
-                    >
-                      <step.icon />
-                    </div>
-                    <div className="font-medium">{step.label}</div>
-                  </div>
-                )}
-              ></StepLabel>
-            </CustomStep>
-          ))}
-        </CustomStepper>
-      </div>
+      <h1 className="text-4xl font-medium mb-[80px] text-center xl:text-left">
+        Checkout
+      </h1>
 
-      <div className="checkout-content mt-12">
-        <Outlet />
+      <Grid container spacing={4}>
+        <Grid item xs={12} xl={8}>
+          <div className="max-w-full mx-auto">
+            <CustomStepper activeStep={activeStep}>
+              {steps.map((step, index) => (
+                <CustomStep key={step.label}>
+                  <StepLabel
+                    StepIconComponent={() => (
+                      <div
+                        className={`flex flex-col items-center gap-4 text-center ${
+                          activeStep >= index ? "opacity-100" : "opacity-50"
+                        }`}
+                      >
+                        <div
+                          className={`
+                        w-[50px] h-[50px] 
+                        text-2xl
+                        border-2 border-black 
+                        rounded-lg
+                        flex items-center justify-center
+                        ${
+                          activeStep >= index
+                            ? "bg-black text-white"
+                            : "bg-white text-black"
+                        }
+                      `}
+                        >
+                          <step.icon />
+                        </div>
+                        <div className="font-medium">{step.label}</div>
+                      </div>
+                    )}
+                  />
+                </CustomStep>
+              ))}
+            </CustomStepper>
+          </div>
+
+          <div className="checkout-content mt-20">
+            <Outlet />
+          </div>
+
+          <div className=" mt-10 hidden xl:block">
+            <div className="flex items-center justify-between">
+              <Button
+                onClick={handleBack}
+                disabled={activeStep === 0}
+                variant="outlined"
+              >
+                Quay lại
+              </Button>
+              <Button
+                onClick={handleNext}
+                disabled={activeStep === steps.length - 1}
+                variant="contained"
+              >
+                Tiếp theo
+              </Button>
+            </div>
+          </div>
+        </Grid>
+        <Grid item xs={12} xl={4}>
+          <Box p={2} border="1px solid #e0e0e0" borderRadius={2}>
+            <div className="flex items-center pt-2 pb-4 border-b justify-between text-[16px] font-semibold">
+              <span>Subtotal</span>
+              <span>{formatPrice(subTotal)}</span>
+            </div>
+            <div className="pt-2 pb-4 border-b">
+              <label
+                className="text-[12px] mt-4 block cursor-pointer"
+                htmlFor="discount-input"
+              >
+                Enter Discount Code
+              </label>
+              <div className="flex items-stretch mt-2">
+                <input
+                  id="discount-input"
+                  type="text"
+                  className="h-[54px] flex-1 cursor-pointer w-full border-[1px] placeholder:font-normal placeholder:text-sm  rounded-tr-none rounded-br-none border-black rounded-lg px-4 outline-none"
+                  placeholder="CODE"
+                />
+                <ButtonComponent className="rounded-tl-none rounded-bl-none flex-1 w-[40%] border-[1px] border-black">
+                  Apply
+                </ButtonComponent>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 text-[14px] font-medium">
+                <span>Delivery Charge</span>
+                <span>{formatPrice(5)}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-4 text-[18px] font-bold">
+              <span>Grand Total</span>
+              <span>{formatPrice(grandTotal)}</span>
+            </div>
+
+            {selectedAddressId && cartId && paymentMethod && (
+              <ButtonComponent className="w-full mt-4" onClick={handleCheckout}>
+                Place Order
+              </ButtonComponent>
+            )}
+
+            {modalState.status === "loading" && (
+              <LoadingModal isOpen={modalState.isOpen} />
+            )}
+
+            {modalState.status === "success" && (
+              <OrderSuccessModal
+                isOpen={modalState.isOpen}
+                onClose={() => setModalState({ ...modalState, isOpen: false })}
+                onBackToHome={handleBackToHome}
+                handleOrderRedirect={handleOrderRedirect}
+              />
+            )}
+
+            {modalState.status === "error" && (
+              <ErrorModal
+                isOpen={modalState.isOpen}
+                onClose={() => setModalState({ ...modalState, isOpen: false })}
+                onRetry={handleCheckout}
+              />
+            )}
+          </Box>
+        </Grid>
+      </Grid>
+
+      {/* Nút điều hướng */}
+      <div className=" mt-10 block xl:hidden">
+        <div className="flex items-center justify-between">
+          <Button
+            onClick={handleBack}
+            disabled={activeStep === 0}
+            variant="outlined"
+          >
+            Quay lại
+          </Button>
+          <Button
+            onClick={handleNext}
+            disabled={activeStep === steps.length - 1}
+            variant="contained"
+          >
+            Tiếp theo
+          </Button>
+        </div>
       </div>
     </div>
   );

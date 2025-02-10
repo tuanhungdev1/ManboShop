@@ -6,6 +6,7 @@ import {
   CartItemForCreate,
   CartItemForUpdate,
 } from "@types-d/cart";
+import { OrderDto, OrderForCreateDto } from "@types-d/order";
 
 export const cartApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -58,13 +59,14 @@ export const cartApi = baseApi.injectEndpoints({
       invalidatesTags: ["Cart"],
     }),
 
-    // checkoutCart: builder.mutation<ApiResponse<OrderDto>, OrderForCreateDto>({
-    //   query: (orderForCreateDto) => ({
-    //     url: "Cart/checkout",
-    //     method: "POST",
-    //     body: orderForCreateDto,
-    //   }),
-    // }),
+    checkoutCart: builder.mutation<ApiResponse<OrderDto>, OrderForCreateDto>({
+      query: (orderForCreateDto) => ({
+        url: "Cart/checkout",
+        method: "POST",
+        body: orderForCreateDto,
+      }),
+      invalidatesTags: ["Cart", "User"],
+    }),
 
     clearCart: builder.mutation<ApiResponse<object>, void>({
       query: () => ({
@@ -84,4 +86,5 @@ export const {
   useUpdateCartItemMutation,
   useRemoveCartItemMutation,
   useClearCartMutation,
+  useCheckoutCartMutation,
 } = cartApi;

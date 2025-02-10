@@ -93,3 +93,20 @@ export function formatDateTime(dateTimeString: string): string {
 
   return `Ngày ${formattedDate} lúc ${formattedTime}`;
 }
+
+import { addDays } from "date-fns";
+
+/**
+ * Hàm lấy ngày giao hàng dự kiến (+6 ngày từ ngày hiện tại)
+ * @returns {string} Ngày giao hàng định dạng tiếng Việt
+ */
+export const getEstimatedDeliveryDate = (): string => {
+  const estimatedDate = addDays(new Date(), 6);
+
+  return new Intl.DateTimeFormat("vi-VN", {
+    weekday: "long", // Hiển thị thứ (Thứ Hai, Thứ Ba, ...)
+    day: "2-digit", // Hiển thị ngày (01, 02, 03, ...)
+    month: "long", // Hiển thị tháng (tháng 1, tháng 2, ...)
+    year: "numeric", // Hiển thị năm (2024, 2025, ...)
+  }).format(estimatedDate);
+};

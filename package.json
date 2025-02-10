@@ -19,6 +19,7 @@
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.5.0",
     "axios": "^1.7.9",
+    "date-fns": "^4.1.0",
     "lodash": "^4.17.21",
     "path": "^0.12.7",
     "react": "^18.3.1",

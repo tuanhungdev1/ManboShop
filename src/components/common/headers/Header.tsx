@@ -98,13 +98,13 @@ const Header = () => {
         })
       );
 
-      const redirect = "/checkout";
+      const redirect = "/checkout/address";
       localStorage.setItem("redirectAfterLogin", redirect);
       navigate("/login");
       return;
     }
 
-    navigate("/checkout");
+    navigate("/checkout/address");
   };
 
   return (

@@ -2,6 +2,8 @@
 import React from "react";
 import { Box, Button, TextField } from "@mui/material";
 import { formatPrice } from "@utils/format";
+import { ButtonComponent } from "@components/buttons";
+import { useNavigate } from "react-router-dom";
 
 interface CartSummaryProps {
   subtotal: number;
@@ -16,7 +18,12 @@ const ShoppingCartSummary: React.FC<CartSummaryProps> = ({
   discount,
   onApplyDiscount,
 }) => {
+  const navigate = useNavigate();
   const grandTotal = subtotal + deliveryCharge - discount;
+
+  const handleCheckoutProcessing = () => {
+    navigate("/checkout/address");
+  };
 
   return (
     <Box p={2} border="1px solid #e0e0e0" borderRadius={2}>
@@ -25,22 +32,24 @@ const ShoppingCartSummary: React.FC<CartSummaryProps> = ({
         <span>{formatPrice(subtotal)}</span>
       </div>
       <div className="pt-2 pb-4 border-b">
-        <TextField
-          label="Enter Discount Code"
-          variant="outlined"
-          fullWidth
-          size="small"
-          sx={{ my: 2 }}
-        />
-        <Button
-          variant="contained"
-          sx={{ textTransform: "none" }}
-          fullWidth
-          size="large"
-          onClick={() => onApplyDiscount("FLAT50")}
+        <label
+          className="text-[12px] mt-4 block cursor-pointer"
+          htmlFor="discount-input"
         >
-          Apply
-        </Button>
+          Enter Discount Code
+        </label>
+        <div className="flex items-stretch mt-2">
+          <input
+            id="discount-input"
+            type="text"
+            className="h-[54px] flex-1 cursor-pointer w-full border-[1px] placeholder:font-normal placeholder:text-sm  rounded-tr-none rounded-br-none border-black rounded-lg px-4 outline-none"
+            placeholder="CODE"
+          />
+          <ButtonComponent className="rounded-tl-none rounded-bl-none flex-1 w-[40%] border-[1px] border-black">
+            Apply
+          </ButtonComponent>
+        </div>
+
         <div className="flex items-center justify-between pt-4 text-[14px] font-medium">
           <span>Delivery Charge</span>
           <span>{formatPrice(deliveryCharge)}</span>
@@ -52,14 +61,12 @@ const ShoppingCartSummary: React.FC<CartSummaryProps> = ({
         <span>{formatPrice(grandTotal)}</span>
       </div>
 
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{ mt: 2, textTransform: "none" }}
-        size="large"
+      <ButtonComponent
+        className="w-full mt-4"
+        onClick={handleCheckoutProcessing}
       >
-        Proceed to Checkout
-      </Button>
+        Process to Checkout
+      </ButtonComponent>
     </Box>
   );
 };
