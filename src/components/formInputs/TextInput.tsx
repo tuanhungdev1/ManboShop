@@ -29,7 +29,7 @@ const TextInput: React.FC<TextInputProps> = ({
       fullWidth
       slotProps={{
         input: {
-          className: "h-12 px-4 py-2 !rounded-[8px] ",
+          className: "h-[54px] px-4 py-3 !rounded-[6px] ",
         },
         htmlInput: { className: "!p-0" },
       }}
@@ -37,11 +37,11 @@ const TextInput: React.FC<TextInputProps> = ({
         fontSize: "10px",
         "& .MuiOutlinedInput-root": {
           "& fieldset": {
-            borderColor: "black",
-            borderWidth: "1px",
+            borderColor: "#E8E8E8",
+            borderWidth: "2px",
           },
           "&:hover fieldset": {
-            borderColor: "black",
+            borderColor: "#E8E8E8",
           },
           "&.Mui-focused fieldset": {
             borderColor: "black",

@@ -32,6 +32,7 @@ import CheckoutLayout from "@pages/checkout/CheckoutLayout";
 import CheckoutAddress from "@pages/checkout/CheckoutAddress";
 import CheckoutPayment from "@pages/checkout/CheckoutPayment";
 import CheckoutPreview from "@pages/checkout/CheckoutPreview";
+import LoginAdminPage from "@pages/admin/auth/LoginAdminPage";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -136,6 +137,10 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "/admin-login",
+    element: <LoginAdminPage />,
   },
 ]);
 

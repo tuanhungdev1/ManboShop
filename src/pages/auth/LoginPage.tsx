@@ -6,9 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { FormField } from "@components/formFields";
 import { TextInput } from "@components/formInputs";
 import {
+  ButtonComponent,
   FacebookLoginButton,
   GoogleLoginButton,
-  PrimaryButton,
 } from "@components/buttons";
 import { InputType } from "@types-d/enums";
 import { useLoginMutation } from "@services/authApi";
@@ -146,16 +146,7 @@ const LoginPage = () => {
           classname="mt-2"
         />
 
-        <PrimaryButton
-          type="submit"
-          fullWidth
-          size="large"
-          variant="contained"
-          color="primary"
-          className="mt-2 bg-blue-primary"
-        >
-          Đăng Nhập
-        </PrimaryButton>
+        <ButtonComponent className="w-full">Đăng Nhập</ButtonComponent>
 
         <div className="text-[14px] underline text-center mt-2 font-semibold">
           <Link to={"/forgot-password"}>

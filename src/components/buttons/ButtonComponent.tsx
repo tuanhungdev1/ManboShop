@@ -6,6 +6,7 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
   loading?: boolean;
+  type?: "submit" | "reset" | "button" | undefined;
 }
 
 const ButtonComponent: React.FC<ButtonProps> = ({
@@ -14,14 +15,16 @@ const ButtonComponent: React.FC<ButtonProps> = ({
   className = "",
   disabled = false,
   loading = false,
+  type = "submit",
 }) => {
   return (
     <button
       onClick={onClick}
+      type={type}
       disabled={disabled || loading}
-      className={`bg-black rounded-lg flex items-center justify-center h-[54px] text-gray-300 hover:text-white cursor-pointer font-medium transition-all duration-200 text-sm w-[300px] ${className} ${
+      className={`bg-black rounded-[6px] flex items-center justify-center h-[54px] text-white hover:text-white cursor-pointer font-medium transition-all duration-200 text-sm w-[300px] ${className} ${
         disabled || loading
-          ? "opacity-70 cursor-not-allowed text-white"
+          ? "cursor-not-allowed text-white"
           : "hover:text-white hover:shadow-lg"
       }`}
     >

@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FormField } from "@components/formFields";
 import { TextInput } from "@components/formInputs";
 import {
+  ButtonComponent,
   FacebookLoginButton,
   GoogleLoginButton,
   PrimaryButton,
@@ -215,21 +216,7 @@ const RegisterPage = () => {
           />
         </div>
 
-        <PrimaryButton
-          type="submit"
-          fullWidth
-          size="medium"
-          variant="contained"
-          color="primary"
-          className={cn(
-            "font-bold",
-            termsAccepted
-              ? "pointer-events-auto opacity-100 "
-              : "pointer-events-none opacity-70 cursor-pointer"
-          )}
-        >
-          REGISTER
-        </PrimaryButton>
+        <ButtonComponent className="w-full">Đăng ký</ButtonComponent>
       </form>
 
       <div className="mt-5 font-medium text-center opacity-60">

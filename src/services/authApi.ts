@@ -5,6 +5,7 @@ import { ApiResponse, Token } from "@types-d/type";
 import { baseApi } from "./baseApi";
 import { openSnackbar } from "@redux/slices/snackbarSlice";
 import { authStorage } from "@utils/authStorage";
+import { LoginAdminFormData } from "@pages/admin/auth/LoginAdminPage";
 
 export interface LoginGoogleDto {
   credential: string;
@@ -123,6 +124,44 @@ export const authApi = baseApi.injectEndpoints({
           body: tokenDto,
         }),
       }),
+
+      loginAdmin: builder.mutation<ApiResponse<object>, LoginAdminFormData>({
+        query: ({ password, username, isRemember }) => {
+          return {
+            url: "/Auth/login",
+            body: { password, username, isRemember },
+            method: "POST",
+          };
+        },
+        async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+
+            const authData = {
+              ...data,
+              token: {
+                accessToken: data.token?.accessToken || "",
+                refreshToken: data.token?.refreshToken || "",
+                isRemembered: _arg.isRemember,
+              },
+            };
+
+            if (_arg.isRemember) {
+              dispatch(login(authData));
+            } else {
+              authStorage.saveAuthData(authData.token, _arg.isRemember);
+            }
+          } catch (error: any) {
+            dispatch(
+              openSnackbar({
+                type: "error",
+                message: error.data.Message || "Đăng nhập thất bại",
+              })
+            );
+          }
+        },
+        invalidatesTags: ["User", "CurentUser"],
+      }),
     };
   },
 });
@@ -134,4 +173,5 @@ export const {
   useRefreshTokenMutation,
   useGoogleLoginMutation,
   useFacebookLoginMutation,
+  useLoginAdminMutation,
 } = authApi;
