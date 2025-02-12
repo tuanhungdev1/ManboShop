@@ -46,12 +46,19 @@ const ProductDetail = () => {
     []
   );
 
+  console.log(currentVariantImages);
+
   const handleColorVariantSelect = (variantValue: VariantValue) => {
-    const selectedVariantImages = variantValue.variantValueImages.map(
-      (img) => img.imageUrl
-    );
-    setCurrentVariantImages(selectedVariantImages);
-    setCurrentImageIndex(0);
+    if (variantValue && variantValue.variantValueImages) {
+      const selectedVariantImages = variantValue.variantValueImages.map(
+        (img) => img.imageUrl
+      );
+      // Log để debug
+      console.log("New variant images:", selectedVariantImages);
+
+      setCurrentVariantImages(selectedVariantImages);
+      setCurrentImageIndex(0); // Reset về ảnh đầu tiên
+    }
     handleVariantSelect(variantValue);
   };
   // Hàm xử lý slide ảnh
@@ -128,15 +135,41 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
+    if (selectedVariants.length > 0) {
+      // Tìm variant màu sắc đã chọn
+      const colorVariant = selectedVariants.find(
+        (variant) =>
+          variant.variantId ===
+          product?.data?.variants.find(
+            (v) => v.name.includes("Color") || v.name.includes("Màu")
+          )?.id
+      );
+
+      if (colorVariant && colorVariant.variantValueImages) {
+        const newImages = colorVariant.variantValueImages.map(
+          (img) => img.imageUrl
+        );
+        setCurrentVariantImages(newImages);
+        setCurrentImageIndex(0);
+      }
+    }
+  }, [selectedVariants, product]);
+
+  useEffect(() => {
     if (product?.data?.variants) {
       const colorVariant = product.data.variants.find((v) =>
-        v.name.includes("Màu")
+        ["Color", "Màu"].some((key) => v.name.includes(key))
       );
+
       if (colorVariant && colorVariant.values[0]) {
         const defaultImages = colorVariant.values[0].variantValueImages.map(
           (img) => img.imageUrl
         );
         setCurrentVariantImages(defaultImages);
+        setCurrentImageIndex(0);
+
+        // Tự động chọn variant màu đầu tiên
+        handleColorVariantSelect(colorVariant.values[0]);
       }
     }
   }, [product]);
@@ -434,7 +467,7 @@ const ProductDetail = () => {
                           key={item.id}
                           className={`border rounded-md cursor-pointer mr-2 transition-transform duration-300 ${
                             selectedVariants.includes(item)
-                              ? "outline-[2px] outline scale-110"
+                              ? "outline-[1px] outline scale-105"
                               : ""
                           }`}
                           onClick={() =>

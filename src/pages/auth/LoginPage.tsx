@@ -97,7 +97,7 @@ const LoginPage = () => {
   }, [isError, dispatch, data, isSuccess, navigate, error]);
 
   return (
-    <div className="mx-auto text-[14px] sm:w-[450px] w-full mt-5">
+    <div className="mx-auto text-[14px] sm:w-[450px] w-full mt-32">
       <div className="flex items-center w-full text-[14px] text-center">
         <Link
           to={"/account/login"}
@@ -125,6 +125,7 @@ const LoginPage = () => {
         <FormField
           control={control}
           label="Tên đăng nhập"
+          placeholder="Tên đăng nhập"
           Component={TextInput}
           type={InputType.Text}
           error={errors.username?.message}
@@ -133,6 +134,7 @@ const LoginPage = () => {
         <FormField
           control={control}
           label="Mật khẩu"
+          placeholder="Mật khẩu"
           Component={TextInput}
           type={InputType.Password}
           error={errors.password?.message}
