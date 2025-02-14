@@ -26,7 +26,7 @@ export default function SearchInputComponent({
       <input
         type="text"
         placeholder={placeholder}
-        className="border-none h-[54px] w-full pl-4 outline-none flex-1"
+        className="border-none h-[50px] w-full pl-4 outline-none flex-1 text-sm"
         onFocus={() => setIsFocused(true)}
         onBlur={(e) => setIsFocused(e.target.value.length > 0)}
         {...props}

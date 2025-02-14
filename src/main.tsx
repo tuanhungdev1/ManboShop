@@ -33,6 +33,13 @@ import CheckoutAddress from "@pages/checkout/CheckoutAddress";
 import CheckoutPayment from "@pages/checkout/CheckoutPayment";
 import CheckoutPreview from "@pages/checkout/CheckoutPreview";
 import LoginAdminPage from "@pages/admin/auth/LoginAdminPage";
+import ProtectedAdminLayout from "@pages/admin/ProtectedAdminLayout";
+import AdminLayout from "@pages/admin/AdminLayout";
+import AdminDashboard from "@pages/admin/AdminDashboard";
+import AdminProducts from "@pages/admin/AdminProducts";
+import AdminOrders from "@pages/admin/AdminOrders";
+import AdminCustomers from "@pages/admin/AdminCustomers";
+import AdminReviews from "@pages/admin/AdminReviews";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -141,6 +148,36 @@ const router = createBrowserRouter([
   {
     path: "/admin-login",
     element: <LoginAdminPage />,
+  },
+  {
+    path: "/admin",
+    element: (
+      <ProtectedAdminLayout>
+        <AdminLayout />
+      </ProtectedAdminLayout>
+    ),
+    children: [
+      {
+        path: "dashboard",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "products",
+        element: <AdminProducts />,
+      },
+      {
+        path: "orders",
+        element: <AdminOrders />,
+      },
+      {
+        path: "customers",
+        element: <AdminCustomers />,
+      },
+      {
+        path: "reviews",
+        element: <AdminReviews />,
+      },
+    ],
   },
 ]);
 
