@@ -49,6 +49,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
           fontSize: "14px",
           fontWeight: 500,
           px: "20px",
+          height: "50px",
         }}
       >
         <div className="flex items-center gap-3">

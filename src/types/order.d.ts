@@ -1,5 +1,5 @@
 import { AddressForCreateDto } from "./address";
-import { OrderStatus, PaymentMethod } from "./enums";
+import { OrderStatus, PaymentMethod, PaymentStatus } from "./enums";
 import { Product } from "./product";
 import { RequestParameters } from "./type";
 import { User } from "./user";
@@ -34,6 +34,7 @@ export interface OrderDto {
   note?: string | null;
   status: OrderStatus;
   paymentMethod: PaymentMethod;
+  paymentStatus: PaymentStatus;
   subTotal: number;
   shippingFee: number;
   total: number;
@@ -52,7 +53,7 @@ export interface OrderCancelDto {
 }
 
 interface OrderForCancelDto {
-  cancellationReason: string; // Match với backend DTO
+  cancellationReason: string;
 }
 export interface OrderDetailDto {
   id: number;
@@ -70,3 +71,9 @@ export interface OrderDetailDto {
 }
 
 export interface OrderForUserRequestParameters extends RequestParameters {}
+
+export interface OrderRequestParameters extends RequestParameters {
+  orderStatus?: OrderStatus;
+  fromDate?: Date;
+  toDate?: Date;
+}

@@ -26,42 +26,42 @@ const OrderDetailModal = ({
   const getOrderTimeline = (order: OrderDto) => {
     const timeline = [
       {
-        status: "Order Placed",
+        status: "Đơn hàng đã đặt",
         date: order.createdAt,
       },
     ];
 
     if (order.confirmedAt) {
       timeline.push({
-        status: "Confirmed",
+        status: "Đã xác nhận",
         date: order.confirmedAt,
       });
     }
 
     if (order.processedAt) {
       timeline.push({
-        status: "Processing",
+        status: "Đang xử lý",
         date: order.processedAt,
       });
     }
 
     if (order.shippedAt) {
       timeline.push({
-        status: "Shipped",
+        status: "Đã giao cho đơn vị vận chuyển",
         date: order.shippedAt,
       });
     }
 
     if (order.deliveredAt) {
       timeline.push({
-        status: "Delivered",
+        status: "Đã giao hàng",
         date: order.deliveredAt,
       });
     }
 
     if (order.cancelledAt) {
       timeline.push({
-        status: "Cancelled",
+        status: "Đã hủy",
         date: order.cancelledAt,
       });
     }

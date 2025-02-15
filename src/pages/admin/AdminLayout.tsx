@@ -1,30 +1,31 @@
 import { AdminMenu } from "@constants/menus/adminSidebar";
+import { useAppDispatch } from "@redux/hooks";
+import { logout } from "@redux/slices/authSlice";
+import { authStorage } from "@utils/authStorage";
 import { cn } from "@utils/cn";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoLogOutOutline } from "react-icons/io5";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const AdminLayout = () => {
   const { pathname } = useLocation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const pageNames: Record<string, string> = {
+    "/admin/dashboard": "Bảng điều khiển",
+    "/admin/products": "Danh sách sản phẩm",
+    "/admin/orders": "Danh sách đơn hàng",
+    "/admin/customers": "Danh sách khách hàng",
+    "/admin/coupons": "Danh sách mã giảm giá",
+    "/admin/posts": "Danh sách bài viết",
+  };
 
-  const handleGetPageName = (path: string) => {
-    switch (path) {
-      case "/admin/dashboard":
-        return "Dashboard";
-      case "/admin/products":
-        return "Products";
+  const handleGetPageName = (path: string) => pageNames[path] || "";
 
-      case "/admin/orders":
-        return "Orders";
-
-      case "/admin/customers":
-        return "Customers";
-
-      case "/admin/dashboard":
-        return "Dashboard";
-      default:
-        return "";
-    }
+  const handleLogout = () => {
+    dispatch(logout());
+    authStorage.clearAuthData();
+    navigate("/admin-login");
   };
   return (
     <div className="h-screen overflow-hidden flex items-stretch bg-gray-100">
@@ -110,7 +111,10 @@ const AdminLayout = () => {
               {handleGetPageName(pathname)}
             </span>
           </div>
-          <div className="text-2xl cursor-pointer hover:bg-gray-200 transition-all duration-200 opacity-70 hover:opacity-100 w-[40px] rounded-full flex items-center justify-center h-[40px]">
+          <div
+            onClick={handleLogout}
+            className="text-2xl cursor-pointer hover:bg-gray-200 transition-all duration-200 opacity-70 hover:opacity-100 w-[40px] rounded-full flex items-center justify-center h-[40px]"
+          >
             <IoLogOutOutline />
           </div>
         </div>

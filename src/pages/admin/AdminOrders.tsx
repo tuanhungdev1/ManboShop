@@ -12,7 +12,6 @@ import {
   Typography,
   Pagination,
   useTheme,
-  useMediaQuery,
   Menu,
   MenuItem,
   Divider,
@@ -25,116 +24,99 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import SortIcon from "@mui/icons-material/Sort";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import { OrderStatusBadge } from "@components/order";
+import { OrderStatusBadge, PaymentMethodBadge } from "@components/order";
 import { OrderStatus } from "@types-d/enums";
 import { SearchInputComponent } from "@components/search";
 import { CiSearch } from "react-icons/ci";
 import DropdownButton, {
   Option,
 } from "@components/dropdownButton/DropdownButton";
+import { useGetOrdersQuery } from "@services/orderApi";
+import { formatDate, formatDateTime } from "@utils/format";
+import PaymentStatusBadge from "@components/order/PaymentStatusBadge";
+import { LoadingComponent } from "@components/loadings";
+import { OrderDto } from "@types-d/order";
 
 const stateStatus: Option[] = [
-  { id: "", label: "All" },
-  { id: OrderStatus.Pending.toString(), label: "Pending" },
-  { id: OrderStatus.Confirmed.toString(), label: "Confirmed" },
-  { id: OrderStatus.Processing.toString(), label: "Processing" },
-  { id: OrderStatus.Shipped.toString(), label: "Shipped" },
-  { id: OrderStatus.Delivered.toString(), label: "Delivered" },
-  { id: OrderStatus.Cancelled.toString(), label: "Cancelled" },
-  { id: OrderStatus.Refunded.toString(), label: "Refunded" },
-  { id: OrderStatus.Failed.toString(), label: "Failed" },
+  { id: "", label: "Tất cả" },
+  { id: OrderStatus.Pending.toString(), label: "Chờ xử lý" },
+  { id: OrderStatus.Confirmed.toString(), label: "Đã xác nhận" },
+  { id: OrderStatus.Processing.toString(), label: "Đang xử lý" },
+  { id: OrderStatus.Shipped.toString(), label: "Đã vận chuyển" },
+  { id: OrderStatus.Delivered.toString(), label: "Đã giao hàng" },
+  { id: OrderStatus.Cancelled.toString(), label: "Đã hủy" },
+  { id: OrderStatus.Refunded.toString(), label: "Đã hoàn tiền" },
+  { id: OrderStatus.Failed.toString(), label: "Thất bại" },
 ];
+
+const getOrderTimeline = (order: OrderDto) => {
+  const timeline = [
+    {
+      status: "Đơn hàng đã đặt",
+      date: order.createdAt,
+    },
+  ];
+
+  if (order.confirmedAt) {
+    timeline.push({
+      status: "Đã xác nhận",
+      date: order.confirmedAt,
+    });
+  }
+
+  if (order.processedAt) {
+    timeline.push({
+      status: "Đang xử lý",
+      date: order.processedAt,
+    });
+  }
+
+  if (order.shippedAt) {
+    timeline.push({
+      status: "Đã giao cho đơn vị vận chuyển",
+      date: order.shippedAt,
+    });
+  }
+
+  if (order.deliveredAt) {
+    timeline.push({
+      status: "Đã giao hàng",
+      date: order.deliveredAt,
+    });
+  }
+
+  if (order.cancelledAt) {
+    timeline.push({
+      status: "Đã hủy",
+      date: order.cancelledAt,
+    });
+  }
+
+  return timeline;
+};
 
 const sortOptions: Option[] = [
   {
     id: "newest",
-    label: "Newest",
+    label: "Mới nhất",
   },
   {
     id: "oldest",
-    label: "Oldest",
+    label: "Cũ nhất",
   },
   {
     id: "lowest-price",
-    label: "Lowest Price",
+    label: "Giá thấp nhất",
   },
   {
     id: "highest-price",
-    label: "Highest Price",
-  },
-];
-
-const orderData = [
-  {
-    id: 1,
-    product: "Raw Black T-Shirt Lineup",
-    date: "20 Mar, 2023",
-    total: "$75.00",
-    status: "Processing",
-    image: "👕",
-  },
-  {
-    id: 2,
-    product: "Classic Monochrome Tees",
-    date: "19 Mar, 2023",
-    total: "$35.00",
-    status: "Processing",
-    image: "👕",
-  },
-  {
-    id: 3,
-    product: "Monochromatic Wardrobe",
-    date: "7 Feb, 2023",
-    total: "$27.00",
-    status: "Completed",
-    image: "👘",
-  },
-  {
-    id: 4,
-    product: "Essential Neutrals",
-    date: "29 Jan, 2023",
-    total: "$22.00",
-    status: "Completed",
-    image: "👕",
-  },
-  {
-    id: 5,
-    product: "UTRAANET Black",
-    date: "27 Jan, 2023",
-    total: "$43.00",
-    status: "Processing",
-    image: "👕",
-  },
-  {
-    id: 6,
-    product: "Elegant Ebony Sweatshirts",
-    date: "4 Jan, 2023",
-    total: "$35.00",
-    status: "Cancelled",
-    image: "🧥",
-  },
-  {
-    id: 7,
-    product: "Sleek and Cozy Black",
-    date: "28 Dec, 2022",
-    total: "$57.00",
-    status: "Completed",
-    image: "🧥",
-  },
-  {
-    id: 8,
-    product: "MOCKUP Black",
-    date: "20 Dec, 2022",
-    total: "$30.00",
-    status: "Processing",
-    image: "👕",
+    label: "Giá cao nhất",
   },
 ];
 
@@ -142,20 +124,45 @@ const AdminOrders = () => {
   const [page, setPage] = useState(1);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
-  const rowsPerPage = 8;
+  const rowsPerPage = 10;
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [searchOrder, setSearchOrder] = useState("");
+  const [searchOrderQuery, setSearchOrderQuery] = useState("");
   const [sortCurrent, setSortCurrent] = useState(sortOptions[0].id);
   const [orderStatusCurrent, setOrderStatusCurrent] = useState(stateStatus[0]);
 
   // Date filter state
-  const [startDate, setStartDate] = useState<Dayjs | null>(null);
-  const [endDate, setEndDate] = useState<Dayjs | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  const [startDateTemp, setStartDateTemp] = useState<Dayjs | null>(null);
+  const [endDateTemp, setEndDateTemp] = useState<Dayjs | null>(null);
   const [dateFilterOpen, setDateFilterOpen] = useState(false);
 
+  const getOrderStatusFromId = (id: string): OrderStatus | undefined => {
+    if (!id.trim()) return undefined;
+
+    const numericId = Number(id);
+    return numericId in OrderStatus
+      ? (OrderStatus[numericId] as unknown as OrderStatus)
+      : undefined;
+  };
+
+  const {
+    data: ordersResponse,
+    isLoading,
+    isFetching,
+  } = useGetOrdersQuery({
+    pageSize: rowsPerPage,
+    pageNumber: page,
+    searchTerm: searchOrderQuery,
+    fromDate: startDate || undefined,
+    toDate: endDate || undefined,
+    orderStatus: getOrderStatusFromId(orderStatusCurrent.id),
+  });
+
   const handleChangePage = (
-    event: React.ChangeEvent<unknown>,
+    _event: React.ChangeEvent<unknown>,
     newPage: number
   ) => {
     setPage(newPage);
@@ -189,6 +196,9 @@ const AdminOrders = () => {
     handleMenuClose();
   };
 
+  const handleSubmitSearch = () => {
+    setSearchOrderQuery(searchOrder);
+  };
   const handleSearchOrderChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -203,29 +213,24 @@ const AdminOrders = () => {
     setDateFilterOpen(false);
   };
 
-  const handleApplyDateFilter = () => {
-    // Format dates for backend query
-    const formattedStartDate = startDate ? startDate.toISOString() : null;
-    const formattedEndDate = endDate ? endDate.toISOString() : null;
+  console.log(`FormDate: ${startDate}, End Date: ${endDate}`);
 
-    console.log("Applying date filter:", {
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
-    });
-    // Here you would typically call an API or update your query parameters
+  const handleApplyDateFilter = () => {
+    setStartDate(startDateTemp ? startDateTemp.toDate() : null);
+    setEndDate(endDateTemp ? endDateTemp.toDate() : null);
 
     handleCloseDateFilter();
   };
 
   const handleClearDateFilter = () => {
-    setStartDate(null);
-    setEndDate(null);
+    setStartDateTemp(null);
+    setEndDateTemp(null);
   };
 
   // Format dates for display
   const formatDateForDisplay = (date: Dayjs | null) => {
     if (!date) return "";
-    return date.format("MMM D, YYYY");
+    return date.format("DD/MM/YYYY");
   };
 
   const activeDateFilter = startDate || endDate;
@@ -243,15 +248,14 @@ const AdminOrders = () => {
         }}
       >
         <Typography variant="h5" fontWeight="bold">
-          Orders
+          Danh sách đơn hàng
         </Typography>
         <div className="flex items-center gap-6 flex-wrap">
           <div className="">
             <SearchInputComponent
               icon={<CiSearch />}
               onChange={(e) => handleSearchOrderChange(e)}
-              onSeachClick={() => alert("Searching...")}
-              placeholder="Search"
+              onSeachClick={handleSubmitSearch}
               value={searchOrder}
             />
           </div>
@@ -271,17 +275,20 @@ const AdminOrders = () => {
                   borderColor: theme.palette.primary.main,
                   backgroundColor: "rgba(59, 130, 246, 0.04)",
                 },
+                height: "50px",
+                textTransform: "capitalize",
+                borderRadius: "8px",
               }}
             >
               {activeDateFilter
-                ? `${formatDateForDisplay(startDate)} - ${formatDateForDisplay(
-                    endDate
-                  )}`
-                : "Date Filter"}
+                ? `${formatDateForDisplay(
+                    startDateTemp
+                  )} - ${formatDateForDisplay(endDateTemp)}`
+                : "Lọc theo ngày"}
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Status :</span>
+            <span className="text-sm font-medium">Trạng thái :</span>
             <DropdownButton
               options={stateStatus}
               currentOption={orderStatusCurrent.label}
@@ -290,7 +297,7 @@ const AdminOrders = () => {
             />
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Sort :</span>
+            <span className="text-sm font-medium">Sắp xếp :</span>
             <DropdownButton
               options={sortOptions}
               currentOption={sortCurrent}
@@ -305,72 +312,109 @@ const AdminOrders = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "50px" }}>
-                <SortIcon fontSize="small" sx={{ color: "#94A3B8" }} />
-              </TableCell>
-              <TableCell>Order</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Total</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell align="right">Action</TableCell>
+              <TableCell sx={{ width: "50px" }}>STT</TableCell>
+              <TableCell>Mã Đơn</TableCell>
+              <TableCell>Khách hàng</TableCell>
+              <TableCell>Ngày đặt</TableCell>
+              <TableCell>Số lượng</TableCell>
+              <TableCell>Tổng tiền</TableCell>
+              <TableCell>Phương thức</TableCell>
+              <TableCell>Thanh toán</TableCell>
+              <TableCell>Trạng thái</TableCell>
+              <TableCell>Dòng thời gian</TableCell>
+              <TableCell align="right">Hành động</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {orderData.map((row) => (
-              <TableRow
-                key={row.id}
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                  "&:hover": { backgroundColor: "#F8FAFC" },
-                }}
-              >
-                <TableCell>
-                  <Box
-                    sx={{
-                      width: "40px",
-                      height: "40px",
-                      backgroundColor: "#F1F5F9",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: "4px",
-                      fontSize: "20px",
-                    }}
-                  >
-                    {row.image}
-                  </Box>
-                </TableCell>
-                <TableCell sx={{ fontWeight: "medium" }}>
-                  {row.product}
-                </TableCell>
-                <TableCell sx={{ color: "#64748B" }}>{row.date}</TableCell>
-                <TableCell sx={{ fontWeight: "medium" }}>{row.total}</TableCell>
-                <TableCell>
-                  <OrderStatusBadge status={OrderStatus.Confirmed} />
-                </TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    onClick={(e) => handleMenuOpen(e, row.id)}
-                    sx={{
-                      color: "#64748B",
-                      "&:hover": {
-                        backgroundColor: "#F1F5F9",
-                        color: "#0F172A",
-                      },
-                    }}
-                  >
-                    <MoreHorizIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {!isFetching &&
+              !isLoading &&
+              ordersResponse &&
+              ordersResponse.data &&
+              ordersResponse?.data.map((row, index) => (
+                <TableRow
+                  key={row.id}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    "&:hover": { backgroundColor: "#F8FAFC" },
+                  }}
+                >
+                  <TableCell sx={{ fontWeight: "medium" }}>
+                    {index + 1}
+                  </TableCell>
+                  <TableCell>#{row.id}</TableCell>
+                  <TableCell sx={{ fontWeight: "medium" }}>
+                    {row.user.firstName} {row.user.lastName}
+                  </TableCell>
+                  <TableCell sx={{ color: "#64748B" }}>
+                    {formatDate(row.createdAt.toString())}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "medium" }}>
+                    {row.orderDetails.length}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "medium" }}>
+                    {row.total}
+                  </TableCell>
+                  <TableCell>
+                    <PaymentMethodBadge paymentMethod={row.paymentMethod} />
+                  </TableCell>
+                  <TableCell>
+                    <PaymentStatusBadge status={row.paymentStatus} />
+                  </TableCell>
+                  <TableCell>
+                    <OrderStatusBadge status={row.status} />
+                  </TableCell>
+
+                  <TableCell>
+                    <div className="relative pl-4">
+                      {getOrderTimeline(row).map(
+                        (event, index) =>
+                          index === getOrderTimeline(row).length - 1 && (
+                            <div key={index} className="flex items-start mb-4">
+                              <div className="absolute left-0 w-px h-full bg-gray-200" />
+                              <div className="flex items-center">
+                                <div className="absolute left-0 w-2 h-2 -ml-1 bg-blue-600 rounded-full" />
+                                <div className="">
+                                  <p className="text-[12px] font-medium">
+                                    {event.status}
+                                  </p>
+                                  <p className="text-[10px] text-gray-500">
+                                    {formatDateTime(event.date.toString())}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      onClick={(e) => handleMenuOpen(e, row.id)}
+                      sx={{
+                        color: "#64748B",
+                        "&:hover": {
+                          backgroundColor: "#F1F5F9",
+                          color: "#0F172A",
+                        },
+                      }}
+                    >
+                      <MoreHorizIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
+        {(isLoading || isFetching) && (
+          <div className="flex h-[720px] items-center justify-center w-full">
+            <LoadingComponent />
+          </div>
+        )}
       </TableContainer>
 
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Pagination
-          count={24}
+          count={ordersResponse?.pagination?.totalPage}
           page={page}
           onChange={handleChangePage}
           size="large"
@@ -411,16 +455,16 @@ const AdminOrders = () => {
       >
         <MenuItem onClick={handleDetailClick} sx={{ color: "#334155" }}>
           <VisibilityOutlinedIcon fontSize="small" sx={{ mr: 1.5 }} />
-          Detail
+          Xem chi tiết
         </MenuItem>
         <MenuItem onClick={handleUpdateClick} sx={{ color: "#334155" }}>
           <EditOutlinedIcon fontSize="small" sx={{ mr: 1.5 }} />
-          Update
+          Cập nhật
         </MenuItem>
         <Divider sx={{ my: 1 }} />
         <MenuItem onClick={handleDeleteClick} sx={{ color: "#EF4444" }}>
           <DeleteOutlineOutlinedIcon fontSize="small" sx={{ mr: 1.5 }} />
-          Delete
+          Xóa
         </MenuItem>
       </Menu>
 
@@ -433,14 +477,21 @@ const AdminOrders = () => {
           fullWidth
         >
           <DialogTitle sx={{ fontWeight: "bold" }}>
-            Filter by Date Range
+            Lọc đơn hàng theo ngày
           </DialogTitle>
-          <DialogContent sx={{ mt: 1 }}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <DialogContent>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 5,
+                paddingY: "24px",
+              }}
+            >
               <DatePicker
-                label="Start Date"
-                value={startDate}
-                onChange={(newValue) => setStartDate(newValue)}
+                label="Ngày bắt đầu"
+                value={startDateTemp}
+                onChange={(newValue) => setStartDateTemp(newValue)}
                 slotProps={{
                   textField: {
                     variant: "outlined",
@@ -452,10 +503,10 @@ const AdminOrders = () => {
                 }}
               />
               <DatePicker
-                label="End Date"
-                value={endDate}
-                onChange={(newValue) => setEndDate(newValue)}
-                minDate={startDate || undefined}
+                label="Ngày kết thúc"
+                value={endDateTemp}
+                onChange={(newValue) => setEndDateTemp(newValue)}
+                minDate={startDateTemp || undefined}
                 slotProps={{
                   textField: {
                     variant: "outlined",
@@ -469,23 +520,30 @@ const AdminOrders = () => {
             </Box>
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 3 }}>
-            <Button onClick={handleClearDateFilter} sx={{ color: "#64748B" }}>
-              Clear
+            <Button
+              onClick={handleClearDateFilter}
+              sx={{ color: "#64748B", textTransform: "capitalize" }}
+            >
+              Đặt lại
             </Button>
-            <Button onClick={handleCloseDateFilter} sx={{ color: "#64748B" }}>
-              Cancel
+            <Button
+              onClick={handleCloseDateFilter}
+              sx={{ color: "#64748B", textTransform: "capitalize" }}
+            >
+              Hủy
             </Button>
             <Button
               onClick={handleApplyDateFilter}
               variant="contained"
               sx={{
                 bgcolor: "#1E40AF",
+                textTransform: "capitalize",
                 "&:hover": {
                   bgcolor: "#1E3A8A",
                 },
               }}
             >
-              Apply
+              Xác nhận
             </Button>
           </DialogActions>
         </Dialog>

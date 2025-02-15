@@ -5,12 +5,22 @@ import {
   OrderDto,
   OrderForCreateDto,
   OrderForUserRequestParameters,
+  OrderRequestParameters,
 } from "@types-d/order";
 
 export const orderApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getOrders: builder.query<ApiResponse<OrderDto[]>, void>({
-      query: () => "Order",
+    getOrders: builder.query<ApiResponse<OrderDto[]>, OrderRequestParameters>({
+      query: (params) => ({
+        url: `Order`,
+        params: {
+          PageSize: params.pageSize,
+          PageNumber: params.pageNumber,
+          SearchTerm: params.searchTerm,
+          OrderBy: params.orderBy,
+          OrderStatus: params.orderStatus,
+        },
+      }),
       providesTags: ["Order"],
     }),
 

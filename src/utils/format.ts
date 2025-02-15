@@ -95,6 +95,7 @@ export function formatDateTime(dateTimeString: string): string {
 }
 
 import { addDays } from "date-fns";
+import dayjs, { Dayjs } from "dayjs";
 
 /**
  * Hàm lấy ngày giao hàng dự kiến (+6 ngày từ ngày hiện tại)
@@ -109,4 +110,10 @@ export const getEstimatedDeliveryDate = (): string => {
     month: "long", // Hiển thị tháng (tháng 1, tháng 2, ...)
     year: "numeric", // Hiển thị năm (2024, 2025, ...)
   }).format(estimatedDate);
+};
+
+export const formatDate = (date: string | null) => {
+  const formatedDay = dayjs(date);
+  if (!formatedDay) return "";
+  return formatedDay.format("DD/MM/YYYY");
 };

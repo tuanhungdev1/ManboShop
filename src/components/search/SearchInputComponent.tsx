@@ -9,7 +9,7 @@ interface SearchInputComponentProps
 }
 
 export default function SearchInputComponent({
-  placeholder = "Search...",
+  placeholder = "Tìm kiếm...",
   icon,
   containerClassName = "",
   onSeachClick,

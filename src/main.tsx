@@ -40,6 +40,8 @@ import AdminProducts from "@pages/admin/AdminProducts";
 import AdminOrders from "@pages/admin/AdminOrders";
 import AdminCustomers from "@pages/admin/AdminCustomers";
 import AdminReviews from "@pages/admin/AdminReviews";
+import AdminPosts from "@pages/admin/AdminPosts";
+import AdminCoupons from "@pages/admin/AdminCoupons";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 
@@ -176,6 +178,14 @@ const router = createBrowserRouter([
       {
         path: "reviews",
         element: <AdminReviews />,
+      },
+      {
+        path: "posts",
+        element: <AdminPosts />,
+      },
+      {
+        path: "coupons",
+        element: <AdminCoupons />,
       },
     ],
   },
