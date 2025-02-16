@@ -64,17 +64,18 @@ const OrderPage = () => {
   ) => {
     setSearchOrder(event.target.value);
   };
+
   return (
     <div className="mt-[50px]">
       <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-medium">My Order</h1>
+        <h1 className="text-4xl font-medium">Đơn hàng của tôi</h1>
         <div className="flex items-center gap-6">
           <div className="hidden xl:block">
             <SearchInputComponent
               icon={<CiSearch />}
               onChange={(e) => handleSearchOrderChange(e)}
-              onSeachClick={() => alert("Searching...")}
-              placeholder="Search"
+              onSeachClick={() => alert("Đang tìm kiếm...")}
+              placeholder="Tìm kiếm"
               value={searchOrder}
             />
           </div>
@@ -86,27 +87,30 @@ const OrderPage = () => {
           />
         </div>
       </div>
-      {/* Search */}
+
+      {/* Tìm kiếm */}
       <div className="pt-4 xl:hidden">
         <SearchInputComponent
           icon={<CiSearch />}
           onChange={(e) => handleSearchOrderChange(e)}
-          onSeachClick={() => alert("Searching...")}
-          placeholder="Search"
+          onSeachClick={() => alert("Đang tìm kiếm...")}
+          placeholder="Tìm kiếm"
           value={searchOrder}
         />
       </div>
-      {/* Order List */}
 
+      {/* Danh sách đơn hàng */}
       {isLoading ? (
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       ) : orders?.data?.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12">
-          <div className="text-gray-400 text-lg">No orders found</div>
+          <div className="text-gray-400 text-lg">
+            Không tìm thấy đơn hàng nào
+          </div>
           <p className="text-gray-500 mt-2">
-            Try changing your search or filter
+            Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc
           </p>
         </div>
       ) : (
@@ -116,22 +120,22 @@ const OrderPage = () => {
               <thead>
                 <tr className="text-left border-b">
                   <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                    #ID
+                    Mã đơn hàng
                   </th>
                   <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                    Name
+                    Tên người nhận
                   </th>
                   <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                    Date
+                    Ngày đặt hàng
                   </th>
                   <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                    Price
+                    Tổng tiền
                   </th>
                   <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                    Status
+                    Trạng thái
                   </th>
                   <th className="px-6 py-4 text-sm font-semibold text-gray-600">
-                    Action
+                    Hành động
                   </th>
                 </tr>
               </thead>
@@ -169,7 +173,7 @@ const OrderPage = () => {
                         className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                         onClick={() => setSelectedOrder(orderDetail)}
                       >
-                        View Details
+                        Xem chi tiết
                       </button>
                     </td>
                   </tr>

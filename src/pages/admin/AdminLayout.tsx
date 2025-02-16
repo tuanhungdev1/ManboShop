@@ -99,7 +99,7 @@ const AdminLayout = () => {
         </ul>
       </div>
       {/* Main content */}
-      <div className="py-12 px-12 flex-1 flex flex-col gap-12">
+      <div className="py-10 px-12 flex-1 flex flex-col gap-10">
         {/* Header */}
         <div className="flex gap-2 font-medium text-sm items-center justify-between">
           <div className="flex items-center gap-2">

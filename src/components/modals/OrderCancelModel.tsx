@@ -14,7 +14,6 @@ import {
 import { useState } from "react";
 import CustomModal, { ModalStatus } from "./CustomModal";
 import { useNavigate } from "react-router-dom";
-
 const OrderCanceledSuccessModal = ({
   isOpen,
   onClose,
@@ -28,16 +27,17 @@ const OrderCanceledSuccessModal = ({
     isOpen={isOpen}
     onClose={onClose}
     status="success"
-    title="Your order has been canceled"
+    title="Đơn hàng của bạn đã được hủy"
     message={
       <>
-        Your order has been successfully canceled.
+        Đơn hàng của bạn đã được hủy thành công.
         <br />
-        If you have any questions, please contact our support team.
+        Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với đội ngũ hỗ trợ của
+        chúng tôi.
       </>
     }
     secondaryButton={{
-      label: "Back to My Orders",
+      label: "Quay lại đơn hàng của tôi",
       onClick: onBackToOrderPage,
     }}
   />
@@ -47,8 +47,8 @@ const LoadingCancelModal = ({ isOpen }: { isOpen: boolean }) => (
   <CustomModal
     isOpen={isOpen}
     status="loading"
-    title="Canceling Order"
-    message="Please wait while we process your cancellation request..."
+    title="Đang hủy đơn hàng"
+    message="Vui lòng chờ trong khi chúng tôi xử lý yêu cầu hủy đơn hàng của bạn..."
     showCloseButton={false}
   />
 );
@@ -66,26 +66,26 @@ const ErrorCancelModal = ({
     isOpen={isOpen}
     onClose={onClose}
     status="error"
-    title="Cancellation Failed"
-    message="There was an issue canceling your order. Please try again."
+    title="Hủy đơn hàng thất bại"
+    message="Có lỗi xảy ra khi hủy đơn hàng của bạn. Vui lòng thử lại."
     primaryButton={{
-      label: "Try Again",
+      label: "Thử lại",
       onClick: onRetry,
     }}
     secondaryButton={{
-      label: "Close",
+      label: "Đóng",
       onClick: onClose,
     }}
   />
 );
 
 const CANCEL_REASONS = [
-  "Changed my mind",
-  "Found a better price elsewhere",
-  "Delivery taking too long",
-  "Product not as described",
-  "Ordered by mistake",
-  "Other",
+  "Thay đổi ý định",
+  "Tìm thấy giá tốt hơn ở nơi khác",
+  "Thời gian giao hàng quá lâu",
+  "Sản phẩm không đúng mô tả",
+  "Đặt hàng nhầm",
+  "Khác",
 ];
 
 interface OrderCancelModalProps {
@@ -135,7 +135,7 @@ const OrderCancelModel: React.FC<OrderCancelModalProps> = ({
     }
 
     const finalReason =
-      selectedReason === "Other" ? customReason : selectedReason;
+      selectedReason === "Khác" ? customReason : selectedReason;
 
     setModalState({
       isOpen: true,
@@ -156,9 +156,17 @@ const OrderCancelModel: React.FC<OrderCancelModalProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      sx={{
+        fontSize: "14px",
+      }}
+    >
       <DialogTitle className="text-center font-bold text-xl text-red-600">
-        Cancel Order #{orderId}
+        Hủy đơn hàng #{orderId}
       </DialogTitle>
 
       <DialogContent>
@@ -172,7 +180,7 @@ const OrderCancelModel: React.FC<OrderCancelModalProps> = ({
             component="legend"
             className="text-base font-semibold mb-2"
           >
-            Reason for Cancellation
+            Lý do hủy đơn hàng
           </FormLabel>
 
           <RadioGroup value={selectedReason} onChange={handleReasonChange}>
@@ -189,29 +197,36 @@ const OrderCancelModel: React.FC<OrderCancelModalProps> = ({
 
           {error && (
             <p className="text-red-500 text-sm mt-2">
-              Please select a reason for cancellation
+              Vui lòng chọn lý do hủy đơn hàng
             </p>
           )}
         </FormControl>
 
-        {selectedReason === "Other" && (
+        {selectedReason === "Khác" && (
           <TextField
             fullWidth
             multiline
             rows={4}
             variant="outlined"
-            label="Detailed Reason"
+            label="Lý do chi tiết"
             value={customReason}
             onChange={(e) => setCustomReason(e.target.value)}
-            placeholder="Please provide a detailed explanation"
+            placeholder="Vui lòng cung cấp mô tả chi tiết"
             className="mt-4"
           />
         )}
       </DialogContent>
 
       <DialogActions className="p-6 flex justify-between">
-        <Button onClick={onClose} variant="outlined" color="secondary">
-          Keep Order
+        <Button
+          onClick={onClose}
+          variant="outlined"
+          color="secondary"
+          sx={{
+            textTransform: "capitalize",
+          }}
+        >
+          Giữ lại đơn hàng
         </Button>
 
         <Button
@@ -219,8 +234,11 @@ const OrderCancelModel: React.FC<OrderCancelModalProps> = ({
           variant="contained"
           color="error"
           disabled={!selectedReason}
+          sx={{
+            textTransform: "capitalize",
+          }}
         >
-          Confirm Cancel
+          Xác nhận hủy
         </Button>
       </DialogActions>
 

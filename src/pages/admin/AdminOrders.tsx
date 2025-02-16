@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Table,
@@ -24,7 +24,7 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -37,11 +37,14 @@ import { CiSearch } from "react-icons/ci";
 import DropdownButton, {
   Option,
 } from "@components/dropdownButton/DropdownButton";
-import { useGetOrdersQuery } from "@services/orderApi";
+import { useCancelOrderMutation, useGetOrdersQuery } from "@services/orderApi";
 import { formatDate, formatDateTime } from "@utils/format";
 import PaymentStatusBadge from "@components/order/PaymentStatusBadge";
 import { LoadingComponent } from "@components/loadings";
 import { OrderDto } from "@types-d/order";
+import { BsBoxSeam } from "react-icons/bs";
+import OrderDetailModal from "@components/modals/OrderDetailModal";
+import { OrderCancelModel } from "@components/modals";
 
 const stateStatus: Option[] = [
   { id: "", label: "Tất cả" },
@@ -60,6 +63,7 @@ const getOrderTimeline = (order: OrderDto) => {
     {
       status: "Đơn hàng đã đặt",
       date: order.createdAt,
+      color: "bg-blue-500", // Xanh dương
     },
   ];
 
@@ -67,6 +71,7 @@ const getOrderTimeline = (order: OrderDto) => {
     timeline.push({
       status: "Đã xác nhận",
       date: order.confirmedAt,
+      color: "bg-green-500", // Xanh lá
     });
   }
 
@@ -74,6 +79,7 @@ const getOrderTimeline = (order: OrderDto) => {
     timeline.push({
       status: "Đang xử lý",
       date: order.processedAt,
+      color: "bg-yellow-500", // Vàng
     });
   }
 
@@ -81,6 +87,7 @@ const getOrderTimeline = (order: OrderDto) => {
     timeline.push({
       status: "Đã giao cho đơn vị vận chuyển",
       date: order.shippedAt,
+      color: "bg-orange-500", // Cam
     });
   }
 
@@ -88,6 +95,7 @@ const getOrderTimeline = (order: OrderDto) => {
     timeline.push({
       status: "Đã giao hàng",
       date: order.deliveredAt,
+      color: "bg-gray-700", // Xanh đậm
     });
   }
 
@@ -95,6 +103,7 @@ const getOrderTimeline = (order: OrderDto) => {
     timeline.push({
       status: "Đã hủy",
       date: order.cancelledAt,
+      color: "bg-red-500", // Đỏ
     });
   }
 
@@ -121,46 +130,107 @@ const sortOptions: Option[] = [
 ];
 
 const AdminOrders = () => {
+  // Helpers
+  const formatDateForBackend = (date: Date | null): string | undefined => {
+    if (!date) return undefined;
+
+    // Đảm bảo lấy ngày local
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+  const formatDateForDisplay = (date: Dayjs | null): string => {
+    if (!date) return "";
+    return date.format("DD/MM/YYYY");
+  };
+
+  // Component state
   const [page, setPage] = useState(1);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderDto | null>(null);
+  const [isOpenOrderDetail, setIsOpenOrderDetail] = useState(false);
   const rowsPerPage = 10;
   const theme = useTheme();
   const [searchOrder, setSearchOrder] = useState("");
   const [searchOrderQuery, setSearchOrderQuery] = useState("");
   const [sortCurrent, setSortCurrent] = useState(sortOptions[0].id);
   const [orderStatusCurrent, setOrderStatusCurrent] = useState(stateStatus[0]);
-
-  // Date filter state
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  // Date filter states
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-
   const [startDateTemp, setStartDateTemp] = useState<Dayjs | null>(null);
   const [endDateTemp, setEndDateTemp] = useState<Dayjs | null>(null);
   const [dateFilterOpen, setDateFilterOpen] = useState(false);
 
+  // Order status helper
   const getOrderStatusFromId = (id: string): OrderStatus | undefined => {
     if (!id.trim()) return undefined;
-
     const numericId = Number(id);
     return numericId in OrderStatus
       ? (OrderStatus[numericId] as unknown as OrderStatus)
       : undefined;
   };
 
+  const [cancelOrder] = useCancelOrderMutation();
+
+  // API query
   const {
     data: ordersResponse,
     isLoading,
     isFetching,
+    refetch,
   } = useGetOrdersQuery({
     pageSize: rowsPerPage,
     pageNumber: page,
+    orderBy: sortCurrent,
     searchTerm: searchOrderQuery,
-    fromDate: startDate || undefined,
-    toDate: endDate || undefined,
+    fromDate: formatDateForBackend(startDate),
+    toDate: formatDateForBackend(endDate),
     orderStatus: getOrderStatusFromId(orderStatusCurrent.id),
   });
 
+  const handleCancelOrder = async (reason: string) => {
+    await cancelOrder({
+      id: selectedOrder?.id!,
+      orderForCancelDto: {
+        cancellationReason: reason,
+      },
+    }).unwrap();
+
+    setSelectedOrder(null);
+  };
+  // Date filter handlers
+  const handleOpenDateFilter = () => {
+    // Khởi tạo giá trị temp từ giá trị hiện tại
+    setStartDateTemp(startDate ? dayjs(startDate) : null);
+    setEndDateTemp(endDate ? dayjs(endDate) : null);
+    setDateFilterOpen(true);
+  };
+
+  const handleCloseDateFilter = () => {
+    setDateFilterOpen(false);
+  };
+
+  const handleApplyDateFilter = () => {
+    const newStartDate = startDateTemp?.toDate() || null;
+    const newEndDate = endDateTemp?.toDate() || null;
+
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+    handleCloseDateFilter();
+  };
+
+  const handleClearDateFilter = () => {
+    setStartDateTemp(null);
+    setEndDateTemp(null);
+    setStartDate(null);
+    setEndDate(null);
+  };
+
+  // Các handlers khác giữ nguyên
   const handleChangePage = (
     _event: React.ChangeEvent<unknown>,
     newPage: number
@@ -170,67 +240,25 @@ const AdminOrders = () => {
 
   const handleMenuOpen = (
     event: React.MouseEvent<HTMLElement>,
-    orderId: number
+    order: OrderDto
   ) => {
     setAnchorEl(event.currentTarget);
-    setCurrentOrderId(orderId);
+    setSelectedOrder(order);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setCurrentOrderId(null);
-  };
-
-  const handleDetailClick = () => {
-    console.log(`View details for order #${currentOrderId}`);
-    handleMenuClose();
-  };
-
-  const handleUpdateClick = () => {
-    console.log(`Update order #${currentOrderId}`);
-    handleMenuClose();
-  };
-
-  const handleDeleteClick = () => {
-    console.log(`Delete order #${currentOrderId}`);
-    handleMenuClose();
+    setSelectedOrder(null);
   };
 
   const handleSubmitSearch = () => {
     setSearchOrderQuery(searchOrder);
   };
+
   const handleSearchOrderChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSearchOrder(event.target.value);
-  };
-
-  const handleOpenDateFilter = () => {
-    setDateFilterOpen(true);
-  };
-
-  const handleCloseDateFilter = () => {
-    setDateFilterOpen(false);
-  };
-
-  console.log(`FormDate: ${startDate}, End Date: ${endDate}`);
-
-  const handleApplyDateFilter = () => {
-    setStartDate(startDateTemp ? startDateTemp.toDate() : null);
-    setEndDate(endDateTemp ? endDateTemp.toDate() : null);
-
-    handleCloseDateFilter();
-  };
-
-  const handleClearDateFilter = () => {
-    setStartDateTemp(null);
-    setEndDateTemp(null);
-  };
-
-  // Format dates for display
-  const formatDateForDisplay = (date: Dayjs | null) => {
-    if (!date) return "";
-    return date.format("DD/MM/YYYY");
   };
 
   const activeDateFilter = startDate || endDate;
@@ -372,7 +400,9 @@ const AdminOrders = () => {
                             <div key={index} className="flex items-start mb-4">
                               <div className="absolute left-0 w-px h-full bg-gray-200" />
                               <div className="flex items-center">
-                                <div className="absolute left-0 w-2 h-2 -ml-1 bg-blue-600 rounded-full" />
+                                <div
+                                  className={`absolute left-0 w-2 h-2 -ml-1 ${event.color} rounded-full`}
+                                />
                                 <div className="">
                                   <p className="text-[12px] font-medium">
                                     {event.status}
@@ -389,7 +419,7 @@ const AdminOrders = () => {
                   </TableCell>
                   <TableCell align="right">
                     <IconButton
-                      onClick={(e) => handleMenuOpen(e, row.id)}
+                      onClick={(e) => handleMenuOpen(e, row)}
                       sx={{
                         color: "#64748B",
                         "&:hover": {
@@ -410,6 +440,27 @@ const AdminOrders = () => {
             <LoadingComponent />
           </div>
         )}
+
+        {!ordersResponse?.data ? (
+          <div className="flex h-[720px] font-medium flex-col items-center gap-6 justify-center w-full">
+            <span className="text-red-500">
+              Không thể tải dữ liệu về danh sách đơn hàng
+            </span>
+            <div
+              onClick={refetch}
+              className="h-[50px] cursor-pointer bg-red-50 flex items-center justify-center rounded-lg px-6 text-red-500"
+            >
+              Tải lại dữ liệu
+            </div>
+          </div>
+        ) : ordersResponse.data.length === 0 ? (
+          <div className="flex h-[720px] font-medium opacity-60 flex-col items-center gap-6 justify-center w-full">
+            <div className="text-[100px]">
+              <BsBoxSeam />
+            </div>
+            <span>Danh sách đơn hàng trống</span>
+          </div>
+        ) : null}
       </TableContainer>
 
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
@@ -453,16 +504,22 @@ const AdminOrders = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleDetailClick} sx={{ color: "#334155" }}>
+        <MenuItem
+          onClick={() => {
+            setIsOpenOrderDetail((prev) => !prev);
+            setAnchorEl(null);
+          }}
+          sx={{ color: "#334155" }}
+        >
           <VisibilityOutlinedIcon fontSize="small" sx={{ mr: 1.5 }} />
           Xem chi tiết
         </MenuItem>
-        <MenuItem onClick={handleUpdateClick} sx={{ color: "#334155" }}>
+        <MenuItem onClick={() => {}} sx={{ color: "#334155" }}>
           <EditOutlinedIcon fontSize="small" sx={{ mr: 1.5 }} />
           Cập nhật
         </MenuItem>
         <Divider sx={{ my: 1 }} />
-        <MenuItem onClick={handleDeleteClick} sx={{ color: "#EF4444" }}>
+        <MenuItem onClick={() => {}} sx={{ color: "#EF4444" }}>
           <DeleteOutlineOutlinedIcon fontSize="small" sx={{ mr: 1.5 }} />
           Xóa
         </MenuItem>
@@ -548,6 +605,27 @@ const AdminOrders = () => {
           </DialogActions>
         </Dialog>
       </LocalizationProvider>
+
+      {isOpenOrderDetail && (
+        <>
+          <OrderDetailModal
+            open={!!selectedOrder}
+            onClose={() => {
+              setSelectedOrder(null);
+              setIsOpenOrderDetail((prev) => !prev);
+            }}
+            order={selectedOrder!}
+            onCancelOrder={() => setShowCancelModal(true)}
+          />
+        </>
+      )}
+
+      <OrderCancelModel
+        open={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        onConfirmCancel={handleCancelOrder}
+        orderId={selectedOrder?.id ?? 0}
+      />
     </Box>
   );
 };

@@ -19,6 +19,8 @@ export const orderApi = baseApi.injectEndpoints({
           SearchTerm: params.searchTerm,
           OrderBy: params.orderBy,
           OrderStatus: params.orderStatus,
+          FormDate: params.fromDate,
+          ToDate: params.toDate,
         },
       }),
       providesTags: ["Order"],

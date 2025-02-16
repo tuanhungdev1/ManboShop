@@ -96,6 +96,7 @@ const theme = {
     },
     fontFamily: ["Montserrat", "sans-serif"].join(","),
   },
+
   breakpoints: {
     values: {
       xs: 0,

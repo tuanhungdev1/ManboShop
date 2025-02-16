@@ -74,6 +74,6 @@ export interface OrderForUserRequestParameters extends RequestParameters {}
 
 export interface OrderRequestParameters extends RequestParameters {
   orderStatus?: OrderStatus;
-  fromDate?: Date;
-  toDate?: Date;
+  fromDate?: string;
+  toDate?: string;
 }
