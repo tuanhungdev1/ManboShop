@@ -5,6 +5,8 @@ import { HiOutlineUsers } from "react-icons/hi2";
 import { BsStar } from "react-icons/bs";
 import { RiCoupon3Line } from "react-icons/ri";
 import { IoDocumentTextOutline } from "react-icons/io5";
+import { TbBrandAppgallery } from "react-icons/tb";
+import { BiCategoryAlt } from "react-icons/bi";
 interface AdminMenuItem {
   id: number;
   title: string;
@@ -39,18 +41,30 @@ export const AdminMenu: AdminMenuItem[] = [
   },
   {
     id: 5,
+    title: "Thương hiệu",
+    path: "/admin/brands",
+    icon: TbBrandAppgallery,
+  },
+  {
+    id: 6,
+    title: "Danh mục",
+    path: "/admin/categories",
+    icon: BiCategoryAlt,
+  },
+  {
+    id: 7,
     title: "Đánh giá",
     path: "/admin/reviews",
     icon: BsStar,
   },
   {
-    id: 6,
+    id: 8,
     title: "Mã giảm giá",
     path: "/admin/coupons",
     icon: RiCoupon3Line,
   },
   {
-    id: 7,
+    id: 9,
     title: "Bài viết",
     path: "/admin/posts",
     icon: IoDocumentTextOutline,

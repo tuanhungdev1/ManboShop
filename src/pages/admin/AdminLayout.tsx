@@ -15,9 +15,12 @@ const AdminLayout = () => {
     "/admin/dashboard": "Bảng điều khiển",
     "/admin/products": "Danh sách sản phẩm",
     "/admin/orders": "Danh sách đơn hàng",
+    "/admin/reviews": "Danh sách đánh giá",
     "/admin/customers": "Danh sách khách hàng",
     "/admin/coupons": "Danh sách mã giảm giá",
+    "/admin/brands": "Danh sách thương hiệu",
     "/admin/posts": "Danh sách bài viết",
+    "/admin/categories": "Danh sách đánh giá",
   };
 
   const handleGetPageName = (path: string) => pageNames[path] || "";
