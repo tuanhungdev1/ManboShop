@@ -5,7 +5,7 @@ import { cn } from "@utils/cn";
 const ButtonBackToTop: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isInFooter, setIsInFooter] = useState(false);
-  const footerHeight = 660; // Chiều cao của footer
+  const footerHeight = 320; // Chiều cao của footer
 
   const toggleVisibility = () => {
     const scrollY = window.scrollY;
@@ -51,7 +51,7 @@ const ButtonBackToTop: React.FC = () => {
     >
       <div
         className={cn(
-          "flex items-center text-[20px] justify-center w-10 h-10 border rounded-full",
+          "flex items-center text-[24px] justify-center w-12 h-12 border rounded-full",
           isInFooter ? "border-white" : "border-black"
         )}
       >

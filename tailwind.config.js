@@ -41,6 +41,7 @@ export default {
         marquee: "marquee 80s linear infinite",
         colorRotate: "colorAndRotate 1s infinite",
         shake: "shake 0.9s ease-in-out infinite",
+        bounce: "bounce 1s infinite",
       },
     },
   },

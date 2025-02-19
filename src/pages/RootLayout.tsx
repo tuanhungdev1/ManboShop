@@ -1,4 +1,5 @@
 import ButtonBackToTop from "@components/buttons/ButtonBackToTop";
+import { ChatboxAi } from "@components/chat";
 import { Backdrop } from "@components/common/backdrop";
 import Features from "@components/common/features/Features";
 import { Footer } from "@components/common/footers";
@@ -36,6 +37,7 @@ const RootLayout = () => {
       <Features />
       <Footer />
       <ButtonBackToTop />
+      <ChatboxAi />
 
       {message && (
         <Snackbar
