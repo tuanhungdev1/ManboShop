@@ -11,7 +11,7 @@ import {
   selectAccessToken,
   selectUser,
 } from "@redux/slices/authSlice";
-import { IoMdClose } from "react-icons/io";
+import { IoIosArrowDown, IoMdClose } from "react-icons/io";
 import { Tooltip } from "@mui/material";
 import CartList from "@components/cartList/CartList";
 
@@ -100,7 +100,7 @@ const Header = () => {
 
       const redirect = "/checkout/address";
       localStorage.setItem("redirectAfterLogin", redirect);
-      navigate("/login");
+      navigate("/account/login");
       return;
     }
 
@@ -160,10 +160,9 @@ const Header = () => {
             {/* Main Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
               <Link to="/" className="text-sm font-medium hover:text-gray-600">
-                Home
+                Trang chủ
               </Link>
-              <Link
-                to={"/collection"}
+              <div
                 className="static group py-6"
                 onMouseEnter={() =>
                   dispatch(
@@ -176,39 +175,31 @@ const Header = () => {
                   dispatch(hideBackdrop());
                 }}
               >
-                <button className="text-sm font-medium hover:text-gray-600 flex items-center">
-                  Shop
-                  <svg
-                    className="w-4 h-4 ml-1"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                <button className="text-sm gap-1 font-medium hover:text-gray-600 flex items-center">
+                  <span> Danh mục</span>
+                  <span className="mt-[2px]">
+                    <IoIosArrowDown />
+                  </span>
                 </button>
                 <MegaMenu />
-              </Link>
+              </div>
               <Link
-                to="/our-story"
+                to="/collection"
                 className="text-sm font-medium hover:text-gray-600"
               >
-                Our Story
+                Sản phẩm
               </Link>
               <Link
                 to="/blog"
                 className="text-sm font-medium hover:text-gray-600"
               >
-                Blog
+                Bài viết
               </Link>
               <Link
                 to="/contact"
                 className="text-sm font-medium hover:text-gray-600"
               >
-                Contact Us
+                Liên hệ
               </Link>
             </nav>
 
@@ -263,10 +254,10 @@ const Header = () => {
               {/* Login */}
               {!user ? (
                 <Link
-                  to="/account/login"
+                  to="/account/register"
                   className="hidden lg:block px-6 py-2 bg-black text-white rounded-md text-sm font-medium hover:bg-gray-800"
                 >
-                  Login
+                  Đăng ký
                 </Link>
               ) : (
                 <Link
@@ -293,7 +284,7 @@ const Header = () => {
               <div className="flex items-center border-b gap-1 pb-2 border-gray-200">
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="Tìm kiếm sản phẩm..."
                   className="w-full p-2 focus:outline-none placeholder:text-sm placeholder:font-medium"
                   autoFocus
                   onChange={(e) => handleSearchChange(e)}

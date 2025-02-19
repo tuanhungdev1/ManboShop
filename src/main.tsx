@@ -1,51 +1,77 @@
-/* eslint-disable react-refresh/only-export-components */
-import { lazy, StrictMode } from "react";
+// src/main.tsx
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles/index.css";
 import { ThemeProvider } from "@mui/material";
 import theme from "@configs/muiConfig";
-import RootLayout from "@pages/RootLayout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RegisterPage from "@pages/auth/RegisterPage";
-import LoginPage from "@pages/auth/LoginPage";
-import AuthLayout from "@pages/auth/AuthLayout";
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
-import CollectionLayout from "@pages/collection/CollectionLayout";
-import CollectionDetail from "@pages/collection/CollectionDetail";
-import ProductDetail from "@pages/products/ProductDetail";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import UserProtectedLayout from "@pages/user/UserProtectedLayout";
-import PersonalInformationPage from "@pages/user/PersonalInformationPage";
-import OrderPage from "@pages/user/OrderPage";
-import WishlistPage from "@pages/user/WishlistPage";
-import SaveCardPage from "@pages/user/SaveCardPage";
-import NotificationPage from "@pages/user/NotificationPage";
-import SettingPage from "@pages/user/SettingPage";
-import AddressPage from "@pages/user/AddressPage";
-import ProtectedLayout from "@pages/shoppingCart/ProtectedLayout";
-import ShoppingCartPage from "@pages/shoppingCart/ShoppingCartPage";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import CheckoutGuard from "@pages/checkout/CheckoutGuard";
-import CheckoutLayout from "@pages/checkout/CheckoutLayout";
-import CheckoutAddress from "@pages/checkout/CheckoutAddress";
-import CheckoutPayment from "@pages/checkout/CheckoutPayment";
-import CheckoutPreview from "@pages/checkout/CheckoutPreview";
-import LoginAdminPage from "@pages/admin/auth/LoginAdminPage";
-import ProtectedAdminLayout from "@pages/admin/ProtectedAdminLayout";
-import AdminLayout from "@pages/admin/AdminLayout";
-import AdminDashboard from "@pages/admin/AdminDashboard";
-import AdminProducts from "@pages/admin/AdminProducts";
-import AdminOrders from "@pages/admin/AdminOrders";
-import AdminCustomers from "@pages/admin/AdminCustomers";
-import AdminReviews from "@pages/admin/AdminReviews";
-import AdminPosts from "@pages/admin/AdminPosts";
-import AdminCoupons from "@pages/admin/AdminCoupons";
-import AdminBrands from "@pages/admin/AdminBrands";
-import AdminCategories from "@pages/admin/AdminCategories";
+import { LazyLoad } from "@components/common/wrapper";
 
-const HomePage = lazy(() => import("@pages/HomePage"));
+// Lazy load components
+const RootLayout = LazyLoad(() => import("@pages/RootLayout"));
+const HomePage = LazyLoad(() => import("@pages/HomePage"));
+const BlogPage = LazyLoad(() => import("@pages/BlogPage"));
+const ContactPage = LazyLoad(() => import("@pages/ContactPage"));
+const RegisterPage = LazyLoad(() => import("@pages/auth/RegisterPage"));
+const LoginPage = LazyLoad(() => import("@pages/auth/LoginPage"));
+const AuthLayout = LazyLoad(() => import("@pages/auth/AuthLayout"));
+const CollectionLayout = LazyLoad(
+  () => import("@pages/collection/CollectionLayout")
+);
+const CollectionDetail = LazyLoad(
+  () => import("@pages/collection/CollectionDetail")
+);
+const ProductDetail = LazyLoad(() => import("@pages/products/ProductDetail"));
+const UserProtectedLayout = LazyLoad(
+  () => import("@pages/user/UserProtectedLayout")
+);
+const PersonalInformationPage = LazyLoad(
+  () => import("@pages/user/PersonalInformationPage")
+);
+const OrderPage = LazyLoad(() => import("@pages/user/OrderPage"));
+const WishlistPage = LazyLoad(() => import("@pages/user/WishlistPage"));
+const SaveCardPage = LazyLoad(() => import("@pages/user/SaveCardPage"));
+const NotificationPage = LazyLoad(() => import("@pages/user/NotificationPage"));
+const SettingPage = LazyLoad(() => import("@pages/user/SettingPage"));
+const AddressPage = LazyLoad(() => import("@pages/user/AddressPage"));
+const ProtectedLayout = LazyLoad(
+  () => import("@pages/shoppingCart/ProtectedLayout")
+);
+const ShoppingCartPage = LazyLoad(
+  () => import("@pages/shoppingCart/ShoppingCartPage")
+);
+const CheckoutGuard = LazyLoad(() => import("@pages/checkout/CheckoutGuard"));
+const CheckoutLayout = LazyLoad(() => import("@pages/checkout/CheckoutLayout"));
+const CheckoutAddress = LazyLoad(
+  () => import("@pages/checkout/CheckoutAddress")
+);
+const CheckoutPayment = LazyLoad(
+  () => import("@pages/checkout/CheckoutPayment")
+);
+const CheckoutPreview = LazyLoad(
+  () => import("@pages/checkout/CheckoutPreview")
+);
+const LoginAdminPage = LazyLoad(
+  () => import("@pages/admin/auth/LoginAdminPage")
+);
+const ProtectedAdminLayout = LazyLoad(
+  () => import("@pages/admin/ProtectedAdminLayout")
+);
+const AdminLayout = LazyLoad(() => import("@pages/admin/AdminLayout"));
+const AdminDashboard = LazyLoad(() => import("@pages/admin/AdminDashboard"));
+const AdminProducts = LazyLoad(() => import("@pages/admin/AdminProducts"));
+const AdminOrders = LazyLoad(() => import("@pages/admin/AdminOrders"));
+const AdminCustomers = LazyLoad(() => import("@pages/admin/AdminCustomers"));
+const AdminReviews = LazyLoad(() => import("@pages/admin/AdminReviews"));
+const AdminPosts = LazyLoad(() => import("@pages/admin/AdminPosts"));
+const AdminCoupons = LazyLoad(() => import("@pages/admin/AdminCoupons"));
+const AdminBrands = LazyLoad(() => import("@pages/admin/AdminBrands"));
+const AdminCategories = LazyLoad(() => import("@pages/admin/AdminCategories"));
 
 const router = createBrowserRouter([
   {
@@ -55,7 +81,14 @@ const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
       },
-
+      {
+        path: "/blog",
+        element: <BlogPage />,
+      },
+      {
+        path: "/contact",
+        element: <ContactPage />,
+      },
       {
         path: "/product/:slug",
         element: <ProductDetail />,

@@ -1,6 +1,6 @@
 import { useGetUserQuery } from "@services/userApi";
 import UserLayout from "./UserLayout";
-import { LoadingPage } from "@components/loadings";
+import { LoadingFallback } from "@components/loadings";
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@redux/hooks";
@@ -26,7 +26,7 @@ const UserProtectedLayout = () => {
     }
   }, [isLoading]);
 
-  if (isLoading || showLoading) return <LoadingPage />;
+  if (isLoading || showLoading) return <LoadingFallback />;
   if (error) return <Navigate to={"/account/login"} />;
 
   return (

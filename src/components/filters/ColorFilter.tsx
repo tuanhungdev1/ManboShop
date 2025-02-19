@@ -43,7 +43,7 @@ const ColorFilter = () => {
           },
         }}
       >
-        <span className="font-bold text-[18px]">Colors</span>
+        <span className="font-bold text-[18px]">Màu sắc</span>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: "0 0 16px 0" }}>
         <div className="flex flex-wrap gap-3">

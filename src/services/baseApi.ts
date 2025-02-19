@@ -101,6 +101,7 @@ export const baseApi = createApi({
   tagTypes: [
     "Cart",
     "Address",
+    "Products",
     "Feedback",
     "FeedbackAverage",
     "Login",

@@ -31,6 +31,7 @@ import {
 } from "@services/feedbackApi";
 import { FeedbackItemSkeleton, FeedbackList } from "@components/feedbackList";
 import { CreateFeedbackForm } from "@components/form";
+import { ImageLoad } from "@components/images";
 
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
@@ -46,15 +47,11 @@ const ProductDetail = () => {
     []
   );
 
-  console.log(currentVariantImages);
-
   const handleColorVariantSelect = (variantValue: VariantValue) => {
     if (variantValue && variantValue.variantValueImages) {
       const selectedVariantImages = variantValue.variantValueImages.map(
         (img) => img.imageUrl
       );
-      // Log để debug
-      console.log("New variant images:", selectedVariantImages);
 
       setCurrentVariantImages(selectedVariantImages);
       setCurrentImageIndex(0); // Reset về ảnh đầu tiên
@@ -102,8 +99,8 @@ const ProductDetail = () => {
         ? {
             productId: product.data.id,
             feedbackRequestParameters: {
-              pageNumber: feedbackPageSize,
-              pageSize: 5,
+              PageNumber: feedbackPageSize,
+              PageSize: 5,
             },
           }
         : skipToken
@@ -331,7 +328,7 @@ const ProductDetail = () => {
         <div className="flex flex-col md:flex-row mt-10">
           {/* Product Image */}
           <div className="md:w-1/2 relative">
-            <img
+            <ImageLoad
               src={currentVariantImages[currentImageIndex]}
               alt={product.data.name}
               className="w-full h-[500px] md:h-[600px] lg:h-[700px] object-cover rounded-md relative transition duration-300 ease-in-out"
@@ -363,7 +360,7 @@ const ProductDetail = () => {
                   }`}
                   onClick={() => handleThumbnailClick(index)}
                 >
-                  <img
+                  <ImageLoad
                     src={image}
                     alt={`Thumbnail ${index + 1}`}
                     className="w-20 h-20 object-cover rounded-md"
@@ -477,7 +474,7 @@ const ProductDetail = () => {
                           }
                         >
                           {item.variantValueImages.length > 0 ? (
-                            <img
+                            <ImageLoad
                               src={item.variantValueImages[0].imageUrl}
                               alt={item.value}
                               className="w-[50px] h-[50px] object-cover rounded"

@@ -74,7 +74,7 @@ const PersonalInformationPage = () => {
               <div className="text-[20px]">
                 <FiEdit />
               </div>
-              <span className="text-sm font-normal">Edit Profile</span>
+              <span className="text-sm font-normal">Chỉnh sửa thông tin</span>
             </PrimaryButton>
           </div>
         </div>

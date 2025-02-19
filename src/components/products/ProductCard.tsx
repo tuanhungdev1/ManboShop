@@ -1,3 +1,4 @@
+import { ImageLoad } from "@components/images";
 import { Product } from "@types-d/product";
 import { formatPrice } from "@utils/format";
 import { isNewProduct, slugify } from "@utils/utils";
@@ -20,8 +21,8 @@ const ProductCard = ({ product, viewMode }: ProductCardProps) => {
         }`}
       >
         {/* Main Image */}
-        <img
-          src={product.productImages[0]?.imageUrl}
+        <ImageLoad
+          src={product.productImages[0]?.imageUrl || ""}
           alt={product.name}
           className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
         />

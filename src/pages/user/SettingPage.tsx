@@ -1,4 +1,3 @@
-// src/components/Settings.tsx
 import React, { useState } from "react";
 import { Typography, Button } from "@mui/material";
 import DropdownButton, {
@@ -10,8 +9,8 @@ import { logout } from "@redux/slices/authSlice";
 import { authStorage } from "@utils/authStorage";
 
 const themeOptions: Option[] = [
-  { id: "light", label: "Light Mode" },
-  { id: "dark", label: "Dark Mode" },
+  { id: "light", label: "Chế độ Sáng" },
+  { id: "dark", label: "Chế độ Tối" },
 ];
 
 const languageOptions = [
@@ -42,7 +41,7 @@ const Settings: React.FC = () => {
               fontWeight: "700",
             }}
           >
-            Appearance
+            Giao diện
           </Typography>
           <Typography
             variant="body2"
@@ -53,7 +52,7 @@ const Settings: React.FC = () => {
             color="text.secondary"
             gutterBottom
           >
-            Customize how your theme looks on your device
+            Tùy chỉnh giao diện trên thiết bị của bạn
           </Typography>
         </div>
         <div>
@@ -75,7 +74,7 @@ const Settings: React.FC = () => {
             }}
             gutterBottom
           >
-            Language
+            Ngôn ngữ
           </Typography>
           <Typography
             variant="body2"
@@ -86,7 +85,7 @@ const Settings: React.FC = () => {
             color="text.secondary"
             gutterBottom
           >
-            Select your language
+            Chọn ngôn ngữ của bạn
           </Typography>
         </div>
         <div>
@@ -110,7 +109,7 @@ const Settings: React.FC = () => {
           }}
           onClick={handleLogout}
         >
-          Logout
+          Đăng xuất
         </Button>
       </div>
     </div>

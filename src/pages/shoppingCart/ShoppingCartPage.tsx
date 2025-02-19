@@ -13,11 +13,12 @@ const ShoppingCartPage = () => {
   const cartItems = useAppSelector(selectCartItems);
   const cartItemCount = useAppSelector(selectCartTotalItems);
   const subTotal = useAppSelector(selectCartTotalAmount);
-  const deliveryCharge = 5; // Example delivery charge
-  const discount = 0; // Example discount
+  const deliveryCharge = 5; // Phí giao hàng (ví dụ)
+  const discount = 0; // Giảm giá (ví dụ)
+
   return (
-    <div className=" mt-[50px]">
-      <div className="text-4xl font-medium mt-4 mb-12">Shopping Cart</div>
+    <div className="mt-[50px]">
+      <div className="text-4xl font-medium mt-4 mb-12">Giỏ hàng</div>
       <Grid container spacing={4} marginTop={6}>
         <Grid
           item
@@ -25,16 +26,15 @@ const ShoppingCartPage = () => {
           lg={12}
           xl={9}
           sx={{
-            overflowX: { xs: "auto", lg: "hidden" }, // Cuộn ngang ở màn hình nhỏ
-
-            flexWrap: "nowrap", // Ngăn các item xuống dòng khi màn hình nhỏ
+            overflowX: { xs: "auto", lg: "hidden" }, // Cuộn ngang trên màn hình nhỏ
+            flexWrap: "nowrap", // Ngăn các mục xuống dòng khi màn hình nhỏ
           }}
         >
           {cartItemCount > 0 ? (
             <>
               <Grid container spacing={4} sx={{ flexWrap: "nowrap" }}>
                 <Grid item xs={5} sx={{ minWidth: "400px" }}>
-                  <div className="text-[14px] font-medium">Products</div>
+                  <div className="text-[14px] font-medium">Sản phẩm</div>
                 </Grid>
                 <Grid
                   item
@@ -46,7 +46,7 @@ const ShoppingCartPage = () => {
                     },
                   }}
                 >
-                  <div className="text-[14px] font-medium">Price</div>
+                  <div className="text-[14px] font-medium">Giá</div>
                 </Grid>
                 <Grid
                   item
@@ -58,7 +58,7 @@ const ShoppingCartPage = () => {
                     },
                   }}
                 >
-                  <div className="text-[14px] font-medium">Quantity</div>
+                  <div className="text-[14px] font-medium">Số lượng</div>
                 </Grid>
                 <Grid
                   item
@@ -70,7 +70,7 @@ const ShoppingCartPage = () => {
                     },
                   }}
                 >
-                  <div className="text-[14px] font-medium">Subtotal</div>
+                  <div className="text-[14px] font-medium">Tạm tính</div>
                 </Grid>
                 <Grid
                   item
@@ -92,7 +92,7 @@ const ShoppingCartPage = () => {
               <div className="text-[60px] mb-6 opacity-50">
                 <TfiFaceSad />
               </div>
-              <span>Your shopping cart is empty.</span>
+              <span>Giỏ hàng của bạn đang trống.</span>
             </div>
           )}
         </Grid>

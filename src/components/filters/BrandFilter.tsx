@@ -28,7 +28,7 @@ const BrandFilter = () => {
 
   if (error) {
     return (
-      <div className="p-4 text-red-500">
+      <div className="p-4 text-red-500 font-medium">
         Có lỗi xảy ra khi tải dữ liệu thương hiệu
       </div>
     );
@@ -67,7 +67,7 @@ const BrandFilter = () => {
           },
         }}
       >
-        <span className="font-bold text-[17px]">Product Brands</span>
+        <span className="font-bold text-[17px]">Thương hiệu</span>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: "0 0 16px 0" }}>
         <div className="flex flex-col gap-4">

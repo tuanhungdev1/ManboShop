@@ -2,21 +2,22 @@ import { Link } from "react-router-dom";
 import { useGetCategoriesQuery } from "@services/categoryApi";
 import { Category } from "@types-d/category";
 import { SkeletonMenu } from "./SkeletonMenu";
+import { useAppDispatch } from "@redux/hooks";
+import { toggleProductType } from "@redux/slices/filterSlice";
 
 export const MegaMenu = () => {
   const {
     data: categoriesResponse,
     isLoading,
-    error
+    error,
   } = useGetCategoriesQuery({
     orderBy: "asc",
     pageNumber: 1,
     pageSize: 1000,
   });
 
-  
+  const dispatch = useAppDispatch();
   const organizeCategories = (categories: Category[]) => {
-    
     const rootCategories = categories.filter(
       (category) => category.parentCategoryId === null
     );
@@ -30,7 +31,7 @@ export const MegaMenu = () => {
 
       return {
         ...rootCategory,
-        subCategories: level1Categories
+        subCategories: level1Categories,
       };
     });
   };
@@ -62,7 +63,7 @@ export const MegaMenu = () => {
     return null;
   }
 
-  const rootCategories = categoriesResponse?.data 
+  const rootCategories = categoriesResponse?.data
     ? organizeCategories(categoriesResponse.data)
     : [];
 
@@ -76,7 +77,7 @@ export const MegaMenu = () => {
               <h3 className="font-bold text-gray-800 mb-4 text-base">
                 {category.name}
               </h3>
-              
+
               {/* Main Categories */}
               {category.subCategories && category.subCategories.length > 0 && (
                 <div className="flex-1">
@@ -84,7 +85,10 @@ export const MegaMenu = () => {
                     {category.subCategories.map((subCategory) => (
                       <li key={subCategory.id} className="group/item">
                         <Link
-                          to={`/category/${subCategory.id}`}
+                          to={`/collection`}
+                          onClick={() =>
+                            dispatch(toggleProductType(subCategory.name))
+                          }
                           className="text-gray-500 hover:text-gray-900 text-sm block transition-colors duration-200"
                         >
                           {subCategory.name}

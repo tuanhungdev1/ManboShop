@@ -14,10 +14,10 @@ export const orderApi = baseApi.injectEndpoints({
       query: (params) => ({
         url: `Order`,
         params: {
-          PageSize: params.pageSize,
-          PageNumber: params.pageNumber,
-          SearchTerm: params.searchTerm,
-          OrderBy: params.orderBy,
+          PageSize: params.PageSize,
+          PageNumber: params.PageNumber,
+          SearchTerm: params.SearchTerm,
+          OrderBy: params.OrderBy,
           OrderStatus: params.orderStatus,
           FormDate: params.fromDate,
           ToDate: params.toDate,
@@ -40,8 +40,8 @@ export const orderApi = baseApi.injectEndpoints({
         params: {
           PageSize: 1000000,
           PageNumber: 1,
-          SearchTerm: params.searchTerm,
-          OrderBy: params.orderBy,
+          SearchTerm: params.SearchTerm,
+          OrderBy: params.OrderBy,
         },
       }),
 

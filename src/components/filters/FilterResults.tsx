@@ -89,7 +89,7 @@ const FilterResults = () => {
       priceRange ||
       sortBy ? (
         <span
-          className="font-semibold uppercase text-[14px] underline cursor-pointer"
+          className="font-semibold capitalize text-[14px] underline cursor-pointer"
           onClick={() => dispatch(resetFilters())}
         >
           xóa bộ lọc

@@ -14,31 +14,31 @@ interface MenuItem {
 }
 
 export const menuItems: MenuItem[] = [
-  { id: 1, label: "Personal Information", path: "/user/profile", icon: CiUser },
-  { id: 2, label: "My Orders", path: "/user/orders", icon: BsBoxSeam },
+  { id: 1, label: "Thông Tin Cá Nhân", path: "/user/profile", icon: CiUser },
+  { id: 2, label: "Đơn Hàng Của Tôi", path: "/user/orders", icon: BsBoxSeam },
   {
     id: 3,
-    label: "My Wishlists",
+    label: "Danh Sách Yêu Thích",
     path: "/user/wishlists",
     icon: IoIosHeartEmpty,
   },
   {
     id: 4,
-    label: "Manage Addresses",
+    label: "Quản Lý Địa Chỉ",
     path: "/user/addresses",
     icon: IoLocationOutline,
   },
   {
     id: 5,
-    label: "Saved Cards",
+    label: "Thẻ Đã Lưu",
     path: "/user/saved-cards",
     icon: IoCardOutline,
   },
   {
     id: 6,
-    label: "Notifications",
+    label: "Thông Báo",
     path: "/user/notifications",
     icon: IoIosNotificationsOutline,
   },
-  { id: 7, label: "Settings", path: "/user/settings", icon: IoSettingsOutline },
+  { id: 7, label: "Cài Đặt", path: "/user/settings", icon: IoSettingsOutline },
 ];

@@ -42,8 +42,8 @@ const OrderPage = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
 
   const { data: orders, isLoading } = useGetOrdersByUserIdQuery({
-    orderBy: sortCurrent,
-    searchTerm: searchOrder,
+    OrderBy: sortCurrent,
+    SearchTerm: searchOrder,
   });
 
   const [cancelOrder] = useCancelOrderMutation();
@@ -109,9 +109,6 @@ const OrderPage = () => {
           <div className="text-gray-400 text-lg">
             Không tìm thấy đơn hàng nào
           </div>
-          <p className="text-gray-500 mt-2">
-            Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc
-          </p>
         </div>
       ) : (
         <div className="mt-8 bg-white rounded-lg shadow-sm">

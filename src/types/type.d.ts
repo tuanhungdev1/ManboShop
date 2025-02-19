@@ -29,9 +29,9 @@ export interface ApiResponse<T> {
 }
 
 export interface RequestParameters {
-  pageNumber?: number;
-  pageSize?: number;
-  searchTerm?: string;
-  orderBy?: string;
-  orderKey?: string;
+  PageNumber?: number;
+  PageSize?: number;
+  SearchTerm?: string;
+  OrderBy?: string;
+  OrderKey?: string;
 }

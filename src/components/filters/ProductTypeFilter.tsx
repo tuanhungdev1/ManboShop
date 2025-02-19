@@ -33,23 +33,20 @@ const ProductTypeFilter = () => {
 
   if (error) {
     return (
-      <div className="p-4 text-red-500">
+      <div className="p-4 text-red-500 font-medium">
         Có lỗi xảy ra khi tải dữ liệu danh mục
       </div>
     );
   }
 
-  // Organize categories into a tree structure
   const organizeCategories = (categories: Category[]) => {
     const categoryMap = new Map();
     const rootCategories: Category[] = [];
 
-    // First, create a map of all categories
     categories.forEach((category) => {
       categoryMap.set(category.id, { ...category, subCategories: [] });
     });
 
-    // Then, organize them into a tree structure
     categories.forEach((category) => {
       const categoryWithSubs = categoryMap.get(category.id);
       if (category.parentCategoryId === null) {
@@ -177,7 +174,7 @@ const ProductTypeFilter = () => {
           },
         }}
       >
-        <span className="font-bold text-[17px]">Product Categories</span>
+        <span className="font-bold text-[17px]">Danh mục</span>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: "0 0 16px 0" }}>
         <div className="flex flex-col gap-4">

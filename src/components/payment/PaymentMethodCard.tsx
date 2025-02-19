@@ -15,7 +15,7 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
   selected,
   onSelect,
 }) => {
-  // Map payment method icons to actual image paths
+  // Ánh xạ các biểu tượng phương thức thanh toán đến đường dẫn hình ảnh thực tế
   const getPaymentIcon = (iconName: string) => {
     const iconMap: { [key: string]: string } = {
       "cod-icon":
@@ -31,7 +31,7 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
   return (
     <Card
       onClick={onSelect}
-      className={`
+      className={` 
         relative
         cursor-pointer
         transition-all
@@ -64,8 +64,8 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
               {method.label}
             </span>
             {method.id === 1 && (
-              <span className=" text-gray-500 text-sm">
-                Pay when you receive the package
+              <span className="text-gray-500 text-sm">
+                Thanh toán khi nhận hàng
               </span>
             )}
           </div>
@@ -80,26 +80,26 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
         />
       </div>
 
-      {/* Additional information based on payment method */}
+      {/* Thông tin bổ sung dựa trên phương thức thanh toán */}
       {selected && (
         <div className="mt-4 pt-4 border-t border-gray-200">
           {method.id === 1 && (
             <div className="text-sm text-gray-600 flex flex-col gap-1 font-medium">
-              <p>• Cash payment upon delivery</p>
-              <p>• Available nationwide</p>
-              <p>• Free shipping for orders over $50</p>
+              <p>• Thanh toán bằng tiền mặt khi nhận hàng</p>
+              <p>• Áp dụng trên toàn quốc</p>
+              <p>• Miễn phí vận chuyển cho đơn hàng trên 50$</p>
             </div>
           )}
           {method.id === 2 && (
             <div className="text-sm text-gray-600 flex flex-col gap-1 font-medium">
-              <p>• Fast and secure payment via ZaloPay</p>
-              <p>• Get 5% cashback on your first payment</p>
+              <p>• Thanh toán nhanh chóng và an toàn qua ZaloPay</p>
+              <p>• Nhận hoàn tiền 5% cho lần thanh toán đầu tiên</p>
             </div>
           )}
           {method.id === 3 && (
             <div className="text-sm text-gray-600 flex flex-col gap-1 font-medium">
-              <p>• Secure payment via VNPay gateway</p>
-              <p>• Support all major banks in Vietnam</p>
+              <p>• Thanh toán an toàn qua cổng VNPay</p>
+              <p>• Hỗ trợ tất cả các ngân hàng lớn tại Việt Nam</p>
             </div>
           )}
         </div>

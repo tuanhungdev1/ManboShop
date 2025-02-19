@@ -4,25 +4,40 @@ import { Product, ProductRequestParameters } from "@types-d/product";
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // Get all products with filters
     getProducts: builder.query<
       ApiResponse<Product[]>,
       ProductRequestParameters
     >({
-      query: (params) => ({
-        url: "Products",
-        params: {
-          PageSize: params.pageSize,
-          PageNumber: params.pageNumber,
-          SearchTerm: params.searchTerm,
-          OrderBy: params.orderBy,
-          Brands: params.brands,
-          Colors: params.colors,
-          Sizes: params.sizes,
-          Categories: params.categories,
-          PriceRange: params.priceRange,
-        },
-      }),
+      query: (params) => {
+        const queryParams = new URLSearchParams();
+
+        // Chỉ thêm params có giá trị
+        if (params.PageSize)
+          queryParams.append("PageSize", params.PageSize.toString());
+        if (params.PageNumber)
+          queryParams.append("PageNumber", params.PageNumber.toString());
+        if (params.SearchTerm)
+          queryParams.append("SearchTerm", params.SearchTerm);
+        if (params.OrderBy) queryParams.append("OrderBy", params.OrderBy);
+        if (params.Brands) queryParams.append("Brands", params.Brands);
+        if (params.Colors) queryParams.append("Colors", params.Colors);
+        if (params.Sizes) queryParams.append("Sizes", params.Sizes);
+        if (params.Categories)
+          queryParams.append("Categories", params.Categories);
+        if (params.PriceRange)
+          queryParams.append("PriceRange", params.PriceRange);
+
+        return {
+          url: `Products?${queryParams.toString()}`,
+          method: "GET",
+          // Có thể thêm headers nếu cần
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
+      // Thêm để invalidate cache khi cần
+      providesTags: ["Products"],
     }),
 
     // Get product by ID

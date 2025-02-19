@@ -11,6 +11,7 @@ import {
   useRemoveCartItemMutation,
   useUpdateCartItemMutation,
 } from "@services/cartApi";
+import { ImageLoad } from "@components/images";
 
 interface ShoppingCartItemComponentProps {
   cartItem: CartItem;
@@ -124,10 +125,10 @@ const ShoppingCartItem: React.FC<ShoppingCartItemComponentProps> = ({
       >
         <div className="flex items-center flex-1">
           <Link to={`/product/${slugify(cartItem.product.name)}`}>
-            <img
+            <ImageLoad
               src={firstImage?.imageUrl || "https://via.placeholder.com/100"}
               alt={cartItem.product.name}
-              style={{ width: 80, height: 80, marginRight: 16 }}
+              className="w-[80px] h-[80px] mr-[16px]"
             />
           </Link>
           <div className="flex flex-col gap-2">

@@ -43,7 +43,7 @@ const ButtonBackToTop: React.FC = () => {
   return (
     <div
       className={cn(
-        "fixed bottom-[100px] transition-all duration-100 ease-in-out justify-center flex flex-col items-center gap-2 right-[20px] cursor-pointer bg-transparent",
+        "fixed bottom-[100px] transition-all duration-100 ease-in-out justify-center flex flex-col items-center gap-2 right-[24px] cursor-pointer bg-transparent",
         isInFooter ? "text-white border-white" : "text-black border-black",
         isVisible ? "opacity-100" : "opacity-0 select-none pointer-events-none"
       )}
@@ -57,7 +57,6 @@ const ButtonBackToTop: React.FC = () => {
       >
         <GoArrowUp />
       </div>
-      <span className="uppercase text-[8px] font-medium">back to top</span>
     </div>
   );
 };

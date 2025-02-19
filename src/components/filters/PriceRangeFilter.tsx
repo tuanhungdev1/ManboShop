@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Accordion, AccordionDetails, AccordionSummary, Slider } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Slider,
+} from "@mui/material";
 import { FiChevronDown } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { selectPriceRange, setPriceRange } from "@redux/slices/filterSlice";
@@ -36,35 +41,36 @@ const PriceRangeFilter = () => {
       defaultExpanded={true}
       elevation={0}
       sx={{
-        '&.MuiAccordion-root': {
+        "&.MuiAccordion-root": {
           borderRadius: 0,
-          borderBottom: '1px solid #eee',
+          borderBottom: "1px solid #eee",
         },
-        '&.MuiAccordion-root:before': {
-          display: 'none',
+        "&.MuiAccordion-root:before": {
+          display: "none",
         },
       }}
     >
       <AccordionSummary
-        expandIcon={<FiChevronDown className="text-[20px] text-black"/>}
+        expandIcon={<FiChevronDown className="text-[20px] text-black" />}
         sx={{
-          padding: '16px 0',
-          '& .MuiAccordionSummary-content': {
+          padding: "16px 0",
+          "& .MuiAccordionSummary-content": {
             margin: 0,
           },
-          '& .MuiAccordionSummary-expandIconWrapper': {
-            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s',
+          "& .MuiAccordionSummary-expandIconWrapper": {
+            transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.2s",
           },
         }}
       >
-        <span className="font-bold text-[17px]">Filter by Price</span>
+        <span className="font-bold text-[17px]">Giá</span>
       </AccordionSummary>
-      <AccordionDetails sx={{ padding: '0 0 16px 0' }}>
+      <AccordionDetails sx={{ padding: "0 0 16px 0" }}>
         <div className="space-y-6">
           {/* Price Display */}
           <div className="text-[15px] font-medium">
-            Price: {formatPrice(localPriceRange[0])} - {formatPrice(localPriceRange[1])}
+            Price: {formatPrice(localPriceRange[0])} -{" "}
+            {formatPrice(localPriceRange[1])}
           </div>
 
           {/* Slider */}
@@ -75,22 +81,22 @@ const PriceRangeFilter = () => {
             min={MIN_PRICE}
             max={MAX_PRICE}
             sx={{
-              color: '#000',
-              '& .MuiSlider-thumb': {
+              color: "#000",
+              "& .MuiSlider-thumb": {
                 width: 12,
                 height: 12,
-                backgroundColor: '#fff',
-                border: '2px solid #000',
-                '&:hover, &.Mui-focusVisible': {
-                  boxShadow: 'none',
+                backgroundColor: "#fff",
+                border: "2px solid #000",
+                "&:hover, &.Mui-focusVisible": {
+                  boxShadow: "none",
                 },
               },
-              '& .MuiSlider-rail': {
-                backgroundColor: '#e5e7eb',
+              "& .MuiSlider-rail": {
+                backgroundColor: "#e5e7eb",
                 opacity: 1,
               },
-              '& .MuiSlider-track': {
-                backgroundColor: '#000',
+              "& .MuiSlider-track": {
+                backgroundColor: "#000",
               },
             }}
           />

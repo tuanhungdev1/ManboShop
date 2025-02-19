@@ -16,32 +16,38 @@ interface ProductListProps {
 const ProductList = ({ viewMode, onPaginationChange }: ProductListProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
-  const pageSize = 9; // Số sản phẩm mỗi trang
+  const pageSize = 9;
 
-  // Lấy state từ redux store
   const filters = useAppSelector((state) => state.filter);
 
-  // Query products với các params
+  console.log(formatQueryParams(filters, currentPage, pageSize));
+  // Query products với các params đã được format đúng
   const { data, isLoading, isFetching, isSuccess } = useGetProductsQuery(
     formatQueryParams(filters, currentPage, pageSize)
   );
 
+  // Cập nhật metadata pagination khi data thay đổi
   useEffect(() => {
-    if (isSuccess && data.pagination) {
+    if (isSuccess && data?.pagination) {
       onPaginationChange(data.pagination);
     }
-  }, [isSuccess, data?.pagination]);
+  }, [isSuccess, data?.pagination, onPaginationChange]);
 
   // Reset về trang 1 khi filter thay đổi
   useEffect(() => {
-    if (currentPage !== 1) {
-      setSearchParams({ page: "1" });
-    }
-  }, [filters]);
+    setSearchParams((prev) => {
+      if (currentPage !== 1) {
+        prev.set("page", "1");
+      }
+      return prev;
+    });
+  }, [JSON.stringify(filters)]); // Dependency là filters được stringify
 
-  // Handle page change
-  const handlePageChange = (page: number) => {
-    setSearchParams({ page: page.toString() });
+  const handlePageChange = (_: any, page: number) => {
+    setSearchParams((prev) => {
+      prev.set("page", page.toString());
+      return prev;
+    });
   };
 
   // Render loading skeleton
@@ -103,7 +109,7 @@ const ProductList = ({ viewMode, onPaginationChange }: ProductListProps) => {
             <Pagination
               count={Math.ceil(data.pagination.totalCount / pageSize)}
               page={currentPage}
-              onChange={(_, page) => handlePageChange(page)}
+              onChange={(_, page) => handlePageChange(_, page)}
               color="primary"
               showFirstButton
               showLastButton

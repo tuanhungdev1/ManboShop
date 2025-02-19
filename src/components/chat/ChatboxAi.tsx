@@ -1,5 +1,3 @@
-// index.tsx
-import { Tooltip } from "@mui/material";
 import { useState } from "react";
 import { IoChatboxEllipses } from "react-icons/io5";
 import { CgClose } from "react-icons/cg";

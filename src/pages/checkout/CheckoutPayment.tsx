@@ -21,7 +21,7 @@ const CheckoutPayment: React.FC = () => {
   return (
     <div className="checkout-payment rounded-lg select-none">
       <h2 className="text-xl font-bold text-black mb-8">
-        Select Payment Method
+        Chọn phương thức thanh toán
       </h2>
 
       <div className="payment-methods">
@@ -36,14 +36,14 @@ const CheckoutPayment: React.FC = () => {
       </div>
 
       <div className="flex flex-col text-black text-sm gap-2 mt-8">
-        <span>Note</span>
+        <span className="font-medium">Ghi chú</span>
         <TextField
           multiline
           rows={4}
           spellCheck={false}
           onChange={(e) => dispatch(setNote(e.target.value))}
           className="mt-4 w-full rounded-lg placeholder:text-sm"
-          placeholder="Enter your note..."
+          placeholder="Ghi chú cho đơn hàng..."
         />
       </div>
     </div>

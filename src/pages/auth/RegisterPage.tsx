@@ -9,10 +9,8 @@ import {
   ButtonComponent,
   FacebookLoginButton,
   GoogleLoginButton,
-  PrimaryButton,
 } from "@components/buttons";
 import { InputType } from "@types-d/enums";
-import { cn } from "@utils/cn";
 import { Checkbox } from "@components/checkbox";
 import { useAppDispatch } from "@redux/hooks";
 import { useRegisterMutation } from "@services/authApi";
@@ -34,19 +32,11 @@ const schema = yup.object().shape({
   firstname: yup
     .string()
     .required("Tên là bắt buộc")
-    .max(100, "Tên không được vượt quá 100 ký tự")
-    .matches(
-      /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂÊÔơưăêô\s]+$/,
-      "Tên không được chứa số hoặc ký tự đặc biệt"
-    ),
+    .max(100, "Tên không được vượt quá 100 ký tự"),
   lastname: yup
     .string()
     .required("Họ là bắt buộc")
-    .max(100, "Họ không được vượt quá 100 ký tự")
-    .matches(
-      /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂÊÔơưăêô\s]+$/,
-      "Họ không được chứa số hoặc ký tự đặc biệt"
-    ),
+    .max(100, "Họ không được vượt quá 100 ký tự"),
   username: yup
     .string()
     .required("Tên đăng nhập là bắt buộc")
@@ -58,7 +48,13 @@ const schema = yup.object().shape({
   password: yup
     .string()
     .required("Mật khẩu là bắt buộc")
-    .min(8, "Mật khẩu phải có ít nhất 8 ký tự"),
+    .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+    .matches(/[A-Z]/, "Mật khẩu phải chứa ít nhất một chữ in hoa")
+    .matches(/\d/, "Mật khẩu phải chứa ít nhất một chữ số")
+    .matches(
+      /[@$!%*?&]/,
+      "Mật khẩu phải chứa ít nhất một ký tự đặc biệt (@$!%*?&)"
+    ),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("password"), undefined], "Mật khẩu không khớp")

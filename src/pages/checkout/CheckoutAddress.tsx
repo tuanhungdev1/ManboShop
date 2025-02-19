@@ -11,6 +11,7 @@ const CheckoutAddress = () => {
   const { data: addresses, isLoading, isSuccess } = useGetUserAddressesQuery();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const handleSelectedAddressDefaultForUser = () => {
     if (addresses && addresses.data) {
       const selectedAddress = addresses.data.find((addr) => addr.isDefault);
@@ -22,7 +23,6 @@ const CheckoutAddress = () => {
             message: "Không chọn được địa chỉ nhận hàng hợp lệ!",
           })
         );
-
         return;
       }
 
@@ -37,19 +37,20 @@ const CheckoutAddress = () => {
       navigate("/checkout/payment");
     }
   };
+
   return (
     <div>
-      <h1 className="text-lg font-bold mb-2">Select a delivery address</h1>
+      <h1 className="text-lg font-bold mb-2">Chọn địa chỉ giao hàng</h1>
       <span className="font-medium opacity-70 text-sm">
-        Is the address you'd like to use displayed below? If so, click the
-        corresponding "Deliver to this address" button. Or you can enter a new
-        delivery address.
+        Địa chỉ bạn muốn sử dụng có hiển thị bên dưới không? Nếu có, hãy nhấn
+        nút "Giao hàng đến địa chỉ này" tương ứng. Hoặc bạn có thể nhập một địa
+        chỉ giao hàng mới.
       </span>
 
-      {/* Render Address List for User */}
+      {/* Danh sách địa chỉ của người dùng */}
       <div className="mb-8 mt-6">
         {addresses && addresses.data && addresses?.data?.length > 0 ? (
-          <div className=" grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {addresses.data.map((address) => (
               <AddressItem key={address.id} address={address} />
             ))}
@@ -59,16 +60,17 @@ const CheckoutAddress = () => {
         )}
 
         {!addresses && isLoading && (
-          <div className=" grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {[...Array(6)].map((_, index) => (
               <AddressItemSkeleton key={index} />
             ))}
           </div>
         )}
       </div>
-      {/* Button Deliver Here */}
+
+      {/* Nút giao hàng đến địa chỉ này */}
       <ButtonComponent onClick={handleSelectedAddressDefaultForUser}>
-        Deliver Here
+        Giao hàng đến địa chỉ này
       </ButtonComponent>
 
       <AddressCreateForm refetch={() => {}} />

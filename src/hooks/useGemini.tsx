@@ -8,7 +8,7 @@ export const useGemini = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: uuidv4(),
-      content: "Hey there! How can I help you today?",
+      content: "Xin chào! Tôi có thể giúp gì cha bạn?",
       sender: "bot",
       timestamp: new Date(),
     },

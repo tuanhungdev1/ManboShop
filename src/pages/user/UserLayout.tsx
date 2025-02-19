@@ -10,7 +10,7 @@ const UserLayout = () => {
   const user = useAppSelector(selectUser);
   return (
     <div>
-      <h1 className="text-4xl font-medium pt-6">My Profile</h1>
+      <h1 className="text-4xl font-medium pt-6">Thông tin người dùng</h1>
       <Grid container spacing={4} marginTop={6}>
         <Grid item xs={12} lg={4} xl={3}>
           <div className="border-gray-100 border-[2px] pb-6">

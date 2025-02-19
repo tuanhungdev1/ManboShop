@@ -32,9 +32,9 @@ export const feedbackApi = baseApi.injectEndpoints({
       query: ({ productId, feedbackRequestParameters }) => ({
         url: `Feedbacks/product/${productId}`,
         params: {
-          PageSize: feedbackRequestParameters.pageSize,
-          PageNumber: feedbackRequestParameters.pageNumber,
-          OrderBy: feedbackRequestParameters.orderBy,
+          PageSize: feedbackRequestParameters.PageSize,
+          PageNumber: feedbackRequestParameters.PageNumber,
+          OrderBy: feedbackRequestParameters.OrderBy,
         },
       }),
       providesTags: ["Feedback"],

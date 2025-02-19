@@ -80,9 +80,9 @@ export interface ProductVariantDetail {
 }
 
 export interface ProductRequestParameters extends RequestParameters {
-  brands?: string;
-  categories?: string;
-  colors?: string;
-  sizes?: string;
-  priceRange?: string;
+  Brands?: string;
+  Categories?: string;
+  Colors?: string;
+  Sizes?: string;
+  PriceRange?: string;
 }

@@ -56,9 +56,11 @@ const CollectionDetail = () => {
           to="/"
           className="text-gray-600 hover:text-primary-900 text-sm font-medium"
         >
-          Shop
+          Cửa hàng
         </Link>
-        <span className="text-sm text-gray-600 font-medium">All Products</span>
+        <span className="text-sm text-gray-600 font-medium">
+          Danh sách sản phẩm
+        </span>
       </Breadcrumbs>
 
       {/* Main Content */}
@@ -92,7 +94,7 @@ const CollectionDetail = () => {
                 </button>
               </div>
               <span className="text-sm text-gray-500 font-medium">
-                {`Showing ${pagination?.currentPage} – ${pagination?.totalPage} of ${pagination?.totalCount} results`}
+                {`Hiển thị ${pagination?.currentPage} – ${pagination?.totalPage} trong tổng số ${pagination?.totalCount} kết quả`}
               </span>
             </div>
 
